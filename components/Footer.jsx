@@ -27,8 +27,8 @@ const Footer = () => {
               123 Carnivore Street
             </a>
           </p>
-          <p className='text-sm ml-5'>Grillville, CA 90210</p>
-          <p className='text-sm flex items-center'>
+          <p className='text-sm ml-5 mb-1'>Grillville, CA 90210</p>
+          <p className='text-sm flex items-center mb-1'>
             <FaPhone className='mr-1' />{' '}
             <a href='tel:+15551234567'>(555) 123-4567</a>
           </p>
