@@ -48,19 +48,19 @@ const Navbar = () => {
             <div className='hidden md:ml-6 md:block'>
               <div className='flex space-x-2'>
                 <a
-                  href='/index.html'
+                  href='/'
                   className='text-white bg-black hover:bg-gray-900 hover:text-white rounded-md px-3 py-2'
                 >
                   Home
                 </a>
                 <a
-                  href='/properties.html'
+                  href='/cuts'
                   className='text-white hover:bg-gray-900 hover:text-white rounded-md px-3 py-2'
                 >
                   Cuts
                 </a>
                 <a
-                  href='/add-property.html'
+                  href='/add-cuts'
                   className='text-white hover:bg-gray-900 hover:text-white rounded-md px-3 py-2'
                 >
                   Add Cuts
@@ -199,19 +199,19 @@ const Navbar = () => {
         <div className='md:hidden' id='mobile-menu'>
           <div className='space-y-1 px-2 pb-3 pt-2'>
             <a
-              href='/index.html'
+              href='/'
               className='bg-gray-900 text-white block rounded-md px-3 py-2 text-base font-medium'
             >
               Home
             </a>
             <a
-              href='/properties.html'
+              href='/cuts'
               className='text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium'
             >
               Cuts
             </a>
             <a
-              href='/add-property.html'
+              href='/add-cuts'
               className='text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium'
             >
               Add Cuts
