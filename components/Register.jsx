@@ -1,11 +1,66 @@
 'use client';
 
-import React from 'react';
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { toast } from 'react-toastify';
 
 const Register = () => {
+  const router = useRouter();
+
+  const [formData, setFormData] = useState({
+    name: '',
+    username: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
+  });
+
+  const [loading, setLoading] = useState(false);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+
+    if (formData.password !== formData.confirmPassword) {
+      toast.error('Passwords do not match');
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const res = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (res.ok) {
+        toast.success('Registration Successful!');
+        router.push('/auth/login');
+      } else {
+        const data = await response.json();
+        toast.error(data.message || 'Registration Failed');
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error('Something Went Wrong');
+    } finally {
+      setLoading(false);
+    }
+  };
   return (
-    <form>
+    <form onSubmit={handleSubmit}>
       <h2 className='text-3xl text-center font-semibold mb-6'>
         Create An Account
       </h2>
@@ -18,8 +73,25 @@ const Register = () => {
           id='name'
           name='name'
           className='border rounded w-full py-2 px-3 mb-2'
-          placeholder='Full name'
+          placeholder='Full Name'
           required
+          value={formData.name}
+          onChange={handleChange}
+        />
+      </div>
+
+      {/* Username */}
+      <div className='mb-4'>
+        <label className='block text-gray-700 font-bold mb-2'>Username</label>
+        <input
+          type='text'
+          id='username'
+          name='username'
+          className='border rounded w-full py-2 px-3 mb-2'
+          placeholder='Username'
+          required
+          value={formData.username}
+          onChange={handleChange}
         />
       </div>
 
@@ -33,6 +105,8 @@ const Register = () => {
           className='border rounded w-full py-2 px-3 mb-2'
           placeholder='Email address'
           required
+          value={formData.email}
+          onChange={handleChange}
         />
       </div>
 
@@ -46,21 +120,25 @@ const Register = () => {
           className='border rounded w-full py-2 px-3 mb-2'
           placeholder='Password'
           required
+          value={formData.password}
+          onChange={handleChange}
         />
       </div>
 
-      {/* <!-- Password --> */}
+      {/* <!-- Confirm Password --> */}
       <div className='mb-4'>
         <label className='block text-gray-700 font-bold mb-2'>
           Confirm Password
         </label>
         <input
           type='password'
-          id='password2'
-          name='password2'
+          id='confirmPassword'
+          name='confirmPassword'
           className='border rounded w-full py-2 px-3 mb-2'
           placeholder='Confirm Password'
           required
+          value={formData.confirmPassword}
+          onChange={handleChange}
         />
       </div>
 
