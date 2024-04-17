@@ -1,4 +1,7 @@
-import React from 'react';
+import {
+  MdOutlineArrowBackIosNew,
+  MdOutlineArrowForwardIos,
+} from 'react-icons/md';
 
 const Pagination = ({ page, pageSize, totalItems, onPageChange }) => {
   const totalPages = Math.ceil(totalItems / pageSize);
@@ -11,21 +14,21 @@ const Pagination = ({ page, pageSize, totalItems, onPageChange }) => {
   return (
     <section className='container mx-auto flex justify-center items-center my-8'>
       <button
-        className='mr-2 px-2 py-1 border border-gray-300 rounded'
+        className='mr-2 px-2 py-1 text-3xl'
         disabled={page === 1}
         onClick={() => handlePageChange(page - 1)}
       >
-        Previous
+        <MdOutlineArrowBackIosNew />
       </button>
       <span className='mx-2'>
-        Page {page} of {totalPages}
+        {page} of {totalPages}
       </span>
       <button
-        className='ml-2 px-2 py-1 border border-gray-300 rounded'
+        className='ml-2 px-2 py-1 text-3xl'
         disabled={page === totalPages}
         onClick={() => handlePageChange(page + 1)}
       >
-        Next
+        <MdOutlineArrowForwardIos />
       </button>
     </section>
   );
