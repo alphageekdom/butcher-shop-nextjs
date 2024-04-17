@@ -56,6 +56,10 @@ const ProductSchema = new Schema(
       type: String,
       required: true,
     },
+    highlight: {
+      type: String,
+      required: true,
+    },
     reviews: [ReviewSchema],
     rating: {
       type: Number,

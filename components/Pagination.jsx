@@ -14,7 +14,9 @@ const Pagination = ({ page, pageSize, totalItems, onPageChange }) => {
   return (
     <section className='container mx-auto flex justify-center items-center my-8'>
       <button
-        className='mr-2 px-2 py-1 text-3xl'
+        className={`ml-2 px-2 py-1 text-3xl ${
+          page === 1 ? 'text-gray-500' : ''
+        }`}
         disabled={page === 1}
         onClick={() => handlePageChange(page - 1)}
       >
@@ -24,7 +26,9 @@ const Pagination = ({ page, pageSize, totalItems, onPageChange }) => {
         {page} of {totalPages}
       </span>
       <button
-        className='ml-2 px-2 py-1 text-3xl'
+        className={`ml-2 px-2 py-1 text-3xl ${
+          page === totalPages ? 'text-gray-500' : ''
+        }`}
         disabled={page === totalPages}
         onClick={() => handlePageChange(page + 1)}
       >

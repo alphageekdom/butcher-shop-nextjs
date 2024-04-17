@@ -1,6 +1,6 @@
-import '@/assets/styles/global.css';
 import Footer from '@/components/Footer';
 import Navbar from '@/components/Navbar';
+import '@/assets/styles/global.css';
 
 export const metadata = {
   title: "Ribeye Don's | Luxury Cuts",
