@@ -14,34 +14,26 @@ export const POST = async (request) => {
     const user = await User.findOne({ email });
 
     if (!user) {
-      return new Response(
-        JSON.stringify({ error: 'Invalid email or password' }),
-        {
-          status: 401,
-          headers: { 'Content-Type': 'application/json' },
-        }
-      );
+      return new Response(JSON.stringify({ error: "User Doesn't Exist" }), {
+        status: 401,
+        headers: { 'Content-Type': 'application/json' },
+      });
     }
 
     // Validate password
     const isPasswordValid = await bcrypt.compare(password, user.password);
 
     if (!isPasswordValid) {
-      return new Response(
-        JSON.stringify({ error: 'Invalid email or password' }),
-        {
-          status: 401,
-          headers: { 'Content-Type': 'application/json' },
-        }
-      );
-    }
-
-    if (typeof window !== 'undefined') {
-      // Sign in the user to establish the session
-      await signIn('credentials', {
-        email: user.email,
+      return new Response(JSON.stringify({ error: 'Invalid Credentials' }), {
+        status: 401,
+        headers: { 'Content-Type': 'application/json' },
       });
     }
+
+    // Sign in the user to establish the session
+    await signIn('credentials', {
+      email: user.email,
+    });
 
     // Return success response
     return new Response(JSON.stringify({ message: 'Login successful' }), {

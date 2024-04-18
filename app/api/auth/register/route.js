@@ -7,40 +7,26 @@ export const POST = async (request) => {
   try {
     await connectDB();
 
-    const userData = await request.json();
+    const { name, email, username, password } = await request.json();
 
-    // Input validation
-    if (
-      !userData ||
-      !userData.username ||
-      !userData.email ||
-      !userData.password
-    ) {
-      throw new Error('Invalid input data.');
-    }
+    // Check if email or username already exist
+    const existingUser = await User.findOne({ email });
 
-    // Check if username is already taken
-    const existingUsername = await User.findOne({
-      username: userData.username,
-    });
-    if (existingUsername) {
-      throw new Error('Username is already taken.');
-    }
-
-    // Check if email is already registered
-    const existingEmail = await User.findOne({ email: userData.email });
-    if (existingEmail) {
-      throw new Error('Email is already registered.');
+    if (existingUser) {
+      return new Response(JSON.stringify({ error: 'Email already in use' }), {
+        status: 409,
+        headers: { 'Content-Type': 'application/json' },
+      });
     }
 
     // Hash password
-    const hashedPassword = await bcrypt.hash(userData.password, 10);
+    const hashedPassword = await bcrypt.hash(password, 10);
 
     // Create user object
     const newUser = new User({
-      name: userData.name,
-      username: userData.username,
-      email: userData.email,
+      name,
+      email,
+      username,
       password: hashedPassword,
     });
 
@@ -54,15 +40,9 @@ export const POST = async (request) => {
     );
   } catch (error) {
     console.log(error);
-
-    let errorMessage = 'Failed to register user.';
-    // Customize error message based on specific error types
-    if (error.message.includes('Username')) {
-      errorMessage = 'Username is already taken.';
-    } else if (error.message.includes('Email')) {
-      errorMessage = 'Email is already registered.';
-    }
-
-    return new Response(errorMessage, { status: 400 });
+    return new Response(JSON.stringify({ error: 'Internal server error' }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json' },
+    });
   }
 };

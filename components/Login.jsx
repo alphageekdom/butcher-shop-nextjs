@@ -34,18 +34,25 @@ const Login = () => {
     e.preventDefault();
     setLoading(true);
 
-    signIn('credentials', {
-      redirect: false,
-      email: formData.email,
-      password: formData.password,
-    }).then((res) => {
+    try {
+      const res = await signIn('credentials', {
+        redirect: false,
+        email: formData.email,
+        password: formData.password,
+      });
+
+      console.log(res);
+
       setLoading(false);
+
       if (res.error) {
         toast.error(res.error);
       } else {
-        router.push('/');
+        toast.success('Login Successful');
       }
-    });
+    } catch (error) {
+      console.log('Error during login:', error);
+    }
   };
 
   return (
@@ -89,7 +96,7 @@ const Login = () => {
           type='submit'
           disabled={loading}
         >
-          {loading ? 'Logging in...' : 'Login'}
+          Login
         </button>
       </div>
       <div className='text-center mt-3'>

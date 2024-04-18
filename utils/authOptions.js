@@ -38,10 +38,15 @@ export const authOptions = {
 
           console.log('Authenticated user:', user);
 
-          return {
-            ...user.toObject(),
-            _id: user._id.toString(),
+          const userData = {
+            id: user._id.toString(),
+            email: user.email,
+            username: user.username,
+            // Add any additional fields you need
+            role: user.role,
           };
+
+          return userData;
         } catch (error) {
           console.error('Error occurred during authentication:', error);
           throw new Error('Authentication failed');
@@ -49,6 +54,10 @@ export const authOptions = {
       },
     }),
   ],
+  session: {
+    jwt: true, // Use JSON Web Tokens for session
+    // Add other session properties as needed
+  },
   callbacks: {
     // Modify the session object
     async session({ session, token }) {

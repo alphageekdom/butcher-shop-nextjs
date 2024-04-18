@@ -21,9 +21,13 @@ const Navbar = () => {
   const router = useRouter();
 
   const handleSignIn = async () => {
+    if (!session || !session.user) {
+      router.replace('/');
+      return;
+    }
     try {
       const res = await signIn('credentials', {
-        email,
+        email: session.user.email,
         password,
         redirect: false,
       });
@@ -37,6 +41,16 @@ const Navbar = () => {
     } catch (error) {
       console.log(error);
       toast.error('Something Went Wrong');
+    }
+  };
+
+  const handleSignOut = async () => {
+    try {
+      await signOut({ redirect: false });
+      toast.success('Signed Out Successfully');
+    } catch (error) {
+      console.error(error);
+      toast.error('Failed To Sign Out');
     }
   };
 
@@ -54,6 +68,7 @@ const Navbar = () => {
     };
   }, []);
 
+  // Render a loading indicator while session status is loading
   // Wait for the session to be loaded before rendering
   if (status === 'loading') {
     return null; // Render nothing or loading indicator
@@ -70,7 +85,7 @@ const Navbar = () => {
               id='mobile-dropdown-button'
               className='relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white'
               aria-controls='mobile-menu'
-              aria-expanded='false'
+              aria-expanded={isMobileMenuOpen}
               onClick={() => setIsMobileMenuOpen((prev) => !prev)}
             >
               <span className='absolute -inset-0.5'></span>
@@ -108,12 +123,14 @@ const Navbar = () => {
                 >
                   Cuts
                 </a>
-                <a
-                  href='/add-cuts'
-                  className='text-white hover:bg-gray-900 hover:text-white rounded-md px-3 py-2'
-                >
-                  Add Cuts
-                </a>
+                {session && (
+                  <a
+                    href='/products/add'
+                    className='text-white hover:bg-gray-900 hover:text-white rounded-md px-3 py-2'
+                  >
+                    Add Cuts
+                  </a>
+                )}
               </div>
             </div>
             {/* <!-- Logo --> */}
@@ -130,14 +147,22 @@ const Navbar = () => {
           {/* <!-- Right Side Menu (Logged Out) --> */}
           {!session && (
             <div className='hidden md:block md:ml-6'>
-              <div className='flex items-center'>
+              <div className='flex items-center gap-3'>
                 <Link
                   onClick={handleSignIn}
                   href={'/auth/login'}
-                  className='flex items-center text-white bg-gray-700 hover:bg-gray-900 hover:text-white rounded-md px-3 py-2'
+                  className='flex items-center justify-center text-white bg-gray-700 hover:bg-gray-900 hover:text-white rounded-md px-3 py-2'
                 >
-                  <i className='fa-brands fa-google text-white mr-2'></i>
-                  <span>Login or Register</span>
+                  <i className='fa-brands fa-google text-white'></i>
+                  <span>Login</span>
+                </Link>
+                <Link
+                  onClick={handleSignIn}
+                  href={'/auth/register'}
+                  className='flex items-center justify-center text-white bg-gray-700 hover:bg-gray-900 hover:text-white rounded-md px-3 py-2'
+                >
+                  <i className='fa-brands fa-google text-white'></i>
+                  <span>Register</span>
                 </Link>
               </div>
             </div>
@@ -204,13 +229,13 @@ const Navbar = () => {
                     role='menu'
                     aria-orientation='vertical'
                     aria-labelledby='user-menu-button'
-                    tabindex='-1'
+                    tabIndex='-1'
                   >
                     <a
                       href='/profile.html'
                       className='block px-4 py-2 text-sm text-gray-700'
                       role='menuitem'
-                      tabindex='-1'
+                      tabIndex='-1'
                       id='user-menu-item-0'
                       onClick={() => {
                         setIsProfileMenuOpen(false);
@@ -222,7 +247,7 @@ const Navbar = () => {
                       href='saved-properties.html'
                       className='block px-4 py-2 text-sm text-gray-700'
                       role='menuitem'
-                      tabindex='-1'
+                      tabIndex='-1'
                       id='user-menu-item-2'
                       onClick={() => {
                         setIsProfileMenuOpen(false);
@@ -234,11 +259,11 @@ const Navbar = () => {
                       href='#'
                       className='block px-4 py-2 text-sm text-gray-700'
                       role='menuitem'
-                      tabindex='-1'
+                      tabIndex='-1'
                       id='user-menu-item-2'
                       onClick={() => {
                         setIsProfileMenuOpen(false);
-                        signOut();
+                        handleSignOut();
                       }}
                     >
                       Sign Out

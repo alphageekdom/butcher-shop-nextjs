@@ -48,6 +48,8 @@ const Register = () => {
       if (res.ok) {
         toast.success('Registration Successful!');
         router.push('/auth/login');
+      } else if (res.status === 409) {
+        toast.error('Email Already In Use');
       } else {
         const data = await response.json();
         toast.error(data.message || 'Registration Failed');

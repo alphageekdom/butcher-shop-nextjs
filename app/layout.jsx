@@ -5,6 +5,9 @@ import '@/assets/styles/global.css';
 import { GlobalProvider } from '@/context/GlobalContext';
 import AuthProvider from '@/components/AuthProvider';
 
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 export const metadata = {
   title: "Ribeye Don's | Luxury Cuts",
   description: 'Explore your new favorite cut',
@@ -20,6 +23,7 @@ const MainLayout = ({ children }) => {
             <Navbar />
             <main>{children}</main>
             <Footer />
+            <ToastContainer />
           </body>
         </html>
       </AuthProvider>
