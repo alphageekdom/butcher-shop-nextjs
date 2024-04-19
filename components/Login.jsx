@@ -4,11 +4,13 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { toast } from 'react-toastify';
-import { signIn, useSession } from 'next-auth/react';
+import { useSession, signIn } from 'next-auth/react';
 
 const Login = () => {
   const router = useRouter();
   const { data: session, status } = useSession();
+
+  console.log(session);
 
   const [formData, setFormData] = useState({
     email: '',
@@ -39,9 +41,8 @@ const Login = () => {
         redirect: false,
         email: formData.email,
         password: formData.password,
+        isAdmin: formData.isAdmin,
       });
-
-      console.log(res);
 
       setLoading(false);
 

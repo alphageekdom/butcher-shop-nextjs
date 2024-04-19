@@ -2,6 +2,7 @@ import connectDB from '@/config/database';
 import User from '@/models/User';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import bcrypt from 'bcryptjs';
+import { MongoClient } from 'mongodb';
 
 export const authOptions = {
   providers: [
@@ -36,14 +37,11 @@ export const authOptions = {
             throw new Error('Invalid password');
           }
 
-          console.log('Authenticated user:', user);
-
           const userData = {
             id: user._id.toString(),
             email: user.email,
-            username: user.username,
-            // Add any additional fields you need
-            role: user.role,
+            name: user.name,
+            isAdmin: user.isAdmin,
           };
 
           return userData;
@@ -55,17 +53,19 @@ export const authOptions = {
     }),
   ],
   session: {
-    jwt: true, // Use JSON Web Tokens for session
-    // Add other session properties as needed
+    jwt: true,
   },
+  database: process.env.MONGODB_URI,
   callbacks: {
     // Modify the session object
     async session({ session, token }) {
-      session.user.id = token.sub;
+      const user = await User.findById(token.sub);
+      if (user) {
+        session.user.isAdmin = user.isAdmin;
+      }
       return session;
     },
 
-    // Invoked on successful sign-in
     async signIn({ user }) {
       // Connect to database
       await connectDB();

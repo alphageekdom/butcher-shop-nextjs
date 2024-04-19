@@ -10,7 +10,6 @@ const Register = () => {
 
   const [formData, setFormData] = useState({
     name: '',
-    username: '',
     email: '',
     password: '',
     confirmPassword: '',
@@ -69,7 +68,9 @@ const Register = () => {
 
       {/* <!-- Name --> */}
       <div className='mb-4'>
-        <label className='block text-gray-700 font-bold mb-2'>Name</label>
+        <label htmlFor='name' className='block text-gray-700 font-bold mb-2'>
+          Name
+        </label>
         <input
           type='text'
           id='name'
@@ -82,24 +83,11 @@ const Register = () => {
         />
       </div>
 
-      {/* Username */}
-      <div className='mb-4'>
-        <label className='block text-gray-700 font-bold mb-2'>Username</label>
-        <input
-          type='text'
-          id='username'
-          name='username'
-          className='border rounded w-full py-2 px-3 mb-2'
-          placeholder='Username'
-          required
-          value={formData.username}
-          onChange={handleChange}
-        />
-      </div>
-
       {/* <!-- Email --> */}
       <div className='mb-4'>
-        <label className='block text-gray-700 font-bold mb-2'>Email</label>
+        <label htmlFor='email' className='block text-gray-700 font-bold mb-2'>
+          Email
+        </label>
         <input
           type='email'
           id='email'
@@ -114,7 +102,12 @@ const Register = () => {
 
       {/* <!-- Password --> */}
       <div className='mb-4'>
-        <label className='block text-gray-700 font-bold mb-2'>Password</label>
+        <label
+          htmlFor='password'
+          className='block text-gray-700 font-bold mb-2'
+        >
+          Password
+        </label>
         <input
           type='password'
           id='password'
@@ -129,7 +122,10 @@ const Register = () => {
 
       {/* <!-- Confirm Password --> */}
       <div className='mb-4'>
-        <label className='block text-gray-700 font-bold mb-2'>
+        <label
+          htmlFor='confirmPassword'
+          className='block text-gray-700 font-bold mb-2'
+        >
           Confirm Password
         </label>
         <input

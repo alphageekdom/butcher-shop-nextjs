@@ -8,6 +8,8 @@ const ProductAddForm = () => {
     type: '',
     category: '',
     name: '',
+    price: '',
+    rating: '',
     description: '',
     highlight: '',
     location: {
@@ -16,7 +18,7 @@ const ProductAddForm = () => {
       state: '',
       zipcode: '',
     },
-    seller_info: {
+    company_info: {
       name: '',
       email: '',
       phone: '',
@@ -72,13 +74,11 @@ const ProductAddForm = () => {
   return (
     mounted && (
       <form action='/api/products' method='POST' encType='multipart/form-data'>
-        <h2 className='text-3xl text-center font-semibold mb-6'>
-          Add Property
-        </h2>
+        <h2 className='text-3xl text-center font-semibold mb-6'>Add Product</h2>
 
         <div className='mb-4'>
           <label htmlFor='type' className='block text-gray-700 font-bold mb-2'>
-            Property Type
+            Product Type
           </label>
           <select
             id='category'
@@ -228,53 +228,53 @@ const ProductAddForm = () => {
 
         <div className='mb-4'>
           <label
-            htmlFor='seller_name'
+            htmlFor='company_name'
             className='block text-gray-700 font-bold mb-2'
           >
-            Seller Name
+            Company Name
           </label>
           <input
             type='text'
-            id='seller_name'
-            name='seller_info.name'
+            id='company_name'
+            name='company_info.name'
             className='border rounded w-full py-2 px-3'
             placeholder='Name'
-            value={fields.seller_info.name}
+            value={fields.company_info.name}
             onChange={handleChange}
           />
         </div>
         <div className='mb-4'>
           <label
-            htmlFor='seller_email'
+            htmlFor='company_email'
             className='block text-gray-700 font-bold mb-2'
           >
-            Seller Email
+            Company Email
           </label>
           <input
             type='email'
-            id='seller_email'
-            name='seller_info.email'
+            id='company_email'
+            name='company_info.email'
             className='border rounded w-full py-2 px-3'
             placeholder='Email address'
             required
-            value={fields.seller_info.email}
+            value={fields.company_info.email}
             onChange={handleChange}
           />
         </div>
         <div className='mb-4'>
           <label
-            htmlFor='seller_phone'
+            htmlFor='company_phone'
             className='block text-gray-700 font-bold mb-2'
           >
-            Seller Phone
+            Company Phone
           </label>
           <input
             type='tel'
-            id='seller_phone'
-            name='seller_info.phone'
+            id='company_phone'
+            name='company_info.phone'
             className='border rounded w-full py-2 px-3'
             placeholder='Phone'
-            value={fields.seller_info.phone}
+            value={fields.company_info.phone}
             onChange={handleChange}
           />
         </div>

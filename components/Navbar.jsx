@@ -7,11 +7,12 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
 import profileDefault from '@/public/images/user-default.png';
-import { signIn, signOut, useSession, getProviders } from 'next-auth/react';
+import { signIn, signOut, useSession } from 'next-auth/react';
 import { toast } from 'react-toastify';
 
 const Navbar = () => {
   const { data: session, status } = useSession();
+  const isAdmin = session?.user?.isAdmin;
 
   const profileImage = session?.user?.image;
 
@@ -48,6 +49,7 @@ const Navbar = () => {
     try {
       await signOut({ redirect: false });
       toast.success('Signed Out Successfully');
+      router.replace('/');
     } catch (error) {
       console.error(error);
       toast.error('Failed To Sign Out');
@@ -68,10 +70,8 @@ const Navbar = () => {
     };
   }, []);
 
-  // Render a loading indicator while session status is loading
-  // Wait for the session to be loaded before rendering
   if (status === 'loading') {
-    return null; // Render nothing or loading indicator
+    return null;
   }
 
   return (
@@ -121,14 +121,14 @@ const Navbar = () => {
                   href='/products'
                   className='text-white hover:bg-gray-900 hover:text-white rounded-md px-3 py-2'
                 >
-                  Cuts
+                  Products
                 </a>
-                {session && (
+                {isAdmin && (
                   <a
                     href='/products/add'
                     className='text-white hover:bg-gray-900 hover:text-white rounded-md px-3 py-2'
                   >
-                    Add Cuts
+                    Add Products
                   </a>
                 )}
               </div>
@@ -222,6 +222,7 @@ const Navbar = () => {
                   </button>
                 </div>
                 {/* <!-- Profile dropdown --> */}
+
                 {isProfileMenuOpen && (
                   <div
                     id='user-menu'
@@ -232,7 +233,7 @@ const Navbar = () => {
                     tabIndex='-1'
                   >
                     <a
-                      href='/profile.html'
+                      href='/profile'
                       className='block px-4 py-2 text-sm text-gray-700'
                       role='menuitem'
                       tabIndex='-1'

@@ -11,10 +11,6 @@ const UserSchema = new Schema(
       type: String,
       required: [true, 'Password Is Required'],
     },
-    username: {
-      type: String,
-      required: [true, 'Username Is Required'],
-    },
     name: {
       type: String,
       required: [true, 'Name Is Required'],
@@ -28,6 +24,10 @@ const UserSchema = new Schema(
         ref: 'Product',
       },
     ],
+    isAdmin: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     timestamps: true,
