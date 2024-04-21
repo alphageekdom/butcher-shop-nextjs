@@ -61,6 +61,8 @@ export const authOptions = {
     async session({ session, token }) {
       const user = await User.findById(token.sub);
       if (user) {
+        session.user.id = user.id;
+        session.user.userId = user._id;
         session.user.isAdmin = user.isAdmin;
       }
       return session;

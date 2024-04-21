@@ -2,6 +2,10 @@ import { Schema, model, models } from 'mongoose';
 
 const UserSchema = new Schema(
   {
+    name: {
+      type: String,
+      required: [true, 'Please provide your name'],
+    },
     email: {
       type: String,
       unique: [true, 'Email Already Exists'],
@@ -9,15 +13,14 @@ const UserSchema = new Schema(
     },
     password: {
       type: String,
-      required: [true, 'Password Is Required'],
+      required: true,
     },
-    name: {
-      type: String,
-      required: [true, 'Name Is Required'],
-    },
-    image: {
-      type: String,
-    },
+    favorites: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'Product',
+      },
+    ],
     bookmarks: [
       {
         type: Schema.Types.ObjectId,

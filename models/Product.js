@@ -2,35 +2,30 @@ import { Schema, model, models } from 'mongoose';
 
 const ProductSchema = new Schema(
   {
-    owner: {
-      type: Schema.Types.ObjectId,
-      ref: 'User',
-      required: true,
-    },
     name: {
       type: String,
-      required: true,
+      required: [true, 'Name of the meat cut is required'],
+      trim: true,
     },
     type: {
+      type: String,
+      required: [true, 'Type of meat is required'],
+      enum: ['Beef', 'Pork', 'Chicken', 'Lamb', 'Other'], // Enum to specify the type of meats available
+      trim: true,
+    },
+    price: {
+      type: Number,
+      required: [true, 'Price of the meat cut is required'],
+      min: [0, 'Price must be a positive number'],
+    },
+    title: {
       type: String,
       required: true,
     },
     description: {
       type: String,
-    },
-    location: {
-      street: {
-        type: String,
-      },
-      city: {
-        type: String,
-      },
-      state: {
-        type: String,
-      },
-      zipcode: {
-        type: String,
-      },
+      required: [true, 'Description of the meat is required'],
+      trim: true,
     },
     price: {
       type: Number,
@@ -40,23 +35,17 @@ const ProductSchema = new Schema(
       type: Number,
       required: true,
     },
-    company_info: {
-      name: {
-        type: String,
-      },
-      email: {
-        type: String,
-      },
-      phone: {
-        type: String,
-      },
-    },
     images: [
       {
         type: String,
       },
     ],
-    is_featured: {
+    inStock: {
+      type: Number,
+      required: [true, 'Stock count is required'],
+      min: [0, 'Stock must be a positive number'],
+    },
+    isFeatured: {
       type: Boolean,
       default: false,
     },

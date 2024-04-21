@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { GiSteak } from 'react-icons/gi';
+
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
@@ -9,9 +10,13 @@ import Link from 'next/link';
 import profileDefault from '@/public/images/user-default.png';
 import { signIn, signOut, useSession } from 'next-auth/react';
 import { toast } from 'react-toastify';
+import CartCount from './CartCount';
 
 const Navbar = () => {
-  const { data: session, status } = useSession();
+  const { data: session } = useSession();
+
+  console.log(session);
+
   const isAdmin = session?.user?.isAdmin;
 
   const profileImage = session?.user?.image;
@@ -70,10 +75,6 @@ const Navbar = () => {
     };
   }, []);
 
-  if (status === 'loading') {
-    return null;
-  }
-
   return (
     <nav className='bg-red-700 custom-shadow'>
       <div className='mx-auto max-w-7xl px-2 sm:px-6 lg:px-8'>
@@ -125,10 +126,10 @@ const Navbar = () => {
                 </a>
                 {isAdmin && (
                   <a
-                    href='/products/add'
+                    href='/dashboard'
                     className='text-white hover:bg-gray-900 hover:text-white rounded-md px-3 py-2'
                   >
-                    Add Products
+                    Dashboard
                   </a>
                 )}
               </div>
@@ -145,12 +146,12 @@ const Navbar = () => {
           </div>
 
           {/* <!-- Right Side Menu (Logged Out) --> */}
-          {!session && (
-            <div className='hidden md:block md:ml-6'>
-              <div className='flex items-center gap-3'>
+          <div className='hidden md:block md:ml-6'>
+            {!session && (
+              <div className='flex items-center gap-4'>
                 <Link
                   onClick={handleSignIn}
-                  href={'/auth/login'}
+                  href={'/login'}
                   className='flex items-center justify-center text-white bg-gray-700 hover:bg-gray-900 hover:text-white rounded-md px-3 py-2'
                 >
                   <i className='fa-brands fa-google text-white'></i>
@@ -158,15 +159,14 @@ const Navbar = () => {
                 </Link>
                 <Link
                   onClick={handleSignIn}
-                  href={'/auth/register'}
+                  href={'/register'}
                   className='flex items-center justify-center text-white bg-gray-700 hover:bg-gray-900 hover:text-white rounded-md px-3 py-2'
                 >
-                  <i className='fa-brands fa-google text-white'></i>
                   <span>Register</span>
                 </Link>
               </div>
-            </div>
-          )}
+            )}
+          </div>
 
           {/* <!-- Right Side Menu (Logged In) --> */}
           {session && (
@@ -193,7 +193,7 @@ const Navbar = () => {
                     />
                   </svg>
                 </button>
-                <span className='absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white transform translate-x-1/2 -translate-y-1/2 bg-red-600 rounded-full'>
+                <span className='absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white transform translate-x-1/2 -translate-y-1/2 bg-blue-600 rounded-full'>
                   2
                   {/* <!-- Replace with the actual number of notifications --> */}
                 </span>
@@ -272,6 +272,7 @@ const Navbar = () => {
                   </div>
                 )}
               </div>
+              <CartCount />
             </div>
           )}
         </div>
@@ -288,20 +289,35 @@ const Navbar = () => {
               Home
             </a>
             <a
-              href='/cuts'
+              href='/products'
               className='text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium'
             >
-              Cuts
+              Products
             </a>
-            <a
-              href='/add-cuts'
-              className='text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium'
-            >
-              Add Cuts
-            </a>
-            <button className='flex items-center text-white bg-gray-700 hover:bg-gray-900 hover:text-white rounded-md px-3 py-2 my-4'>
-              <i className='fa-brands fa-google mr-2'></i>
-              <span>Login or Register</span>
+            {isAdmin && (
+              <a
+                href='/dashboard'
+                className='text-white hover:bg-gray-900 hover:text-white rounded-md px-3 py-2'
+              >
+                Dashboard
+              </a>
+            )}
+            <button className='flex items-center text-white hover:text-white rounded-md px-3 py-2 my-4 gap-4'>
+              <Link
+                onClick={handleSignIn}
+                href={'/login'}
+                className='flex items-center justify-center text-white bg-gray-700 hover:bg-gray-900 hover:text-white rounded-md px-3 py-2'
+              >
+                <i className='fa-brands fa-google text-white'></i>
+                <span>Login</span>
+              </Link>
+              <Link
+                onClick={handleSignIn}
+                href={'/register'}
+                className='flex items-center justify-center text-white bg-gray-700 hover:bg-gray-900 hover:text-white rounded-md px-3 py-2'
+              >
+                <span>Register</span>
+              </Link>
             </button>
           </div>
         </div>

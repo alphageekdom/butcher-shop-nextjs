@@ -8,9 +8,7 @@ import { useSession, signIn } from 'next-auth/react';
 
 const Login = () => {
   const router = useRouter();
-  const { data: session, status } = useSession();
-
-  console.log(session);
+  const { data: session } = useSession();
 
   const [formData, setFormData] = useState({
     email: '',
