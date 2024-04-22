@@ -76,7 +76,11 @@ export const PUT = async (request, { params }) => {
     }
 
     // Verify ownership
-    if (existingProduct.owner.toString() !== userId) {
+    if (
+      existingProduct &&
+      existingProduct.owner &&
+      existingProduct.owner.toString() !== userId
+    ) {
       return new Response('Unauthorized', { status: 401 });
     }
 
@@ -89,25 +93,13 @@ export const PUT = async (request, { params }) => {
       description: formData.get('description'),
       price: formData.get('price'),
       inStock: formData.get('inStock'),
-      rating: formData.get('rating'),
       owner: userId,
     };
 
-    // Update product in database
-    const updatedProduct = await Product.findByIdAndUpdate(id, productData);
-
-    if (formData.has('comment') && formData.has('rating')) {
-      const newReview = {
-        comment: formData.get('comment'),
-        rating: parseInt(formData.get('rating')),
-      };
-
-      // Push the new review to the product's reviews array
-      updatedProduct.reviews.push(newReview);
-
-      // Save the updated product
-      await updatedProduct.save();
-    }
+    // Save the updated product
+    const updatedProduct = await Product.findByIdAndUpdate(id, productData, {
+      new: true,
+    });
 
     return new Response(JSON.stringify(updatedProduct), {
       status: 200,

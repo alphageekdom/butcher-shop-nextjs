@@ -180,7 +180,7 @@ const ProductsList = () => {
                       </td>
                       <td className='px-6 py-4 whitespace-nowrap'>
                         <Link
-                          href={`/product?id=${product.id}`}
+                          href={`/products/${product._id}/edit`}
                           className='text-blue-600 hover:text-blue-900 mr-4'
                         >
                           Edit
