@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { BsStarFill } from 'react-icons/bs';
 import { useSession } from 'next-auth/react';
+import Spinner from './Spinner';
 
 const CommentSection = ({ product }) => {
   const { data: session } = useSession();
@@ -29,7 +30,9 @@ const CommentSection = ({ product }) => {
     fetchProductDetails();
     setRating(0);
 
-    const isReviewSubmitted = localStorage.getItem('reviewSubmitted');
+    const isReviewSubmitted = localStorage.getItem(
+      `reviewSubmitted_${product._id}`
+    );
     if (isReviewSubmitted === 'true') {
       setReviewSubmitted(true);
     }
@@ -56,16 +59,20 @@ const CommentSection = ({ product }) => {
         setRating(0);
         setComment('');
         setReviewSubmitted(true);
-        localStorage.setItem('reviewSubmitted', 'true');
+        localStorage.setItem(`reviewSubmitted_${product._id}`, 'true');
+        setLoading(false);
       } else {
         console.error('Failed to submit review');
+        setLoading(false);
       }
     } catch (error) {
       console.error('Error submitting review:', error);
     }
   };
 
-  return (
+  return loading ? (
+    <Spinner />
+  ) : (
     <div className='bg-white p-6 rounded-lg shadow-md mt-6'>
       <h2 className='text-lg font-semibold mb-2'>Leave a Review</h2>
       {status === 'authenticated' && !reviewSubmitted ? (
@@ -137,9 +144,7 @@ const CommentSection = ({ product }) => {
           <p>No reviews available</p>
         )}
       </div>
-      <p className='text-lg font-semibold mt-4'>
-        Average Rating: {rating.toFixed(1)}
-      </p>
+      <p className='text-lg font-semibold mt-4'>Average Rating: {rating}</p>
     </div>
   );
 };

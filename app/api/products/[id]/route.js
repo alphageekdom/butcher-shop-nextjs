@@ -176,6 +176,8 @@ export const POST = async (request, { params }) => {
       newRating = (product.rating + parsedRating) / 2; // Simple average of the old and new ratings
     }
 
+    newRating = Math.floor(newRating * 100) / 100;
+
     product.rating = newRating;
 
     await product.save();
