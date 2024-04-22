@@ -29,41 +29,26 @@ export const GET = async (request, { params }) => {
   }
 };
 
-// DELETE /api/products/:id
 export const DELETE = async (request, { params }) => {
   try {
-    const productId = params.id;
-
-    const sessionUser = await getSessionUser();
-
-    // Check for session
-    if (!sessionUser || !sessionUser.userId) {
-      return new Response('User ID Is Required', { status: 401 });
-    }
-
-    const { userId } = sessionUser;
-
     await connectDB();
 
-    const product = await Product.findById(productId);
+    const { id } = params;
+    console.log('Product Id:', id);
 
-    if (!product) return new Response('Product Not Found', { status: 404 });
-
-    // Verify ownership
-    if (product.owner.toString() !== userId) {
-      return new Response('Unauthorized', { status: 401 });
+    // Check if the product exists
+    const existingProduct = await Product.findById(id);
+    if (!existingProduct) {
+      return new Response('Product not found', { status: 404 });
     }
 
-    await product.deleteOne();
+    // Delete the product
+    await Product.findByIdAndDelete(id);
 
-    return new Response('Property Successfully Deleted', {
-      status: 200,
-    });
+    return new Response('Product deleted successfully', { status: 200 });
   } catch (error) {
     console.log(error);
-    return new Response('Something Went Wrong', {
-      status: 500,
-    });
+    return new Response('Failed to delete product', { status: 500 });
   }
 };
 

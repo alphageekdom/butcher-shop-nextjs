@@ -33,4 +33,21 @@ export const GET = async (request) => {
   }
 };
 
-export const POST = async (request) => {};
+export const DELETE = async (request) => {
+  try {
+    await connectDB();
+
+    const userId = request.nextUrl.searchParams.get('userId');
+
+    const deletedUser = await User.findByIdAndDelete(userId);
+
+    if (!deletedUser) {
+      return new Response('User not found', { status: 404 });
+    }
+
+    return new Response('User deleted successfully', { status: 200 });
+  } catch (error) {
+    console.log(error);
+    return new Response('Something Went Wrong', { status: 500 });
+  }
+};

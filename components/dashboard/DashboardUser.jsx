@@ -5,10 +5,15 @@ import { FaCheck, FaTimes } from 'react-icons/fa';
 import Link from 'next/link';
 import Pagination from '../Pagination';
 import Spinner from '../Spinner';
+import { useSession } from 'next-auth/react';
+useSession;
 
 const UsersList = () => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  const { data: session } = useSession();
+  const isAdmin = session?.user?.isAdmin;
 
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(6);
@@ -51,6 +56,38 @@ const UsersList = () => {
     } else {
       setSortField(field);
       setSortOrder('asc');
+    }
+  };
+
+  const deleteUser = async (userId, isAdmin) => {
+    try {
+      // Check if the user is trying to delete another admin
+      if (isAdmin === true) {
+        // Display error message
+        console.error('You cannot delete another admin');
+        return;
+      }
+
+      // Display confirmation dialog
+      const confirmed = window.confirm(
+        'Are you sure you want to delete this user?'
+      );
+
+      // If user confirms deletion
+      if (confirmed) {
+        const res = await fetch(`/api/users?userId=${userId}`, {
+          method: 'DELETE',
+        });
+
+        if (!res.ok) {
+          throw new Error('Failed to delete user');
+        }
+
+        // Remove the deleted user from the state
+        setUsers(users.filter((user) => user._id !== userId));
+      }
+    } catch (error) {
+      console.error('Error deleting user:', error);
     }
   };
 
@@ -124,7 +161,7 @@ const UsersList = () => {
                     </Link>
                     <button
                       className='text-red-600 hover:text-red-900'
-                      onClick={() => deleteUser(user.id)}
+                      onClick={() => deleteUser(user._id, user.isAdmin)}
                     >
                       Delete
                     </button>
