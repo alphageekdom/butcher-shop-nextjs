@@ -1,5 +1,6 @@
 import connectDB from '@/config/database';
 import Product from '@/models/Product';
+import Review from '@/models/Review';
 import { getSessionUser } from '@/utils/getSessionUser';
 
 // GET /api/products/:id
@@ -7,11 +8,17 @@ export const GET = async (request, { params }) => {
   try {
     await connectDB();
 
-    const product = await Product.findById(params.id);
+    const { id } = params;
+
+    const product = await Product.findById(id);
 
     if (!product) return new Response('Product Not Found', { status: 404 });
 
-    return new Response(JSON.stringify(product), {
+    const reviews = await Review.find({ product: id });
+
+    const productWithReviews = { ...product.toJSON(), reviews };
+
+    return new Response(JSON.stringify(productWithReviews), {
       status: 200,
     });
   } catch (error) {
@@ -76,7 +83,7 @@ export const PUT = async (request, { params }) => {
 
     const formData = await request.formData();
 
-    // Get property to update
+    // Get product to update
     const existingProduct = await Product.findById(id);
 
     if (!existingProduct) {
@@ -101,14 +108,92 @@ export const PUT = async (request, { params }) => {
       owner: userId,
     };
 
-    // Update property in database
+    // Update product in database
     const updatedProduct = await Product.findByIdAndUpdate(id, productData);
+
+    if (formData.has('comment') && formData.has('rating')) {
+      const newReview = {
+        comment: formData.get('comment'),
+        rating: parseInt(formData.get('rating')),
+      };
+
+      // Push the new review to the product's reviews array
+      updatedProduct.reviews.push(newReview);
+
+      // Save the updated product
+      await updatedProduct.save();
+    }
 
     return new Response(JSON.stringify(updatedProduct), {
       status: 200,
     });
   } catch (error) {
     console.log(error);
-    return new Response('Failed To Add Property', { status: 500 });
+    return new Response('Failed To Add Product', { status: 500 });
+  }
+};
+
+// POST /api/products/:id
+export const POST = async (request, { params }) => {
+  try {
+    await connectDB();
+
+    const sessionUser = await getSessionUser();
+
+    if (!sessionUser || !sessionUser.userId) {
+      return new Response('User ID Is Required', { status: 401 });
+    }
+
+    const { userId } = await getSessionUser();
+    const { id } = params;
+
+    const bodyText = await request.text();
+
+    const requestBody = JSON.parse(bodyText);
+
+    const { rating, comment } = requestBody;
+
+    if (!rating || !comment) {
+      return new Response('Rating and comment are required', { status: 400 });
+    }
+
+    const product = await Product.findById(id);
+
+    if (!product) {
+      return new Response('Product not found', { status: 404 });
+    }
+
+    // Validate the rating
+    const parsedRating = parseFloat(rating);
+    if (isNaN(parsedRating) || parsedRating < 0 || parsedRating > 5) {
+      return new Response('Invalid rating value', { status: 400 });
+    }
+
+    let newRating = parsedRating;
+
+    if (product.rating) {
+      // If there's a previous rating, calculate the new rating based on the existing rating and the new one
+      newRating = (product.rating + parsedRating) / 2; // Simple average of the old and new ratings
+    }
+
+    product.rating = newRating;
+
+    await product.save();
+
+    const review = new Review({
+      user: userId,
+      product: id,
+      rating,
+      comment,
+    });
+
+    await review.save();
+
+    return new Response(JSON.stringify(product), {
+      status: 201,
+    });
+  } catch (error) {
+    console.error(error);
+    return new Response('Failed to create review', { status: 500 });
   }
 };

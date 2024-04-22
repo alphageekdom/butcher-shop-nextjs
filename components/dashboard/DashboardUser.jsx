@@ -54,8 +54,6 @@ const UsersList = () => {
     }
   };
 
-  console.log(users);
-
   return loading ? (
     <Spinner />
   ) : (

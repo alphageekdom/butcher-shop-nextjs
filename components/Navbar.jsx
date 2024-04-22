@@ -15,8 +15,6 @@ import CartCount from './CartCount';
 const Navbar = () => {
   const { data: session } = useSession();
 
-  console.log(session);
-
   const isAdmin = session?.user?.isAdmin;
 
   const profileImage = session?.user?.image;

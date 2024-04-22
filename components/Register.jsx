@@ -46,7 +46,7 @@ const Register = () => {
 
       if (res.ok) {
         toast.success('Registration Successful!');
-        router.push('/auth/login');
+        router.push('/login');
       } else if (res.status === 409) {
         toast.error('Email Already In Use');
       } else {
@@ -152,7 +152,7 @@ const Register = () => {
       <div className='text-center mt-3'>
         <p>
           Do You Have An Account?{' '}
-          <Link href={'/auth/login'} className='underline text-cyan-600'>
+          <Link href={'/login'} className='underline text-cyan-600'>
             Login
           </Link>
         </p>

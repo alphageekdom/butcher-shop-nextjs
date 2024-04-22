@@ -9,6 +9,7 @@ import { FaArrowLeft } from 'react-icons/fa';
 import Spinner from '@/components/Spinner';
 import ProductDetails from '@/components/ProductDetails';
 import ProductImages from '@/components/ProductImages';
+import BackButton from '@/components/uielements/BackButton';
 // import BookmarkButton from '@/components/BookmarkButton';
 // import ShareButtons from '@/components/ShareButtons';
 // import PropertyContactForm from '@/components/PropertyContactForm';
@@ -53,16 +54,7 @@ const PropertyPage = () => {
         <>
           {/* <PropertyHeaderImage image={product.images[0]} /> */}
 
-          <section>
-            <div className='container m-auto py-6 px-6'>
-              <Link
-                href='/products'
-                className='text-sky-500 hover:text-sky-600 flex items-center'
-              >
-                <FaArrowLeft className='mr-2' /> Back to Cuts
-              </Link>
-            </div>
-          </section>
+          <BackButton href={'/products'} />
 
           <section className='bg-blue-50'>
             <div className='container m-auto py-10 px-6'>

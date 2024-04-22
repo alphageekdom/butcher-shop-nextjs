@@ -101,7 +101,7 @@ const Login = () => {
       <div className='text-center mt-3'>
         <p>
           Don't Have An Account?{' '}
-          <Link href={'/auth/register'} className='underline text-cyan-600'>
+          <Link href={'/register'} className='underline text-cyan-600'>
             Register
           </Link>
         </p>

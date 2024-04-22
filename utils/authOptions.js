@@ -77,12 +77,10 @@ export const authOptions = {
       if (!userExists) {
         // Truncate username if too long
         const name = user.name.slice(0, 20);
-        const username = user.username.slice(0, 20);
 
         await User.create({
           email: user.email,
           name,
-          username,
           image: user.picture,
         });
       }
