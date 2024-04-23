@@ -1,5 +1,11 @@
+import FeaturedProducts from '@/components/FeaturedProducts';
+
 const HomePage = async () => {
-  return <div>HomePage</div>;
+  return (
+    <>
+      <FeaturedProducts />
+    </>
+  );
 };
 
 export default HomePage;
