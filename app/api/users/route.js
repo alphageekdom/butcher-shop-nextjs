@@ -51,3 +51,21 @@ export const DELETE = async (request) => {
     return new Response('Something Went Wrong', { status: 500 });
   }
 };
+
+// POST /api/users
+export const POST = async (request) => {
+  try {
+    await connectDB();
+
+    const body = await request.json();
+
+    const newUser = await User.create(body);
+
+    return new Response(JSON.stringify(newUser), {
+      status: 201,
+    });
+  } catch (error) {
+    console.log(error);
+    return new Response('Something Went Wrong', { status: 500 });
+  }
+};

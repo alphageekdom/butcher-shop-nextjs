@@ -10,7 +10,7 @@ import Spinner from '@/components/Spinner';
 import ProductDetails from '@/components/ProductDetails';
 import ProductImages from '@/components/ProductImages';
 import BackButton from '@/components/uielements/BackButton';
-// import BookmarkButton from '@/components/BookmarkButton';
+import BookmarkButton from '@/components/uielements/BookmarkButton';
 // import ShareButtons from '@/components/ShareButtons';
 // import PropertyContactForm from '@/components/PropertyContactForm';
 
@@ -60,13 +60,6 @@ const PropertyPage = () => {
             <div className='container m-auto py-10 px-6'>
               <div className='grid grid-cols-1 md:grid-cols-70/30 w-full gap-6'>
                 <ProductDetails product={product} />
-                {/* <!-- Sidebar --> */}
-                <aside className='space-y-4'>
-                  {/* <BookmarkButton product={product} /> */}
-                  {/* <ShareButtons product={product} /> */}
-                  {/* <!-- Contact Form --> */}
-                  {/* <PropertyContactForm product={product} /> */}
-                </aside>
               </div>
             </div>
           </section>

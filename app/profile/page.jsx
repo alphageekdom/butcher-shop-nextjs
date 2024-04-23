@@ -1,4 +1,5 @@
 'use client';
+
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -13,62 +14,63 @@ const ProfilePage = () => {
   const profileName = session?.user?.name;
   const profileEmail = session?.user?.email;
 
-  const [products, setProducts] = useState([]);
+  const [bookmarks, setBookmarks] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchUserProduct = async (userId) => {
-      if (!userId) {
+    const fetchUserBookmarks = async () => {
+      if (!session?.user?.id) {
         return;
       }
 
       try {
-        const res = await fetch(`/api/properties/user/${userId}`);
+        const res = await fetch(`api/bookmarks`);
 
         if (res.status === 200) {
           const data = await res.json();
-          setProperties(data);
+          setBookmarks(data);
         }
       } catch (error) {
-        console.log(error);
+        console.error(error);
       } finally {
         setLoading(false);
       }
     };
 
     // Fetch user properties when session is available
-    if (session?.user?.id) {
-      fetchUserProduct(session.user.id);
-    }
+    fetchUserBookmarks();
   }, [session]);
 
-  const handleDeleteProduct = async (productId) => {
+  const handleDeleteBookmark = async (productId) => {
     const confirmed = window.confirm(
-      'Are you sure you want to delete this property?'
+      'Are you sure you want to delete this bookmark?'
     );
 
-    if (!confirmed) return;
+    if (!confirmed) {
+      return;
+    }
 
     try {
-      const res = await fetch(`/api/products/${propertyId}`, {
-        method: 'DELETE',
+      const res = await fetch('/api/bookmarks', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ productId }),
       });
 
       if (res.status === 200) {
-        // Remove the property from state
-        const updatedProducts = products.filter(
-          (product) => product._id !== productId
+        // Refetch bookmarks after successful deletion
+        setBookmarks(
+          bookmarks.filter((bookmark) => bookmark._id !== productId)
         );
-
-        setProducts(updatedProducts);
-
-        toast.success('Property Deleted');
+        toast.success('Bookmark Removed');
       } else {
-        toast.error('Failed to delete property');
+        toast.error('Failed To Remove Bookmark');
       }
     } catch (error) {
       console.log(error);
-      toast.error('Failed to delete property');
+      toast.error('Failed To Remove Bookmark');
     }
   };
 
@@ -91,9 +93,6 @@ const ProfilePage = () => {
               <h2 className='text-2xl mb-4'>
                 <span className='font-bold block'>Name: </span> {profileName}
               </h2>
-              <h2 className='text-2xl mb-4'>
-                <span className='font-bold block'>Username: </span>
-              </h2>
               <h2 className='text-2xl'>
                 <span className='font-bold block'>Email: </span> {profileEmail}
               </h2>
@@ -101,18 +100,19 @@ const ProfilePage = () => {
 
             <div className='md:w-3/4 md:pl-4'>
               <h2 className='text-xl font-semibold mb-4'>Your Listings</h2>
-              {!loading && products.length === 0 && (
-                <p>You have no product listings</p>
+              {!loading && bookmarks.length === 0 && (
+                <p>You Have No Bookmarks</p>
               )}
+
               {loading ? (
                 <Spinner loading={loading} />
               ) : (
-                products.map((product) => (
-                  <div key={product._id} className='mb-10'>
-                    <Link href={`/products/${product._id}`}>
+                bookmarks.map((bookmark) => (
+                  <div key={bookmark?._id} className='mb-10'>
+                    <Link href={`/products/${bookmark._id}`}>
                       <Image
                         className='h-32 w-full rounded-md object-cover'
-                        src={product.images[0]}
+                        src={`/images/products/${bookmark?.images[0]}`}
                         alt=''
                         width={500}
                         height={100}
@@ -120,25 +120,14 @@ const ProfilePage = () => {
                       />
                     </Link>
                     <div className='mt-2'>
-                      <p className='text-lg font-semibold'>{product.name}</p>
-                      <p className='text-gray-600'>
-                        Address: {product.location.street}{' '}
-                        {product.location.city} {product.location.state}
-                      </p>
+                      <p className='text-lg font-semibold'>{bookmark.name}</p>
                     </div>
                     <div className='mt-2'>
-                      <Link
-                        href={`/properties/${product._id}/edit`}
-                        className='bg-blue-500 text-white px-3 py-3 rounded-md mr-2 hover:bg-blue-600'
-                      >
-                        Edit
-                      </Link>
                       <button
-                        onClick={() => handleDeleteProduct(product._id)}
-                        className='bg-red-500 text-white px-3 py-2 rounded-md hover:bg-red-600'
-                        type='button'
+                        className='bg-red-500 text-white px-4 py-2 rounded-md'
+                        onClick={() => handleDeleteBookmark(bookmark._id)}
                       >
-                        Delete
+                        Unbookmark
                       </button>
                     </div>
                   </div>
@@ -151,4 +140,5 @@ const ProfilePage = () => {
     </section>
   );
 };
+
 export default ProfilePage;

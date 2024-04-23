@@ -4,6 +4,8 @@ import { FaStar, FaDollarSign } from 'react-icons/fa';
 import { GiMeatCleaver } from 'react-icons/gi';
 import ProductImages from './ProductImages';
 import CommentSection from './CommentSection';
+import BookmarkButton from '@/components/uielements/BookmarkButton';
+import ShareButtons from './uielements/ShareButton';
 
 const ProductDetails = ({ product }) => {
   return (
@@ -36,7 +38,12 @@ const ProductDetails = ({ product }) => {
                   Add to Cart
                 </button>
               </div>
-              <p className='text-red-500'>Current Stock: {product.inStock}</p>
+              <p className='text-red-500 mb-9'>
+                Current Stock: {product.inStock}
+              </p>
+              <div className='border-t border-gray-500 my-4'></div>
+              <BookmarkButton product={product} />
+              <ShareButtons product={product} />
             </div>
           </div>
           <div className='md:w-1/2 md:pl-4 mt-4 md:mt-0'>
