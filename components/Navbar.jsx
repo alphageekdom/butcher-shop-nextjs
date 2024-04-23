@@ -59,6 +59,10 @@ const Navbar = () => {
     }
   };
 
+  const closeMobileMenu = () => {
+    setIsMobileMenuOpen(false);
+  };
+
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth >= 768) {
@@ -255,12 +259,14 @@ const Navbar = () => {
             <a
               href='/'
               className='bg-gray-900 text-white block rounded-md px-3 py-2 text-base font-medium'
+              onClick={closeMobileMenu}
             >
               Home
             </a>
             <a
               href='/products'
               className='text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium'
+              onClick={closeMobileMenu}
             >
               Products
             </a>
@@ -268,6 +274,7 @@ const Navbar = () => {
               <a
                 href='/dashboard'
                 className='text-white hover:bg-gray-900 hover:text-white rounded-md px-3 py-2'
+                onClick={closeMobileMenu}
               >
                 Dashboard
               </a>
@@ -277,7 +284,10 @@ const Navbar = () => {
                 <>
                   {' '}
                   <Link
-                    onClick={handleSignIn}
+                    onClick={() => {
+                      handleSignIn();
+                      closeMobileMenu();
+                    }}
                     href={'/login'}
                     className='flex items-center justify-center text-white bg-gray-700 hover:bg-gray-900 hover:text-white rounded-md px-3 py-2'
                   >
@@ -285,7 +295,10 @@ const Navbar = () => {
                     <span>Login</span>
                   </Link>
                   <Link
-                    onClick={handleSignIn}
+                    onClick={() => {
+                      handleSignIn();
+                      closeMobileMenu();
+                    }}
                     href={'/register'}
                     className='flex items-center justify-center text-white bg-gray-700 hover:bg-gray-900 hover:text-white rounded-md px-3 py-2'
                   >

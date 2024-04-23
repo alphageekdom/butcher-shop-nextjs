@@ -107,7 +107,7 @@ const FeaturedProductCard = ({ product }) => {
             <p className='ml-1'>{product.rating}</p>
           </div>
         </div>
-        <h3 className='absolute bottom-[10px] left-[0px] px-4 py-2 rounded-lg text-grey-500 font-bold text-right md:text-center lg:text-right text-3xl'>
+        <h3 className='absolute top-[10px] right-[10px] md:bottom-[10px] md:left-[0px] px-4 py-2 rounded-lg text-grey-500 font-bold text-right md:text-center lg:text-right text-3xl'>
           <FaBookmark
             className={`${
               isBookmarked ? 'text-[#B91C1B]' : 'text-blue-500'
@@ -126,7 +126,7 @@ const FeaturedProductCard = ({ product }) => {
           <div className='flex justify-center items-center'>
             <Link
               href={`/products/${product._id}`}
-              className='h-[36px] bg-red-800 hover:bg-red-700 text-white px-4 py-2 rounded-lg text-center text-sm'
+              className='h-[36px] w-full bg-red-800 hover:bg-red-700 text-white px-4 py-2 rounded-lg text-center text-sm'
             >
               Add to Cart
             </Link>
