@@ -49,7 +49,7 @@ const FeaturedProductCard = ({ product }) => {
     e.preventDefault();
     e.stopPropagation();
     if (!userId) {
-      toast.error('You Need To Sign In To Bookmark A Property');
+      toast.error('You Need To Sign In To Bookmark A Product');
       return;
     }
 
@@ -86,14 +86,16 @@ const FeaturedProductCard = ({ product }) => {
       className='cursor-pointer relative flex flex-col md:flex-row custom-shadow rounded-xl'
       onClick={handleCardClick}
     >
-      <Image
-        src={`/images/products/${product.images[0]}`}
-        alt=''
-        height={300}
-        width={300}
-        sizes='100vw'
-        className='object-cover rounded-t-xl md:rounded-tr-none md:rounded-l-xl md:w-[50%] w-full h-[300px]'
-      />
+      <div className='relative w-full h-[300px] md:w-[900px] '>
+        <Image
+          src={`/images/products/${product.images[0]}`}
+          alt=''
+          height={300}
+          width={300}
+          sizes='100vw'
+          className='object-cover rounded-t-xl md:rounded-tr-none md:rounded-l-xl w-full h-full'
+        />
+      </div>
       <div className='p-4 w-full'>
         <div className='flex justify-between '>
           <div className='text-left md:text-center lg:text-left mb-1'>
@@ -102,13 +104,13 @@ const FeaturedProductCard = ({ product }) => {
           </div>
           <div className='flex items-center text-left md:text-center lg:text-left mb-1'>
             <FaStar className='text-yellow-500' />
-            <p>{product.rating}</p>
+            <p className='ml-1'>{product.rating}</p>
           </div>
         </div>
         <h3 className='absolute bottom-[10px] left-[0px] px-4 py-2 rounded-lg text-grey-500 font-bold text-right md:text-center lg:text-right text-3xl'>
           <FaBookmark
             className={`${
-              isBookmarked ? 'text-red-500' : 'text-blue-500'
+              isBookmarked ? 'text-[#B91C1B]' : 'text-blue-500'
             } cursor-pointer`}
             onClick={handleBookmarkClick}
           />

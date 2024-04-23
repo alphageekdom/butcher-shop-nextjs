@@ -80,15 +80,18 @@ const ProductCard = ({ product }) => {
     window.location.href = `/products/${product._id}`;
   };
   return (
-    <div className='relative cursor-pointer' onClick={handleCardClick}>
-      <div className='relative'>
+    <div
+      className='relative cursor-pointer custom-shadow rounded-xl flex flex-col'
+      onClick={handleCardClick}
+    >
+      <div className='relative w-full'>
         <Image
           src={`/images/products/${product.images[0]}`}
           alt=''
           height={300}
           width={300}
           sizes='100vw'
-          className='w-[500px] h-[300px] rounded-t-xl object-cover rounded-2xl'
+          className='w-full h-[300px] rounded-t-xl object-cover rounded-2xl'
         />
         <div className='p-4'>
           <div className='flex justify-between'>
@@ -104,7 +107,7 @@ const ProductCard = ({ product }) => {
           <h3 className='absolute top-[10px] right-[10px] px-4 py-2 rounded-lg text-grey-500 font-bold text-right md:text-center lg:text-right text-3xl'>
             <FaBookmark
               className={`${
-                isBookmarked ? 'text-red-500' : 'text-blue-500'
+                isBookmarked ? 'text-[#B91C1B]' : 'text-blue-500'
               } cursor-pointer`}
               onClick={handleBookmarkClick}
             />
