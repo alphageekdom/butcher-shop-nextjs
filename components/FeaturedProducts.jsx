@@ -14,7 +14,7 @@ const FeaturedProducts = async () => {
       {products.length > 0 && (
         <section className='bg-blue-50 px-4 pt-6 pb-10'>
           <div className='container-xl lg:container m-auto'>
-            <h2 className='text-4xl font-bold text-blue-500 mb-6 text-center'>
+            <h2 className='text-4xl font-bold text-black mb-6 text-center'>
               Featured Products
             </h2>
             <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>

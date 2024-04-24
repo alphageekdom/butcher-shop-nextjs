@@ -81,7 +81,7 @@ const ProductCard = ({ product }) => {
   };
   return (
     <div
-      className='relative cursor-pointer custom-shadow rounded-xl flex flex-col'
+      className='relative cursor-pointer rounded-xl flex flex-col'
       onClick={handleCardClick}
     >
       <div className='relative w-full'>

@@ -6,11 +6,35 @@ import ProductImages from './ProductImages';
 import CommentSection from './CommentSection';
 import BookmarkButton from '@/components/uielements/BookmarkButton';
 import ShareButtons from './uielements/ShareButton';
+import { useState } from 'react';
 
 const ProductDetails = ({ product }) => {
+  const [isAddingToCart, setIsAddingToCart] = useState(false);
+
+  const handleAddToCart = async () => {
+    setIsAddingToCart(true);
+    try {
+      const response = await fetch('/api/cart', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ productId: product?._id }),
+      });
+      if (response.ok) {
+        console.log('Item added to cart successfully');
+      } else {
+        console.error('Failed to add item to cart');
+      }
+    } catch (error) {
+      console.error('Error adding item to cart:', error);
+    } finally {
+      setIsAddingToCart(false);
+    }
+  };
   return (
     <main className='container mx-auto px-4'>
-      <div className='bg-white p-6 rounded-lg custom-shadow text-center md:text-left'>
+      <div className='bg-white p-6 rounded-lg text-center md:text-left'>
         <div className='text-gray-500 mb-4 text-left'>{product.type}</div>
         <div className='text-3xl font-bold mb-4 flex justify-between items-center'>
           {product.name}
@@ -21,7 +45,7 @@ const ProductDetails = ({ product }) => {
         </div>
         <div className='flex flex-col md:flex-row mb-4'>
           <div className='md:w-1/2'>
-            <div className='bg-white p-6 rounded-lg shadow-md mt-6'>
+            <div className='bg-white p-6 rounded-lg mt-6'>
               <h3 className='flex items-center text-lg font-bold mb-2'>
                 <GiMeatCleaver className='mr-2 text-2xl' />
                 {product.title}
@@ -34,7 +58,10 @@ const ProductDetails = ({ product }) => {
                   <FaDollarSign className='mr-2 text-1xl' />
                   {product.price} / lbs
                 </p>
-                <button className='bg-red-800 hover:bg-red-700 text-white font-bold py-2 px-4 rounded'>
+                <button
+                  className='bg-red-800 hover:bg-red-700 text-white font-bold py-2 px-4 rounded'
+                  onClick={handleAddToCart}
+                >
                   Add to Cart
                 </button>
               </div>
@@ -52,7 +79,7 @@ const ProductDetails = ({ product }) => {
         </div>
       </div>
 
-      <div className='bg-white p-6 rounded-lg shadow-md mt-6'>
+      <div className='bg-white p-6 rounded-lg mt-6'>
         <CommentSection product={product} />
       </div>
     </main>

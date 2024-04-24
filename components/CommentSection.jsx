@@ -73,7 +73,7 @@ const CommentSection = ({ product }) => {
   return loading ? (
     <Spinner />
   ) : (
-    <div className='bg-white p-6 rounded-lg shadow-md mt-6'>
+    <div className='bg-white p-6 rounded-lg  mt-6'>
       <h2 className='text-lg font-semibold mb-2'>Leave a Review</h2>
       {status === 'authenticated' && !reviewSubmitted ? (
         <form onSubmit={handleSubmit}>

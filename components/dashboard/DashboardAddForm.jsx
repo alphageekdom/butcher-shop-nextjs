@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 
-const ProductAddForm = () => {
+const DashboardAddForm = () => {
   const [mounted, setMounted] = useState(false);
 
   const [formData, setFormData] = useState({
@@ -190,4 +190,4 @@ const ProductAddForm = () => {
   );
 };
 
-export default ProductAddForm;
+export default DashboardAddForm;
