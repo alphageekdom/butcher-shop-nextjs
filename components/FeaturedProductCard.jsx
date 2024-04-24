@@ -2,7 +2,6 @@
 
 import Image from 'next/image';
 import { FaDollarSign, FaStar, FaBookmark } from 'react-icons/fa';
-import Link from 'next/link';
 import { useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
@@ -12,6 +11,7 @@ const FeaturedProductCard = ({ product }) => {
   const userId = session?.user?.id;
   const [isBookmarked, setIsBookmarked] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [isAddingToCart, setIsAddingToCart] = useState(false);
 
   useEffect(() => {
     if (!userId) {
@@ -81,19 +81,43 @@ const FeaturedProductCard = ({ product }) => {
     // Redirect to the product page when the card is clicked
     window.location.href = `/products/${product._id}`;
   };
+
+  const handleAddToCart = async () => {
+    try {
+      const response = await fetch('/api/cart', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ productId: product?._id }),
+      });
+      if (response.ok) {
+        console.log('Item added to cart successfully');
+      } else {
+        console.error('Failed to add item to cart');
+      }
+    } catch (error) {
+      console.error('Error adding item to cart:', error);
+    } finally {
+      setIsAddingToCart(false);
+    }
+  };
+
   return (
     <div
-      className='cursor-pointer relative flex flex-col md:flex-row rounded-xl'
+      className='relative flex flex-col md:flex-row rounded-xl cursor-pointer'
       onClick={handleCardClick}
     >
-      <div className='relative w-full h-[300px] md:w-[900px] '>
+      <div className='relative w-full h-full '>
         <Image
           src={`/images/products/${product.images[0]}`}
           alt=''
-          height={300}
           width={300}
+          height={300}
           sizes='100vw'
-          className='object-cover rounded-t-xl md:rounded-tr-none md:rounded-l-xl w-full h-full'
+          placeholder='blur'
+          blurDataURL={`/images/products/${product.images[0]}`}
+          className='object-cover rounded-t-xl md:rounded-tr-none md:rounded-l-xl h-[300px] w-full md:w-[300px]'
         />
       </div>
       <div className='p-4 w-full'>
@@ -124,12 +148,15 @@ const FeaturedProductCard = ({ product }) => {
             <span className='text-black'>{product.price}</span>
           </div>
           <div className='flex justify-center items-center'>
-            <Link
-              href={`/products/${product._id}`}
-              className='h-[36px] w-full bg-red-800 hover:bg-red-700 text-white px-4 py-2 rounded-lg text-center text-sm'
+            <button
+              className='h-[36px] w-full bg-red-800 hover:bg-red-700 text-white px-4 py-2 rounded-lg text-center text-sm z-20'
+              onClick={(e) => {
+                e.stopPropagation();
+                handleAddToCart();
+              }}
             >
               Add to Cart
-            </Link>
+            </button>
           </div>
         </div>
       </div>

@@ -23,6 +23,8 @@ const ProductImages = ({ images }) => {
                 height={0}
                 sizes='100vw'
                 priority={true}
+                placeholder='blur'
+                blurDataURL={images[0]}
               />
             )}
           </Item>
@@ -58,6 +60,8 @@ const ProductImages = ({ images }) => {
                       height={0}
                       sizes='100vw'
                       priority={true}
+                      placeholder='blur'
+                      blurDataURL={`/images/products/${image}`}
                     />
                   )}
                 </Item>
