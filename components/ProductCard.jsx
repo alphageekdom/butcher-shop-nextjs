@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { FaDollarSign, FaStar, FaBookmark } from 'react-icons/fa';
-import Link from 'next/link';
 import { useSession } from 'next-auth/react';
 import { toast } from 'react-toastify';
 
@@ -93,11 +92,14 @@ const ProductCard = ({ product }) => {
       });
       if (response.ok) {
         console.log('Item added to cart successfully');
+        toast.success('Added To Cart');
       } else {
         console.error('Failed to add item to cart');
+        toast.error('Failed To Add');
       }
     } catch (error) {
       console.error('Error adding item to cart:', error);
+      toast.error(error);
     } finally {
       setIsAddingToCart(false);
     }

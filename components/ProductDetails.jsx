@@ -7,6 +7,7 @@ import CommentSection from './CommentSection';
 import BookmarkButton from '@/components/uielements/BookmarkButton';
 import ShareButtons from './uielements/ShareButton';
 import { useState } from 'react';
+import { toast } from 'react-toastify';
 
 const ProductDetails = ({ product }) => {
   const [isAddingToCart, setIsAddingToCart] = useState(false);
@@ -23,11 +24,14 @@ const ProductDetails = ({ product }) => {
       });
       if (response.ok) {
         console.log('Item added to cart successfully');
+        toast.success('Added To Cart');
       } else {
         console.error('Failed to add item to cart');
+        toast.error('Failed To Add');
       }
     } catch (error) {
       console.error('Error adding item to cart:', error);
+      toast.error(error);
     } finally {
       setIsAddingToCart(false);
     }

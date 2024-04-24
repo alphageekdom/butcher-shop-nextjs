@@ -4,6 +4,7 @@ import '@/assets/styles/global.css';
 
 import { GlobalProvider } from '@/context/GlobalContext';
 import AuthProvider from '@/components/AuthProvider';
+import { CartProvider } from '@/context/CartContext';
 
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -18,14 +19,16 @@ const MainLayout = ({ children }) => {
   return (
     <GlobalProvider>
       <AuthProvider>
-        <html lang='en'>
-          <body>
-            <Navbar />
-            <main>{children}</main>
-            <Footer />
-            <ToastContainer />
-          </body>
-        </html>
+        <CartProvider>
+          <html lang='en'>
+            <body>
+              <Navbar />
+              <main>{children}</main>
+              <Footer />
+              <ToastContainer />
+            </body>
+          </html>
+        </CartProvider>
       </AuthProvider>
     </GlobalProvider>
   );

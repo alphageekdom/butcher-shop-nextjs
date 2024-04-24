@@ -1,35 +1,33 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { FaShoppingCart } from 'react-icons/fa';
 
 const CartCount = () => {
-  // State variable to keep track of the number of items in the cart
-  const [cartItemsCount, setCartItemsCount] = useState(0);
+  const [cartCount, updateCartCount] = useState(0);
 
-  // useEffect to update the cartItemsCount whenever the cart changes
-  useEffect(
-    () => {
-      // Fetch and update the cartItemsCount from your cart data
-      // Replace the following line with your actual logic to get the cart items count
-      const fetchCartItemsCount = () => {
-        // Example logic to fetch cart items count (replace this with your actual logic)
-        const cartCount = getCartItemsCount(); // Function to get cart items count
-        setCartItemsCount(cartCount);
-      };
+  useEffect(() => {
+    const fetchCartItemsCount = async () => {
+      try {
+        // Fetch cart data from the backend
+        const response = await fetch('/api/cart');
+        if (response.ok) {
+          const cartData = await response.json();
+          // Extract the number of items from the cart data
+          const itemCount = cartData.items ? cartData.items.length : 0;
+          updateCartCount(itemCount);
+        } else {
+          // Handle error response
+          console.error('Failed to fetch cart data');
+        }
+      } catch (error) {
+        console.error('Error fetching cart data:', error);
+      }
+    };
 
-      fetchCartItemsCount(); // Call the function to fetch cart items count
+    const intervalId = setInterval(fetchCartItemsCount, 3000);
 
-      // You might want to clean up this effect if needed
-    },
-    [
-      /* Add dependencies if needed */
-    ]
-  );
-
-  // Assuming you have a function `getCartItemsCount` to fetch the cart items count
-  const getCartItemsCount = () => {
-    // Replace this with your actual logic to fetch cart items count
-    return /* Logic to get cart items count */;
-  };
+    fetchCartItemsCount();
+    return () => clearInterval(intervalId);
+  }, [cartCount]);
 
   return (
     <div className='relative ml-2'>
@@ -42,14 +40,11 @@ const CartCount = () => {
           <span className='sr-only'>View notifications</span>
           <FaShoppingCart className='text-2xl' />
         </button>
-        <span className='absolute bottom-2 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white transform translate-x-1/2 -translate-y-1/2 bg-blue-600 rounded-full'>
-          {/* {cartItemsCount > 0 && (
-            <span className='absolute top-0 right-0 bg-red-500 text-white rounded-full px-2 py-1 text-xs'>
-              {cartItemsCount}
-            </span>
-          )} */}
-          1
-        </span>
+        {cartCount > 0 && (
+          <span className='absolute bottom-2 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white transform translate-x-1/2 -translate-y-1/2 bg-blue-600 rounded-full'>
+            {cartCount}
+          </span>
+        )}
       </a>
     </div>
   );

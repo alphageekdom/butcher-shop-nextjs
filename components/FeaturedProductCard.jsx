@@ -5,6 +5,7 @@ import { FaDollarSign, FaStar, FaBookmark } from 'react-icons/fa';
 import { useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
+import Spinner from './Spinner';
 
 const FeaturedProductCard = ({ product }) => {
   const { data: session } = useSession();
@@ -12,6 +13,41 @@ const FeaturedProductCard = ({ product }) => {
   const [isBookmarked, setIsBookmarked] = useState(false);
   const [loading, setLoading] = useState(true);
   const [isAddingToCart, setIsAddingToCart] = useState(false);
+
+  const handleBookmarkClick = async (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!userId) {
+      toast.error('You Need To Sign In To Bookmark A Product');
+      return;
+    }
+
+    try {
+      const res = await fetch('/api/bookmarks', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          productId: product?._id,
+        }),
+      });
+
+      if (res.status === 200) {
+        const data = await res.json();
+        toast.success(data.message);
+        setIsBookmarked(data.isBookmarked);
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error('Something Went Wrong');
+    }
+  };
+
+  const handleCardClick = () => {
+    // Redirect to the product page when the card is clicked
+    window.location.href = `/products/${product._id}`;
+  };
 
   useEffect(() => {
     if (!userId) {
@@ -45,43 +81,6 @@ const FeaturedProductCard = ({ product }) => {
     checkBookmarkStatus();
   }, [product?._id, userId]);
 
-  const handleBookmarkClick = async (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    if (!userId) {
-      toast.error('You Need To Sign In To Bookmark A Product');
-      return;
-    }
-
-    try {
-      const res = await fetch('/api/bookmarks', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          productId: product?._id,
-        }),
-      });
-
-      if (res.status === 200) {
-        const data = await res.json();
-        toast.success(data.message);
-        setIsBookmarked(data.isBookmarked);
-      }
-    } catch (error) {
-      console.log(error);
-      toast.error('Something Went Wrong');
-    }
-  };
-
-  if (loading) return <p className='text-center'>Loading...</p>;
-
-  const handleCardClick = () => {
-    // Redirect to the product page when the card is clicked
-    window.location.href = `/products/${product._id}`;
-  };
-
   const handleAddToCart = async () => {
     try {
       const response = await fetch('/api/cart', {
@@ -92,18 +91,21 @@ const FeaturedProductCard = ({ product }) => {
         body: JSON.stringify({ productId: product?._id }),
       });
       if (response.ok) {
-        console.log('Item added to cart successfully');
+        toast.success('Added To Cart');
       } else {
-        console.error('Failed to add item to cart');
+        toast.error('Failed To Add');
       }
     } catch (error) {
       console.error('Error adding item to cart:', error);
+      toast.error(error);
     } finally {
       setIsAddingToCart(false);
     }
   };
 
-  return (
+  return loading ? (
+    <Spinner />
+  ) : (
     <div
       className='relative flex flex-col md:flex-row rounded-xl cursor-pointer'
       onClick={handleCardClick}

@@ -20,6 +20,7 @@ const BookmarkButton = ({ product }) => {
 
     const checkBookmarkStatus = async () => {
       try {
+        if (!userId) return setLoading(false);
         const res = await fetch('/api/bookmarks/check', {
           method: 'POST',
           headers: {
@@ -33,9 +34,12 @@ const BookmarkButton = ({ product }) => {
         if (res.status === 200) {
           const data = await res.json();
           setIsBookmarked(data.isBookmarked);
+        } else {
+          throw new Error('Failed to fetch bookmark status');
         }
       } catch (error) {
         console.log(error);
+        toast.error('Failed to fetch bookmark status');
       } finally {
         setLoading(false);
       }
@@ -44,7 +48,7 @@ const BookmarkButton = ({ product }) => {
     checkBookmarkStatus();
   }, [product?._id, userId]);
 
-  const handleClick = async () => {
+  const handleBookmarkToggle = async () => {
     if (!userId) {
       toast.error('You Need To Sign In To Bookmark A Property');
       return;
@@ -63,8 +67,8 @@ const BookmarkButton = ({ product }) => {
 
       if (res.status === 200) {
         const data = await res.json();
-        toast.success(data.message);
         setIsBookmarked(data.isBookmarked);
+        toast.success(data.message);
       }
     } catch (error) {
       console.log(error);
@@ -74,19 +78,16 @@ const BookmarkButton = ({ product }) => {
 
   if (loading) return <p className='text-center'>Loading...</p>;
 
-  return isBookmarked ? (
+  return (
     <button
-      onClick={handleClick}
-      className='bg-[#B91C1B] hover:bg-red-600 text-white font-bold w-full py-2 px-4 rounded-full flex items-center justify-center'
+      onClick={handleBookmarkToggle}
+      className={`${
+        isBookmarked
+          ? 'bg-[#B91C1B] hover:bg-red-600'
+          : 'bg-blue-500 hover:bg-blue-600'
+      } text-white font-bold w-full py-2 px-4 rounded-full flex items-center justify-center`}
     >
-      <FaBookmark className='mr-2' /> Remove Bookmark
-    </button>
-  ) : (
-    <button
-      onClick={handleClick}
-      className='bg-blue-500 hover:bg-blue-600 text-white font-bold w-full py-2 px-4 rounded-full flex items-center justify-center'
-    >
-      <FaBookmark className='mr-2' /> Bookmark Product
+      <FaBookmark className='mr-2' /> {isBookmarked ? 'Remove' : 'Bookmark'}
     </button>
   );
 };

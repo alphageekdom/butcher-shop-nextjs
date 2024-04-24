@@ -115,8 +115,6 @@ async function addToCart(userId, item, quantity = 1) {
     // Find the product based on itemId
     const product = await Product.findById(item._id);
 
-    console.log(product);
-
     if (!product) {
       throw new Error('Product not found');
     }
