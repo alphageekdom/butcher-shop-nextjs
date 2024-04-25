@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { AiOutlineClose } from 'react-icons/ai';
+import { FaShoppingCart } from 'react-icons/fa';
 import { useRouter } from 'next/navigation';
 import CartContainer from './CartContainer';
 import {
@@ -18,8 +19,6 @@ const CartModal = ({ isOpen, onClose }) => {
   const [grandTotal, setGrandTotal] = useState(0);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(isOpen);
-
-  const router = useRouter();
 
   const handleRemoveItem = async (itemId) => {
     const confirmed = window.confirm(
@@ -112,7 +111,12 @@ const CartModal = ({ isOpen, onClose }) => {
   };
 
   useEffect(() => {
-    fetchCartData();
+    if (isOpen) {
+      fetchCartData();
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
     setIsModalOpen(isOpen);
   }, [isOpen, handleQuantityChange]);
 
@@ -124,8 +128,8 @@ const CartModal = ({ isOpen, onClose }) => {
   return (
     isModalOpen && (
       <>
-        <div className='fixed top-0 left-0 w-screen h-screen bg-gray-800 bg-opacity-75 flex justify-center items-center z-30'>
-          <div className='bg-white p-8 rounded-lg relative w-[50%]'>
+        <div className='fixed top-0 left-0 w-screen h-screen bg-gray-800 bg-opacity-75 flex justify-center items-center z-30 '>
+          <div className='bg-white p-8 rounded-lg relative w-[90%] md:[50%] h-[90%]'>
             <button
               className='absolute top-2 right-2 text-gray-600 hover:text-gray-800'
               onClick={closeModal}
@@ -134,6 +138,10 @@ const CartModal = ({ isOpen, onClose }) => {
             </button>
             <div className='flex justify-center mt-4'>
               <div className='w-full'>
+                <div className='flex flex-row justify-start items-center p-5 gap-3 text-gray-600'>
+                  <FaShoppingCart className='text-2xl' />
+                  <h1 className='text-2xl'>Cart</h1>
+                </div>
                 <CartContainer
                   cartItems={cartItems}
                   loading={loading}
