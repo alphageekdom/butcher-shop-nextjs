@@ -3,11 +3,10 @@ import User from '@/models/User';
 import { getSessionUser } from '@/utils/getSessionUser';
 
 export const dynamic = 'force-dynamic';
+await connectDB();
 
 export const POST = async (request) => {
   try {
-    await connectDB();
-
     const { productId } = await request.json();
 
     const sessionUser = await getSessionUser();

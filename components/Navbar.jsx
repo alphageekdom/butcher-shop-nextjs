@@ -4,13 +4,14 @@ import { useState, useEffect } from 'react';
 import { GiSteak } from 'react-icons/gi';
 
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
 
 import profileDefault from '@/public/images/user-default.png';
 import { signIn, signOut, useSession } from 'next-auth/react';
 import { toast } from 'react-toastify';
-import CartCount from './CartCount';
+import CartCount from './cart/CartCount';
+import CartModal from './cart/CartModal';
 
 const Navbar = () => {
   const { data: session } = useSession();
@@ -22,7 +23,13 @@ const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
 
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const [hasItemsInCart, setHasItemsInCart] = useState(false);
+
   const router = useRouter();
+  const pathname = usePathname();
 
   const handleSignIn = async () => {
     if (!session || !session.user) {
@@ -63,6 +70,40 @@ const Navbar = () => {
     setIsMobileMenuOpen(false);
   };
 
+  const fetchCartData = async () => {
+    try {
+      const response = await fetch('/api/cart');
+
+      if (response.ok) {
+        const data = await response.json();
+        const cartItemsData = data.items || [];
+
+        setHasItemsInCart(cartItemsData.length > 0);
+
+        // If cart has items, open the modal
+      } else {
+        throw new Error('Failed to fetch cart data');
+      }
+    } catch (error) {
+      console.error('Error fetching cart data:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const openModal = (e) => {
+    e.preventDefault();
+    if (hasItemsInCart) {
+      setIsModalOpen(true);
+    } else {
+      router.push('/cart');
+    }
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth >= 768) {
@@ -72,10 +113,14 @@ const Navbar = () => {
 
     window.addEventListener('resize', handleResize);
 
+    fetchCartData();
     return () => {
       window.removeEventListener('resize', handleResize);
     };
-  }, []);
+  }, [fetchCartData]);
+
+  const isCartPage = pathname === '/cart';
+  const isCheckoutPage = pathname === '/checkout';
 
   return (
     <nav className='bg-red-700 custom-shadow'>
@@ -246,7 +291,18 @@ const Navbar = () => {
                   </div>
                 )}
               </div>
-              <CartCount />
+
+              <div
+                className='flex items-center text-white cursor-pointer'
+                onClick={openModal}
+              >
+                <CartCount className='flex items-center text-white' />
+              </div>
+
+              {/* Render the CartModal only if not on the cart page and modal is open */}
+              {!isCartPage && !isCheckoutPage && isModalOpen && (
+                <CartModal isOpen={isModalOpen} onClose={closeModal} />
+              )}
             </div>
           )}
         </div>

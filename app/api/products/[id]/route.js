@@ -3,11 +3,11 @@ import Product from '@/models/Product';
 import Review from '@/models/Review';
 import { getSessionUser } from '@/utils/getSessionUser';
 
+await connectDB();
+
 // GET /api/products/:id
 export const GET = async (request, { params }) => {
   try {
-    await connectDB();
-
     const { id } = params;
 
     const product = await Product.findById(id);
@@ -31,10 +31,7 @@ export const GET = async (request, { params }) => {
 
 export const DELETE = async (request, { params }) => {
   try {
-    await connectDB();
-
     const { id } = params;
-    console.log('Product Id:', id);
 
     // Check if the product exists
     const existingProduct = await Product.findById(id);
@@ -55,8 +52,6 @@ export const DELETE = async (request, { params }) => {
 // PUT /api/products/:id
 export const PUT = async (request, { params }) => {
   try {
-    await connectDB();
-
     const sessionUser = await getSessionUser();
 
     if (!sessionUser || !sessionUser.userId) {
@@ -113,8 +108,6 @@ export const PUT = async (request, { params }) => {
 // POST /api/products/:id
 export const POST = async (request, { params }) => {
   try {
-    await connectDB();
-
     const sessionUser = await getSessionUser();
 
     if (!sessionUser || !sessionUser.userId) {

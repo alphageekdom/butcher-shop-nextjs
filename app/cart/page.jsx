@@ -1,6 +1,6 @@
 import React from 'react';
 import BackButton from '@/components/uielements/BackButton';
-import Cart from '@/components/Cart';
+import Cart from '@/components/cart/Cart';
 
 const CartPage = () => {
   return (

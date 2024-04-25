@@ -3,11 +3,11 @@ import Product from '@/models/Product';
 import { getSessionUser } from '@/utils/getSessionUser';
 import cloudinary from '@/config/cloudinary';
 
+await connectDB();
+
 // GET /api/products
 export const GET = async (request) => {
   try {
-    await connectDB();
-
     const page = request.nextUrl.searchParams.get('page') || 1;
     const pageSize = request.nextUrl.searchParams.get('pageSize') || 6;
 
@@ -41,8 +41,6 @@ export const GET = async (request) => {
 
 export const POST = async (request) => {
   try {
-    await connectDB();
-
     const sessionUser = await getSessionUser();
 
     if (!sessionUser || !sessionUser.userId) {

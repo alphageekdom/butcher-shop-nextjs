@@ -1,4 +1,4 @@
-import PropertyEditForm from '@/components/ProductEditForm';
+import PropertyEditForm from '@/components/dashboard/ProductEditForm';
 
 const ProductEditPage = () => {
   return (

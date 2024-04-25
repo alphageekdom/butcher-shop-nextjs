@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import Pagination from '../Pagination';
+import Pagination from '../uielements/Pagination';
 import Spinner from '../Spinner';
 
 const ProductsList = () => {

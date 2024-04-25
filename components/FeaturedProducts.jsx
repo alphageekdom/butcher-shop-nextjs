@@ -17,7 +17,7 @@ const FeaturedProducts = async () => {
             <h2 className='text-4xl font-bold text-black mb-6 text-center'>
               Featured Products
             </h2>
-            <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
+            <div className='grid grid-cols-1 md:grid-cols-2 gap-6 z-10'>
               {products.map((product) => (
                 <FeaturedProductCard key={product._id} product={product} />
               ))}

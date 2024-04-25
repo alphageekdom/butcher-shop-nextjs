@@ -3,14 +3,14 @@ import Product from '@/models/Product';
 import User from '@/models/User';
 import { getSessionUser } from '@/utils/getSessionUser';
 
+await connectDB();
+
 // GET /api/admin
 export const GET = async (req, res) => {
   const sessionUser = await getSessionUser();
 
   if (!sessionUser || !sessionUser.isAdmin) {
     try {
-      await connectDB();
-
       const usersCount = await User.countDocuments({});
       const productsCount = await Product.countDocuments({});
 

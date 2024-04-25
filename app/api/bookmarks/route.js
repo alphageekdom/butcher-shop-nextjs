@@ -5,11 +5,11 @@ import { getSessionUser } from '@/utils/getSessionUser';
 
 export const dynamic = 'force-dynamic';
 
+await connectDB();
+
 // GET /api/bookmarks
 export const GET = async () => {
   try {
-    await connectDB();
-
     const sessionUser = await getSessionUser();
 
     if (!sessionUser || !sessionUser.userId) {
@@ -34,8 +34,6 @@ export const GET = async () => {
 // POST /api/bookmarks
 export const POST = async (request) => {
   try {
-    await connectDB();
-
     const { productId } = await request.json();
 
     const sessionUser = await getSessionUser();

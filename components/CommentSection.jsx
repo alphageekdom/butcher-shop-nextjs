@@ -5,6 +5,7 @@ import Spinner from './Spinner';
 
 const CommentSection = ({ product }) => {
   const { data: session } = useSession();
+  console.log(session);
   const [status, setStatus] = useState('authenticated');
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState('');
@@ -75,7 +76,7 @@ const CommentSection = ({ product }) => {
   ) : (
     <div className='bg-white p-6 rounded-lg  mt-6'>
       <h2 className='text-lg font-semibold mb-2'>Leave a Review</h2>
-      {status === 'authenticated' && !reviewSubmitted ? (
+      {status === 'authenticated' && !reviewSubmitted && session ? (
         <form onSubmit={handleSubmit}>
           <div className='flex flex-col mb-4'>
             <label htmlFor='comment' className='mb-1'>

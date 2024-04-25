@@ -1,6 +1,6 @@
 const apiDomain = process.env.NEXT_PUBLIC_API_DOMAIN || null;
 
-// Fetch All Properties
+// Fetch All Products
 async function fetchProducts({ showFeatured = false } = {}) {
   try {
     // Handle if domain is unavailable
@@ -24,7 +24,7 @@ async function fetchProducts({ showFeatured = false } = {}) {
   }
 }
 
-// Fetch Single Property
+// Fetch Single Product
 async function fetchProduct(id) {
   try {
     // Handle if domain is unavailable

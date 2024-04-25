@@ -4,11 +4,11 @@ import Product from '@/models/Product';
 import Cart from '@/models/Cart';
 import { getSessionUser } from '@/utils/getSessionUser';
 
+await connectDB();
+
 // GET /api/cart
 export const GET = async (req, res) => {
   try {
-    await connectDB();
-
     const sessionUser = await getSessionUser();
 
     if (!sessionUser || !sessionUser.userId) {
@@ -36,8 +36,6 @@ export const GET = async (req, res) => {
 // POST /api/cart
 export const POST = async (req, res) => {
   try {
-    await connectDB();
-
     const { productId, quantity, itemId } = await req.json();
 
     const sessionUser = await getSessionUser();
@@ -66,7 +64,6 @@ export const POST = async (req, res) => {
 // DELETE /api/cart
 export const DELETE = async (req, res) => {
   try {
-    await connectDB();
     const sessionUser = await getSessionUser();
 
     if (!sessionUser) {

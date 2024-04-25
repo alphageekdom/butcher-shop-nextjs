@@ -1,9 +1,9 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import ProductCard from './ProductCard';
+import ProductCard from './product/ProductCard';
 import Spinner from '@/components/Spinner';
-import Pagination from '@/components/Pagination';
+import Pagination from '@/components/uielements/Pagination';
 
 const Products = () => {
   const [products, setProducts] = useState([]);

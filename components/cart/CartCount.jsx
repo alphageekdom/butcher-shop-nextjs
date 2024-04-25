@@ -27,7 +27,8 @@ const CartCount = () => {
 
     fetchCartItemsCount();
     return () => clearInterval(intervalId);
-  }, [cartCount]);
+    // place updateCartCount in brackets below
+  }, []);
 
   return (
     <div className='relative ml-2'>

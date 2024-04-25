@@ -3,9 +3,9 @@
 import { FaStar, FaDollarSign } from 'react-icons/fa';
 import { GiMeatCleaver } from 'react-icons/gi';
 import ProductImages from './ProductImages';
-import CommentSection from './CommentSection';
+import CommentSection from '../CommentSection';
 import BookmarkButton from '@/components/uielements/BookmarkButton';
-import ShareButtons from './uielements/ShareButton';
+import ShareButtons from '../uielements/ShareButton';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 

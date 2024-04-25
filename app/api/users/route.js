@@ -1,11 +1,11 @@
 import connectDB from '@/config/database';
 import User from '@/models/User';
 
+await connectDB();
+
 // GET /api/users
 export const GET = async (request) => {
   try {
-    await connectDB();
-
     const page = request.nextUrl.searchParams.get('page') || 1;
     const pageSize = request.nextUrl.searchParams.get('pageSize') || 6;
 
@@ -35,8 +35,6 @@ export const GET = async (request) => {
 
 export const DELETE = async (request) => {
   try {
-    await connectDB();
-
     const userId = request.nextUrl.searchParams.get('userId');
 
     const deletedUser = await User.findByIdAndDelete(userId);
@@ -55,8 +53,6 @@ export const DELETE = async (request) => {
 // POST /api/users
 export const POST = async (request) => {
   try {
-    await connectDB();
-
     const body = await request.json();
 
     const newUser = await User.create(body);

@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { FaCheck, FaTimes } from 'react-icons/fa';
 import Link from 'next/link';
-import Pagination from '../Pagination';
+import Pagination from '../uielements/Pagination';
 import Spinner from '../Spinner';
 import { useSession } from 'next-auth/react';
 useSession;
