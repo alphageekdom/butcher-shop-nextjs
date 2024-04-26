@@ -95,7 +95,7 @@ const ProductsList = () => {
   };
 
   return (
-    <div className='custom-shadow pb-4'>
+    <div className='pb-4 bg-white rounded-2xl'>
       {loading || deleting ? (
         <Spinner />
       ) : (
@@ -106,18 +106,18 @@ const ProductsList = () => {
             </div>
           ) : (
             <div className='overflow-x-auto'>
-              <table className='min-w-full divide-y divide-gray-200'>
-                <thead className='bg-gray-50'>
+              <table className='min-w-full divide-y divide-gray-200 '>
+                <thead className='bg-[#B91C1B] text-white text-md'>
                   <tr>
                     <th
                       scope='col'
-                      className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer'
+                      className='px-6 py-3 text-left font-medium  uppercase tracking-wider cursor-pointer rounded-tl-2xl'
                     >
                       Image
                     </th>
                     <th
                       scope='col'
-                      className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer'
+                      className='px-6 py-3 text-left font-medium  uppercase tracking-wider cursor-pointer'
                       onClick={() => handleSort('name')}
                     >
                       Name
@@ -127,7 +127,7 @@ const ProductsList = () => {
                     </th>
                     <th
                       scope='col'
-                      className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer'
+                      className='px-6 py-3 text-left font-medium  uppercase tracking-wider cursor-pointer'
                       onClick={() => handleSort('price')}
                     >
                       Price
@@ -137,7 +137,7 @@ const ProductsList = () => {
                     </th>
                     <th
                       scope='col'
-                      className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer'
+                      className='px-6 py-3 text-left font-medium  uppercase tracking-wider cursor-pointer'
                       onClick={() => handleSort('type')}
                     >
                       Type
@@ -147,7 +147,7 @@ const ProductsList = () => {
                     </th>
                     <th
                       scope='col'
-                      className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'
+                      className='px-6 py-3 text-left font-medium  uppercase tracking-wider rounded-tr-2xl'
                     >
                       Action
                     </th>
@@ -181,12 +181,12 @@ const ProductsList = () => {
                       <td className='px-6 py-4 whitespace-nowrap'>
                         <Link
                           href={`/products/${product._id}/edit`}
-                          className='text-blue-600 hover:text-blue-900 mr-4'
+                          className='py-3 px-6 bg-blue-500 hover:bg-blue-700 text-white font-bold mr-2'
                         >
                           Edit
                         </Link>
                         <button
-                          className='text-red-600 hover:text-red-900'
+                          className='py-3 px-6 bg-red-500 hover:bg-red-700 text-white font-bold'
                           onClick={() => product && deleteProduct(product._id)}
                         >
                           Delete
@@ -199,14 +199,14 @@ const ProductsList = () => {
               </table>
             </div>
           )}
+          <Pagination
+            page={page}
+            pageSize={pageSize}
+            totalItems={totalItems}
+            onPageChange={handlePageChange}
+          />
         </>
       )}
-      <Pagination
-        page={page}
-        pageSize={pageSize}
-        totalItems={totalItems}
-        onPageChange={handlePageChange}
-      />
     </div>
   );
 };

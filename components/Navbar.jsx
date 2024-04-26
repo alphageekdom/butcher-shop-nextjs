@@ -12,6 +12,7 @@ import { signIn, signOut, useSession } from 'next-auth/react';
 import { toast } from 'react-toastify';
 import CartCount from './cart/CartCount';
 import CartModal from './cart/CartModal';
+import ProductSearchForm from './ProductSearchForm';
 
 const Navbar = () => {
   const { data: session } = useSession();
@@ -329,7 +330,7 @@ const Navbar = () => {
             {isAdmin && (
               <a
                 href='/dashboard'
-                className='text-white hover:bg-gray-900 hover:text-white rounded-md px-3 py-2'
+                className='text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium'
                 onClick={closeMobileMenu}
               >
                 Dashboard
@@ -363,6 +364,7 @@ const Navbar = () => {
                 </>
               )}
             </button>
+            <ProductSearchForm />
           </div>
         </div>
       )}

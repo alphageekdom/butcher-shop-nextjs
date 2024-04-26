@@ -17,7 +17,9 @@ const Hero = () => {
               Discover the perfect cut that suits your needs.
             </p>
           </div>
-          <ProductSearchForm />
+          <div className='search-form'>
+            <ProductSearchForm />
+          </div>
         </div>
       </section>
     </>

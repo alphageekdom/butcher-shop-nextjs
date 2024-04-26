@@ -94,17 +94,19 @@ const UsersList = () => {
   return loading ? (
     <Spinner />
   ) : (
-    <div className='custom-shadow pb-4 bg-white'>
+    <div className='pb-4 bg-white rounded-2xl'>
       {users.length === 0 ? (
-        <p>No Users Found</p>
+        <div className='flex items-center justify-center h-96'>
+          <p className='text-gray-600 text-3xl'>No Users Found</p>
+        </div>
       ) : (
         <div className='overflow-x-auto'>
           <table className='min-w-full divide-y divide-gray-200'>
-            <thead className='bg-gray-50'>
+            <thead className='bg-[#B91C1B] text-white text-md'>
               <tr>
                 <th
                   scope='col'
-                  className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer'
+                  className='px-6 py-3 text-left font-medium uppercase tracking-wider cursor-pointer rounded-tl-2xl'
                   onClick={() => handleSort('name')}
                 >
                   Name
@@ -114,7 +116,7 @@ const UsersList = () => {
                 </th>
                 <th
                   scope='col'
-                  className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer'
+                  className='px-6 py-3 text-left  font-medium uppercase tracking-wider cursor-pointer'
                   onClick={() => handleSort('email')}
                 >
                   Email
@@ -124,7 +126,7 @@ const UsersList = () => {
                 </th>
                 <th
                   scope='col'
-                  className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer'
+                  className='px-6 py-3 text-left  font-medium uppercase tracking-wider cursor-pointer'
                   onClick={() => handleSort('isAdmin')}
                 >
                   Admin
@@ -134,7 +136,7 @@ const UsersList = () => {
                 </th>
                 <th
                   scope='col'
-                  className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'
+                  className='px-6 py-3 text-left font-medium uppercase tracking-wider rounded-tr-2xl'
                 >
                   Action
                 </th>

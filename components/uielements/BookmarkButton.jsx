@@ -50,7 +50,7 @@ const BookmarkButton = ({ product }) => {
 
   const handleBookmarkToggle = async () => {
     if (!userId) {
-      toast.error('You Need To Sign In To Bookmark A Property');
+      toast.error('You Need To Sign In To Bookmark A Product');
       return;
     }
 

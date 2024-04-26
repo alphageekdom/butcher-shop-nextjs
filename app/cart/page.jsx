@@ -5,7 +5,7 @@ import Cart from '@/components/cart/Cart';
 const CartPage = () => {
   return (
     <>
-      <BackButton href={'/dashboard'} />
+      <BackButton href={'/products'} />
       <section className='bg-blue-50'>
         <div className='container m-auto py-10 px-6'>
           <h1 className='text-5xl font-bold'>Cart</h1>
