@@ -25,6 +25,7 @@ const Products = () => {
         }
 
         const data = await res.json();
+
         setProducts(data.products);
         setTotalItems(data.total);
       } catch (error) {

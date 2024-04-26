@@ -72,6 +72,9 @@ const Navbar = () => {
   };
 
   const fetchCartData = async () => {
+    if (!session || !session.user) {
+      return;
+    }
     try {
       const response = await fetch('/api/cart');
 
@@ -80,8 +83,10 @@ const Navbar = () => {
         const cartItemsData = data.items || [];
 
         setHasItemsInCart(cartItemsData.length > 0);
-
-        // If cart has items, open the modal
+      } else if (response.status === 401) {
+        console.error('Unauthorized access to fetch cart data');
+        // Set hasItemsInCart to false
+        setHasItemsInCart(false);
       } else {
         throw new Error('Failed to fetch cart data');
       }

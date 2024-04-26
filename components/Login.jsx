@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { toast } from 'react-toastify';
 import { useSession, signIn } from 'next-auth/react';
+import DOMPurify from 'dompurify';
 
 const Login = () => {
   const router = useRouter();
@@ -34,7 +35,10 @@ const Login = () => {
     e.preventDefault();
     setLoading(true);
 
-    if (!formData.email || !formData.password) {
+    const sanitizedEmail = DOMPurify.sanitize(formData.email);
+    const sanitizedPassword = DOMPurify.sanitize(formData.password);
+
+    if (!sanitizedEmail || !sanitizedPassword) {
       toast.error('Please enter both email and password');
       setLoading(false);
       return;
@@ -43,8 +47,8 @@ const Login = () => {
     try {
       const res = await signIn('credentials', {
         redirect: false,
-        email: formData.email,
-        password: formData.password,
+        email: sanitizedEmail,
+        password: sanitizedPassword,
         isAdmin: formData.isAdmin,
       });
 
@@ -76,6 +80,7 @@ const Login = () => {
           required
           value={formData.email}
           onChange={handleChange}
+          autoComplete='current-email'
         />
       </div>
 
@@ -91,6 +96,7 @@ const Login = () => {
           required
           value={formData.password}
           onChange={handleChange}
+          autoComplete='current-password'
         />
       </div>
 

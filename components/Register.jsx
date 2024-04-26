@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { toast } from 'react-toastify';
+import DOMPurify from 'dompurify';
 
 const Register = () => {
   const router = useRouter();
@@ -29,14 +30,21 @@ const Register = () => {
     e.preventDefault();
     setLoading(true);
 
-    if (formData.password !== formData.confirmPassword) {
+    const sanitizedFormData = {
+      name: DOMPurify.sanitize(formData.name),
+      email: DOMPurify.sanitize(formData.email),
+      password: DOMPurify.sanitize(formData.password),
+      confirmPassword: DOMPurify.sanitize(formData.confirmPassword),
+    };
+
+    if (sanitizedFormData.password !== sanitizedFormData.confirmPassword) {
       toast.error('Passwords do not match');
       setLoading(false);
       return;
     }
 
     // Client-side validation
-    if (formData.password.length < 6) {
+    if (sanitizedFormData.password.length < 6) {
       toast.error('Password must be at least 6 characters long');
       setLoading(false);
       return;
@@ -44,7 +52,7 @@ const Register = () => {
 
     // Email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(formData.email)) {
+    if (!emailRegex.test(sanitizedFormData.email)) {
       toast.error('Invalid email address');
       setLoading(false);
       return;
@@ -56,7 +64,7 @@ const Register = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(sanitizedFormData),
       });
 
       if (res.ok) {
@@ -95,6 +103,7 @@ const Register = () => {
           required
           value={formData.name}
           onChange={handleChange}
+          autoComplete='new-name'
         />
       </div>
 
@@ -112,6 +121,7 @@ const Register = () => {
           required
           value={formData.email}
           onChange={handleChange}
+          autoComplete='new-email'
         />
       </div>
 
@@ -132,6 +142,7 @@ const Register = () => {
           required
           value={formData.password}
           onChange={handleChange}
+          autoComplete='new-password'
         />
       </div>
 
@@ -152,6 +163,7 @@ const Register = () => {
           required
           value={formData.confirmPassword}
           onChange={handleChange}
+          autoComplete='new-password'
         />
       </div>
 
