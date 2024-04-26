@@ -123,6 +123,7 @@ const CartModal = ({ isOpen, onClose }) => {
   const closeModal = () => {
     setIsModalOpen(false);
     onClose();
+    document.body.style.overflow = '';
   };
 
   return (

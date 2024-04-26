@@ -5,7 +5,6 @@ import Spinner from './Spinner';
 
 const CommentSection = ({ product }) => {
   const { data: session } = useSession();
-  console.log(session);
   const [status, setStatus] = useState('authenticated');
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState('');

@@ -114,11 +114,11 @@ const ProductCard = ({ product }) => {
           src={`/images/products/${product.images[0]}`}
           alt=''
           height={300}
-          width={300}
+          width={450}
           sizes='100vw'
           placeholder='blur'
           blurDataURL={`/images/products/${product.images[0]}`}
-          className='rounded-t-xl object-cover rounded-2xl h-[300px] w-full'
+          className='rounded-t-xl object-cover rounded-2xl w-full h-72'
         />
         <div className='p-4'>
           <div className='flex justify-between'>

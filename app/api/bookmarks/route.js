@@ -5,11 +5,10 @@ import { getSessionUser } from '@/utils/getSessionUser';
 
 export const dynamic = 'force-dynamic';
 
-await connectDB();
-
 // GET /api/bookmarks
 export const GET = async () => {
   try {
+    await connectDB();
     const sessionUser = await getSessionUser();
 
     if (!sessionUser || !sessionUser.userId) {
@@ -18,10 +17,8 @@ export const GET = async () => {
 
     const { userId } = sessionUser;
 
-    // Find user in database
     const user = await User.findOne({ _id: userId });
 
-    // Get users bookmarks
     const bookmarks = await Product.find({ _id: { $in: user.bookmarks } });
 
     return new Response(JSON.stringify(bookmarks), { status: 200 });
@@ -53,12 +50,10 @@ export const POST = async (request) => {
     let message;
 
     if (isBookmarked) {
-      // If already bookmarked remove it
       user.bookmarks.pull(productId);
       message = 'Bookmark Removed Successfully';
       isBookmarked = false;
     } else {
-      // If not bookmarked, add it
       user.bookmarks.push(productId);
       message = 'Bookmark Added Successfully';
       isBookmarked = true;

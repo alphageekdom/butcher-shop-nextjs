@@ -3,11 +3,11 @@ import Product from '@/models/Product';
 import Review from '@/models/Review';
 import { getSessionUser } from '@/utils/getSessionUser';
 
-await connectDB();
-
 // GET /api/products/:id
 export const GET = async (request, { params }) => {
   try {
+    await connectDB();
+
     const { id } = params;
 
     const product = await Product.findById(id);
@@ -64,7 +64,7 @@ export const PUT = async (request, { params }) => {
     const formData = await request.formData();
 
     // Get product to update
-    const existingProduct = await Product.findById(id);
+    const existingProduct = await Product.findById(id).lean();
 
     if (!existingProduct) {
       return new Response('Product Does Not Exist', { status: 404 });
@@ -90,6 +90,12 @@ export const PUT = async (request, { params }) => {
       inStock: formData.get('inStock'),
       owner: userId,
     };
+
+    const productDataChanged = !isEqual(existingProduct, productData);
+
+    if (!productDataChanged) {
+      return new Response('No changes to update', { status: 200 });
+    }
 
     // Save the updated product
     const updatedProduct = await Product.findByIdAndUpdate(id, productData, {
@@ -142,8 +148,7 @@ export const POST = async (request, { params }) => {
     let newRating = parsedRating;
 
     if (product.rating) {
-      // If there's a previous rating, calculate the new rating based on the existing rating and the new one
-      newRating = (product.rating + parsedRating) / 2; // Simple average of the old and new ratings
+      newRating = (product.rating + parsedRating) / 2;
     }
 
     newRating = Math.floor(newRating * 100) / 100;

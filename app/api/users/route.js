@@ -16,8 +16,10 @@ export const GET = async (request) => {
 
     const sort = { [sortField]: sortOrder === 'desc' ? -1 : 1 };
 
-    const total = await User.countDocuments({});
-    const users = await User.find({}).sort(sort).skip(skip).limit(pageSize);
+    const [total, users] = await Promise.all([
+      User.countDocuments({}),
+      User.find({}).sort(sort).skip(skip).limit(pageSize).select('-largeField'),
+    ]);
 
     const result = {
       total,

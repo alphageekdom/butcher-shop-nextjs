@@ -35,6 +35,21 @@ const Register = () => {
       return;
     }
 
+    // Client-side validation
+    if (formData.password.length < 6) {
+      toast.error('Password must be at least 6 characters long');
+      setLoading(false);
+      return;
+    }
+
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email)) {
+      toast.error('Invalid email address');
+      setLoading(false);
+      return;
+    }
+
     try {
       const res = await fetch('/api/auth/register', {
         method: 'POST',

@@ -3,16 +3,18 @@ import Product from '@/models/Product';
 import User from '@/models/User';
 import { getSessionUser } from '@/utils/getSessionUser';
 
-await connectDB();
-
 // GET /api/admin
 export const GET = async (req, res) => {
+  await connectDB();
+
   const sessionUser = await getSessionUser();
 
   if (!sessionUser || !sessionUser.isAdmin) {
     try {
-      const usersCount = await User.countDocuments({});
-      const productsCount = await Product.countDocuments({});
+      const [usersCount, productsCount] = await Promise.all([
+        User.countDocuments({}),
+        Product.countDocuments({}),
+      ]);
 
       const total = { users: usersCount, products: productsCount };
 

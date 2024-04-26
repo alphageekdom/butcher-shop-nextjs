@@ -3,11 +3,11 @@ import Product from '@/models/Product';
 import { getSessionUser } from '@/utils/getSessionUser';
 import cloudinary from '@/config/cloudinary';
 
-await connectDB();
-
 // GET /api/products
 export const GET = async (request) => {
   try {
+    await connectDB();
+
     const page = request.nextUrl.searchParams.get('page') || 1;
     const pageSize = request.nextUrl.searchParams.get('pageSize') || 6;
 
@@ -18,12 +18,14 @@ export const GET = async (request) => {
 
     const sort = { [sortField]: sortOrder === 'desc' ? -1 : 1 };
 
-    const total = await Product.countDocuments({});
-
-    const products = await Product.find({})
-      .sort(sort)
-      .skip(skip)
-      .limit(pageSize);
+    const [total, products] = await Promise.all([
+      Product.countDocuments({}),
+      Product.find({})
+        .sort(sort)
+        .skip(skip)
+        .limit(pageSize)
+        .select('-largeField'),
+    ]);
 
     const result = {
       total,
@@ -39,6 +41,7 @@ export const GET = async (request) => {
   }
 };
 
+// POST /api/products
 export const POST = async (request) => {
   try {
     const sessionUser = await getSessionUser();
@@ -53,11 +56,32 @@ export const POST = async (request) => {
 
     formData.set('rating', '0');
 
-    console.log(formData);
     // Access all values from amenities and images
     const images = formData
       .getAll('images')
       .filter((image) => image.name !== '');
+
+    // Upload images to Cloudinary
+    const imageUploadPromises = images.map(async (image) => {
+      const imageBuffer = await image.arrayBuffer();
+      const imageArray = Array.from(new Uint8Array(imageBuffer));
+      const imageData = Buffer.from(imageArray);
+
+      // Convert image data to base64
+      const imageBase64 = imageData.toString('base64');
+
+      // Upload image to Cloudinary
+      const result = await cloudinary.uploader.upload(
+        `data:image/png;base64,${imageBase64}`,
+        {
+          folder: 'elitecuts',
+        }
+      );
+
+      return result.secure_url;
+    });
+
+    const uploadedImages = await Promise.all(imageUploadPromises);
 
     // Create productData object for database
     const productData = {
@@ -70,34 +94,8 @@ export const POST = async (request) => {
       inStock: formData.get('inStock'),
       rating: formData.get('rating'),
       owner: userId,
+      images: uploadedImages,
     };
-
-    // Upload image(s) to Cloudinary
-    const imageUploadPromises = [];
-
-    for (const image of images) {
-      const imageBuffer = await image.arrayBuffer();
-      const imageArray = Array.from(new Uint8Array(imageBuffer));
-      const imageData = Buffer.from(imageArray);
-
-      // Convert the image data to base64
-      const imageBase64 = imageData.toString('base64');
-
-      // Make request to upload to Cloudinary
-      const result = await cloudinary.uploader.upload(
-        `data:image/png;base64,${imageBase64}`,
-        {
-          folder: 'elitecuts',
-        }
-      );
-
-      imageUploadPromises.push(result.secure_url);
-
-      // Wait for all images to upload
-      const uploadedImages = await Promise.all(imageUploadPromises);
-      // Add uploaded images to the productData object
-      productData.images = uploadedImages;
-    }
 
     const newProduct = new Product(productData);
     await newProduct.save();

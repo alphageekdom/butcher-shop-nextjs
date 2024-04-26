@@ -22,8 +22,6 @@ export const GET = async (request) => {
       ],
     };
 
-    console.log(query);
-
     // Only check for product if it's not 'All'
     if (productType && productType !== 'All') {
       const typePattern = new RegExp(productType, 'i');

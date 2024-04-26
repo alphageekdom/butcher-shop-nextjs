@@ -17,10 +17,8 @@ export const POST = async (request) => {
 
     const { userId } = sessionUser;
 
-    // Find user in database
     const user = await User.findOne({ _id: userId });
 
-    // Check if bookmark is bookmarked
     let isBookmarked = user.bookmarks.includes(productId);
 
     return new Response(JSON.stringify({ isBookmarked }, { status: 200 }));

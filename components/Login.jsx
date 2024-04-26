@@ -34,6 +34,12 @@ const Login = () => {
     e.preventDefault();
     setLoading(true);
 
+    if (!formData.email || !formData.password) {
+      toast.error('Please enter both email and password');
+      setLoading(false);
+      return;
+    }
+
     try {
       const res = await signIn('credentials', {
         redirect: false,

@@ -46,9 +46,10 @@ export const POST = async (req, res) => {
 
     const { userId } = sessionUser;
 
-    const user = await User.findOne({ _id: userId });
-    const product = await Product.findById(productId);
-    const cart = await Cart.findById(itemId);
+    const [user, product] = await Promise.all([
+      User.findOne({ _id: userId }),
+      Product.findById(productId),
+    ]);
 
     await addToCart(user, product, quantity);
 
@@ -88,7 +89,6 @@ export const DELETE = async (req, res) => {
 // Example functions for handling cart operations
 async function fetchUserCart(userId) {
   try {
-    // Find the cart document associated with the user's userId
     let cart = await Cart.findOne({ user: userId }).populate('items.product');
 
     if (!cart) {
@@ -103,20 +103,17 @@ async function fetchUserCart(userId) {
 
 async function addToCart(userId, item, quantity = 1) {
   try {
-    // Find the user based on userId
     const user = await User.findById(userId);
     if (!user) {
       throw new Error('User not found');
     }
 
-    // Find the product based on itemId
     const product = await Product.findById(item._id);
 
     if (!product) {
       throw new Error('Product not found');
     }
 
-    // Construct the order item
     const cartItem = {
       product: product._id,
       name: product.name,
@@ -135,22 +132,19 @@ async function addToCart(userId, item, quantity = 1) {
       });
     }
 
-    // Check if the product is already in the cart
     const existingItemIndex = cart.items.findIndex((item) =>
       item.product.equals(product._id)
     );
 
     if (existingItemIndex !== -1) {
-      // Increase quantity if the product is already in the cart
       cart.items[existingItemIndex].quantity = quantity;
     } else {
-      // Add the product to the cart if it's not already there
       cart.items.push(cartItem);
     }
 
     await cart.save();
 
-    return; // No need to return anything if successful
+    return;
   } catch (error) {
     throw new Error(`Failed to add item to cart: ${error.message}`);
   }
@@ -158,14 +152,12 @@ async function addToCart(userId, item, quantity = 1) {
 
 async function removeFromCart(userId, itemId) {
   try {
-    // Find the cart associated with the user
     const cart = await Cart.findOne({ user: userId });
 
     if (!cart) {
       throw new Error('Cart not found');
     }
 
-    // Find the index of the item to remove
     const itemIndex = cart.items.findIndex(
       (item) => item._id.toString() === itemId
     );
@@ -174,10 +166,8 @@ async function removeFromCart(userId, itemId) {
       throw new Error('Item not found in the cart');
     }
 
-    // Remove the item from the cart
     cart.items.splice(itemIndex, 1);
 
-    // Save the updated cart
     await cart.save();
   } catch (error) {
     throw new Error(`Failed to remove item from cart: ${error.message}`);
@@ -186,7 +176,6 @@ async function removeFromCart(userId, itemId) {
 
 async function createCartForUser(userId) {
   try {
-    // Create a new cart document for the user
     const newCart = new Cart({ user: userId, items: [] });
     await newCart.save();
     return newCart;
