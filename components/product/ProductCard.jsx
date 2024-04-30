@@ -73,15 +73,14 @@ const ProductCard = ({ product }) => {
     }
   };
 
-  if (loading) return <p className='text-center'>Loading...</p>;
-
   const handleCardClick = (e) => {
     // Redirect to the product page when the card is clicked
     window.location.href = `/products/${product._id}`;
   };
 
   const handleAddToCart = async (e) => {
-    e.preventDefault();
+    if (isAddingToCart || loading) return;
+    setIsAddingToCart(true);
     try {
       const response = await fetch('/api/cart', {
         method: 'POST',
@@ -104,6 +103,9 @@ const ProductCard = ({ product }) => {
       setIsAddingToCart(false);
     }
   };
+
+  if (loading) return <p className='text-center'>Loading...</p>;
+
   return (
     <div className='relative rounded-xl flex flex-col'>
       <div
@@ -152,9 +154,9 @@ const ProductCard = ({ product }) => {
       </div>
       <button
         className='h-[36px] bg-red-800 hover:bg-red-700 text-white px-4 py-2 rounded-lg text-center text-sm'
-        onClick={handleAddToCart}
+        onClick={handleAddToCart || loading}
       >
-        Add to Cart
+        {isAddingToCart ? 'Adding...' : 'Add to Cart'}
       </button>
     </div>
   );

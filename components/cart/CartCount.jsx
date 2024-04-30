@@ -1,38 +1,33 @@
 import { useState, useEffect } from 'react';
 import { FaShoppingCart } from 'react-icons/fa';
+import Link from 'next/link';
 
 const CartCount = () => {
-  const [cartCount, updateCartCount] = useState(0);
+  const [cartCount, setCartCount] = useState(0);
+
+  const fetchCartData = async () => {
+    try {
+      const response = await fetch('/api/cart');
+      if (response.ok) {
+        const cartData = await response.json();
+        const itemCount = cartData.items ? cartData.items.length : 0;
+        setCartCount(itemCount);
+      } else {
+        console.error('Failed to fetch cart data');
+      }
+    } catch (error) {
+      console.error('Error fetching cart data:', error);
+    }
+  };
 
   useEffect(() => {
-    const fetchCartItemsCount = async () => {
-      try {
-        // Fetch cart data from the backend
-        const response = await fetch('/api/cart');
-        if (response.ok) {
-          const cartData = await response.json();
-          // Extract the number of items from the cart data
-          const itemCount = cartData.items ? cartData.items.length : 0;
-          updateCartCount(itemCount);
-        } else {
-          // Handle error response
-          console.error('Failed to fetch cart data');
-        }
-      } catch (error) {
-        console.error('Error fetching cart data:', error);
-      }
-    };
-
-    const intervalId = setInterval(fetchCartItemsCount, 3000);
-
-    fetchCartItemsCount();
-    return () => clearInterval(intervalId);
-    // place updateCartCount in brackets below
+    const pollInterval = setInterval(fetchCartData, 30000);
+    return () => clearInterval(pollInterval);
   }, []);
 
   return (
     <div className='relative ml-2'>
-      <a href='/cart' className='relative group'>
+      <Link href='/cart' className='relative group'>
         <button
           type='button'
           className='relative rounded-full p-1 text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800'
@@ -46,7 +41,7 @@ const CartCount = () => {
             {cartCount}
           </span>
         )}
-      </a>
+      </Link>
     </div>
   );
 };

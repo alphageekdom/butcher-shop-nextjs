@@ -165,25 +165,25 @@ const Navbar = () => {
             {/* <!-- Desktop Menu Hidden below md screens --> */}
             <div className='hidden md:ml-6 md:block'>
               <div className='flex space-x-2'>
-                <a
+                <Link
                   href='/'
                   className='text-white bg-black hover:bg-gray-900 hover:text-white rounded-md px-3 py-2'
                 >
                   Home
-                </a>
-                <a
+                </Link>
+                <Link
                   href='/products'
                   className='text-white hover:bg-gray-900 hover:text-white rounded-md px-3 py-2'
                 >
                   Products
-                </a>
+                </Link>
                 {isAdmin && (
-                  <a
+                  <Link
                     href='/dashboard'
                     className='text-white hover:bg-gray-900 hover:text-white rounded-md px-3 py-2'
                   >
                     Dashboard
-                  </a>
+                  </Link>
                 )}
               </div>
             </div>
@@ -258,7 +258,7 @@ const Navbar = () => {
                     aria-labelledby='user-menu-button'
                     tabIndex='-1'
                   >
-                    <a
+                    <Link
                       href='/profile'
                       className='block px-4 py-2 text-sm text-gray-700'
                       role='menuitem'
@@ -269,8 +269,8 @@ const Navbar = () => {
                       }}
                     >
                       Your Profile
-                    </a>
-                    <a
+                    </Link>
+                    <Link
                       href='saved-properties.html'
                       className='block px-4 py-2 text-sm text-gray-700'
                       role='menuitem'
@@ -281,8 +281,8 @@ const Navbar = () => {
                       }}
                     >
                       Saved Cuts
-                    </a>
-                    <a
+                    </Link>
+                    <Link
                       href='#'
                       className='block px-4 py-2 text-sm text-gray-700'
                       role='menuitem'
@@ -294,7 +294,7 @@ const Navbar = () => {
                       }}
                     >
                       Sign Out
-                    </a>
+                    </Link>
                   </div>
                 )}
               </div>
@@ -319,28 +319,28 @@ const Navbar = () => {
       {isMobileMenuOpen && (
         <div className='md:hidden' id='mobile-menu'>
           <div className='space-y-1 px-2 pb-3 pt-2'>
-            <a
+            <Link
               href='/'
               className='bg-gray-900 text-white block rounded-md px-3 py-2 text-base font-medium'
               onClick={closeMobileMenu}
             >
               Home
-            </a>
-            <a
+            </Link>
+            <Link
               href='/products'
               className='text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium'
               onClick={closeMobileMenu}
             >
               Products
-            </a>
+            </Link>
             {isAdmin && (
-              <a
+              <Link
                 href='/dashboard'
                 className='text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium'
                 onClick={closeMobileMenu}
               >
                 Dashboard
-              </a>
+              </Link>
             )}
             <button className='flex items-center text-white hover:text-white rounded-md px-3 py-2 my-4 gap-4'>
               {!session && (

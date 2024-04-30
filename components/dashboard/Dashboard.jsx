@@ -53,18 +53,18 @@ const Dashboard = () => {
               <p className='text-gray-500'>{productsCount}</p>
             </div>
             <div className='flex gap-4'>
-              <a
+              <Link
                 href='/products/list'
                 className='py-2 px-4 bg-blue-500 hover:bg-blue-700 text-white'
               >
                 Edit Products
-              </a>
-              <a
+              </Link>
+              <Link
                 href='/products/add'
                 className='py-2 px-4 bg-green-500 hover:bg-green-700 text-white'
               >
                 Add Product
-              </a>
+              </Link>
             </div>
           </div>
         </div>
@@ -76,12 +76,12 @@ const Dashboard = () => {
               <p className='text-gray-500'>{usersCount}</p>
             </div>
             <div className='text-right'>
-              <a
+              <Link
                 href='/users'
                 className='py-2 px-4 bg-blue-500 hover:bg-blue-700 text-white'
               >
                 Edit Users
-              </a>
+              </Link>
             </div>
           </div>
         </div>

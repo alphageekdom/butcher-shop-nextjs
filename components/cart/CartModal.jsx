@@ -3,13 +3,13 @@
 import { useState, useEffect } from 'react';
 import { AiOutlineClose } from 'react-icons/ai';
 import { FaShoppingCart } from 'react-icons/fa';
-import { useRouter } from 'next/navigation';
 import CartContainer from './CartContainer';
 import {
   calculateSubtotal,
   calculateTaxesTotal,
   calculateGrandTotal,
 } from '@/utils/cart';
+import { useRouter } from 'next/navigation';
 
 const CartModal = ({ isOpen, onClose }) => {
   const [cartItems, setCartItems] = useState([]);
@@ -19,6 +19,13 @@ const CartModal = ({ isOpen, onClose }) => {
   const [grandTotal, setGrandTotal] = useState(0);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(isOpen);
+  const router = useRouter();
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    onClose();
+    document.body.style.overflow = '';
+  };
 
   const handleRemoveItem = async (itemId) => {
     const confirmed = window.confirm(
@@ -118,13 +125,7 @@ const CartModal = ({ isOpen, onClose }) => {
       document.body.style.overflow = '';
     }
     setIsModalOpen(isOpen);
-  }, [isOpen, handleQuantityChange]);
-
-  const closeModal = () => {
-    setIsModalOpen(false);
-    onClose();
-    document.body.style.overflow = '';
-  };
+  }, [isOpen]);
 
   return (
     isModalOpen && (

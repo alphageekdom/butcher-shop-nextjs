@@ -1,10 +1,7 @@
-import connectDB from '@/config/database';
 import User from '@/models/User';
 import Product from '@/models/Product';
 import Cart from '@/models/Cart';
 import { getSessionUser } from '@/utils/getSessionUser';
-
-await connectDB();
 
 // GET /api/cart
 export const GET = async (req, res) => {

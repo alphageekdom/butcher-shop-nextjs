@@ -13,6 +13,7 @@ const ProductDetails = ({ product }) => {
   const [isAddingToCart, setIsAddingToCart] = useState(false);
 
   const handleAddToCart = async () => {
+    if (isAddingToCart) return;
     setIsAddingToCart(true);
     try {
       const response = await fetch('/api/cart', {
@@ -65,8 +66,9 @@ const ProductDetails = ({ product }) => {
                 <button
                   className='bg-red-800 hover:bg-red-700 text-white font-bold py-2 px-4 rounded'
                   onClick={handleAddToCart}
+                  disabled={isAddingToCart}
                 >
-                  Add to Cart
+                  {isAddingToCart ? 'Adding...' : 'Add to Cart'}
                 </button>
               </div>
               <p className='text-red-500 mb-9'>

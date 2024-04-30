@@ -5,7 +5,6 @@ import { FaDollarSign, FaStar, FaBookmark } from 'react-icons/fa';
 import { useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import Spinner from './Spinner';
 
 const FeaturedProductCard = ({ product }) => {
   const { data: session } = useSession();
@@ -45,7 +44,6 @@ const FeaturedProductCard = ({ product }) => {
   };
 
   const handleCardClick = () => {
-    // Redirect to the product page when the card is clicked
     window.location.href = `/products/${product._id}`;
   };
 
@@ -82,6 +80,8 @@ const FeaturedProductCard = ({ product }) => {
   }, [product?._id, userId]);
 
   const handleAddToCart = async () => {
+    if (isAddingToCart || loading) return;
+    setIsAddingToCart(true);
     try {
       const response = await fetch('/api/cart', {
         method: 'POST',
@@ -103,14 +103,14 @@ const FeaturedProductCard = ({ product }) => {
     }
   };
 
-  return loading ? (
-    <Spinner />
-  ) : (
+  if (loading) return <p className='text-center'>Loading...</p>;
+
+  return (
     <div
-      className='relative flex flex-col md:flex-row rounded-xl cursor-pointer'
+      className='relative flex flex-col md:flex-row rounded-xl cursor-pointer bg-white'
       onClick={handleCardClick}
     >
-      <div className='relative w-full h-full '>
+      <div className='relative w-full h-full rounded-xl'>
         <Image
           src={`/images/products/${product.images[0]}`}
           alt=''
@@ -156,8 +156,9 @@ const FeaturedProductCard = ({ product }) => {
                 e.stopPropagation();
                 handleAddToCart();
               }}
+              disabled={isAddingToCart || loading}
             >
-              Add to Cart
+              {isAddingToCart ? 'Adding...' : 'Add to Cart'}
             </button>
           </div>
         </div>
