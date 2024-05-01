@@ -2,6 +2,7 @@
 
 import { createContext, useContext, useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
+import { useSession } from 'next-auth/react';
 
 const CartContext = createContext();
 
@@ -10,11 +11,27 @@ export function CartProvider({ children }) {
   const [cartItems, setCartItems] = useState([]);
   const [cartUpdateTrigger, setCartUpdateTrigger] = useState(false);
 
+  const { data: session } = useSession();
+
   // Function to fetch cart data from the server
   const fetchCartData = async () => {
     try {
-      const res = await fetch('/api/cart');
+      if (!isUserAuthenticated()) {
+        setCartCount(0);
+        setCartItems([]);
+        return;
+      }
+
+      const res = await fetch('/api/cart', {
+        credentials: 'include',
+      });
+
       if (!res.ok) {
+        if (res.status === 401) {
+          setCartCount(0);
+          setCartItems([]);
+          return;
+        }
         throw new Error('Failed to fetch cart data');
       }
 
@@ -26,6 +43,10 @@ export function CartProvider({ children }) {
       console.error('Error fetching cart data:', error);
       toast.error('Failed to fetch cart data');
     }
+  };
+
+  const isUserAuthenticated = () => {
+    return session && session.user;
   };
 
   useEffect(() => {
@@ -60,6 +81,7 @@ export function CartProvider({ children }) {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ itemId }),
+        credentials: 'include',
       });
 
       if (res.ok) {
