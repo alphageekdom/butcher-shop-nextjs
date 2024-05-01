@@ -16,8 +16,12 @@ import ProductSearchForm from './ProductSearchForm';
 
 const Navbar = () => {
   const { data: session } = useSession();
-  const isAdmin = session?.user?.isAdmin;
-  const profileImage = session?.user?.image;
+  // const isAdmin = session?.user?.isAdmin;
+  // const profileImage = session?.user?.image;
+
+  const isLoggedIn = session && session.user;
+  const isAdmin = isLoggedIn && session.user.isAdmin;
+  const profileImage = isLoggedIn ? session.user.image : null;
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
@@ -202,8 +206,8 @@ const Navbar = () => {
           </div>
 
           {/* <!-- Right Side Menu (Logged Out) --> */}
-          <div className='hidden md:block md:ml-6'>
-            {!session && (
+          {!isLoggedIn && (
+            <div className='hidden md:block md:ml-6'>
               <div className='flex items-center gap-4'>
                 <Link
                   onClick={handleSignIn}
@@ -221,11 +225,11 @@ const Navbar = () => {
                   <span>Register</span>
                 </Link>
               </div>
-            )}
-          </div>
+            </div>
+          )}
 
           {/* <!-- Right Side Menu (Logged In) --> */}
-          {session && (
+          {isLoggedIn && (
             <div className='absolute inset-y-0 right-0 flex items-center pr-2 md:static md:inset-auto md:ml-6 md:pr-0'>
               {/* <!-- Profile dropdown button --> */}
               <div className='relative ml-3'>
@@ -343,8 +347,8 @@ const Navbar = () => {
                 Dashboard
               </Link>
             )}
-            <button className='flex items-center text-white hover:text-white rounded-md px-3 py-2 my-4 gap-4'>
-              {!session && (
+            {!isLoggedIn && (
+              <button className='flex items-center text-white hover:text-white rounded-md px-3 py-2 my-4 gap-4'>
                 <>
                   {' '}
                   <Link
@@ -369,8 +373,8 @@ const Navbar = () => {
                     <span>Register</span>
                   </Link>
                 </>
-              )}
-            </button>
+              </button>
+            )}
             <ProductSearchForm />
           </div>
         </div>

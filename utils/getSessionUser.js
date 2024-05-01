@@ -9,10 +9,11 @@ export const getSessionUser = async () => {
       return null;
     }
 
+    const { user } = session;
     return {
-      user: session.user,
-      email: session.user.email,
-      userId: session.user.userId,
+      user,
+      email: user.email,
+      userId: user.userId,
     };
   } catch (error) {
     console.error(error);
