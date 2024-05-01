@@ -34,7 +34,7 @@ export const GET = async (req, res) => {
 // POST /api/cart
 export const POST = async (req, res) => {
   try {
-    const { productId, quantity, itemId } = await req.json();
+    const { productId, quantity } = await req.json();
 
     const sessionUser = await getSessionUser();
 
@@ -48,6 +48,10 @@ export const POST = async (req, res) => {
       User.findOne({ _id: userId }),
       Product.findById(productId),
     ]);
+
+    if (!user || !product) {
+      return new Response('User or product not found', { status: 404 });
+    }
 
     await addToCart(user, product, quantity);
 

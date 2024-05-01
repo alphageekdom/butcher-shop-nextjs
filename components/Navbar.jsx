@@ -16,19 +16,14 @@ import ProductSearchForm from './ProductSearchForm';
 
 const Navbar = () => {
   const { data: session } = useSession();
-
   const isAdmin = session?.user?.isAdmin;
-
   const profileImage = session?.user?.image;
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
-
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
-
   const [hasItemsInCart, setHasItemsInCart] = useState(false);
-
   const router = useRouter();
 
   const handleSignIn = async () => {
@@ -37,22 +32,26 @@ const Navbar = () => {
       return;
     }
     try {
-      const res = await signIn('credentials', {
-        email: session.user.email,
-        password,
-        redirect: false,
-      });
-
-      if (res.error) {
-        toast.error('Invalid Credentials');
-        return;
-      }
-
-      router.replace('/');
+      await signInUser(session.user.email, password);
     } catch (error) {
       console.log(error);
       toast.error('Something Went Wrong');
     }
+  };
+
+  const signInUser = async (email, password) => {
+    const res = await signIn('credentials', {
+      email,
+      password,
+      redirect: false,
+    });
+
+    if (res.error) {
+      toast.error('Invalid Credentials');
+      return;
+    }
+
+    router.replace('/');
   };
 
   const handleSignOut = async () => {
@@ -124,7 +123,13 @@ const Navbar = () => {
     return () => {
       window.removeEventListener('resize', handleResize);
     };
-  }, [fetchCartData]);
+  }, []);
+
+  useEffect(() => {
+    if (isModalOpen && session && session.user) {
+      fetchCartData();
+    }
+  }, [isModalOpen]);
 
   return (
     <nav className='bg-red-700 custom-shadow'>
