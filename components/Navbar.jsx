@@ -74,10 +74,10 @@ const Navbar = () => {
   };
 
   const fetchCartData = async () => {
-    if (!session || !session.user) {
-      return;
-    }
+    setLoading(true);
     try {
+      if (!isLoggedIn) return;
+
       const response = await fetch('/api/cart');
 
       if (response.ok) {
@@ -130,10 +130,8 @@ const Navbar = () => {
   }, []);
 
   useEffect(() => {
-    if (isModalOpen && session && session.user) {
-      fetchCartData();
-    }
-  }, [isModalOpen]);
+    fetchCartData();
+  }, [session]);
 
   return (
     <nav className='bg-red-700'>
