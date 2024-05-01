@@ -2,9 +2,9 @@ import connectDB from '@/config/database';
 import User from '@/models/User';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import bcrypt from 'bcryptjs';
-import { MongoClient } from 'mongodb';
 
 export const authOptions = {
+  secret: process.env.NEXTAUTH_SECRET,
   providers: [
     CredentialsProvider({
       name: 'credentials',
