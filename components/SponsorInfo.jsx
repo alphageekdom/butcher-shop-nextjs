@@ -12,7 +12,7 @@ const SponsorInfo = ({
     <div
       className={`rounded-lg custom-shadow overflow-hidden ${backgroundColor} flex flex-col lg:flex-row items-center justify-center`}
     >
-      <div className='relative w-full h-full rounded-xl'>
+      <div className='relative w-full h-full rounded-xl hidden md:block'>
         <Image
           src={imageSrc}
           alt={heading}

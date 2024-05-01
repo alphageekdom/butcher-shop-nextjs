@@ -4,7 +4,7 @@ import SignatureImage from '@/assets/images/signature.png';
 
 const About = () => {
   return (
-    <section className='md:p-12'>
+    <section className='p-12'>
       <div className='container-xl lg:container m-auto'>
         <div className='grid grid-cols-1 md:grid-cols-2 gap-4 px-4 md:p-0 rounded-lg'>
           <div className='md:pr-8'>

@@ -4,7 +4,7 @@ import Link from 'next/link';
 const ReviewCard = ({ name, date, review, imageSrc, favoriteMeatCut }) => {
   return (
     <div className='relative flex flex-col md:flex-row rounded-xl cursor-pointer bg-white custom-shadow'>
-      <div className='relative w-full h-full rounded-xl'>
+      <div className='relative w-full h-full rounded-xl hidden md:block'>
         <Image
           src={imageSrc}
           alt={name}
