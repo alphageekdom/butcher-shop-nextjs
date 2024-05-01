@@ -4,7 +4,7 @@ export const calculateSubtotal = (cartItems) => {
   }
 
   const subTotal = cartItems.reduce((acc, item) => {
-    // Check if each item has the 'price' property
+    // Check if each item has the 'price' product
     if (
       typeof item === 'object' &&
       'product' in item &&

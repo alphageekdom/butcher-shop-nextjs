@@ -44,7 +44,7 @@ export const POST = async (request) => {
     // Find user in database
     const user = await User.findOne({ _id: userId });
 
-    // Check if property is bookmarked
+    // Check if product is bookmarked
     let isBookmarked = user.bookmarks.includes(productId);
 
     let message;

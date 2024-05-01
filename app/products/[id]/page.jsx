@@ -3,19 +3,12 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import { fetchProduct } from '@/utils/request';
-// import PropertyHeaderImage from '@/components/PropertyHeaderImage';
-import Link from 'next/link';
-import { FaArrowLeft } from 'react-icons/fa';
 import Spinner from '@/components/Spinner';
 import ProductDetails from '@/components/product/ProductDetails';
-import ProductImages from '@/components/product/ProductImages';
 import BackButton from '@/components/uielements/BackButton';
-import BookmarkButton from '@/components/uielements/BookmarkButton';
 import ProductSearchForm from '@/components/ProductSearchForm';
-// import ShareButtons from '@/components/ShareButtons';
-// import PropertyContactForm from '@/components/PropertyContactForm';
 
-const PropertyPage = () => {
+const ProductPage = () => {
   const { id } = useParams();
 
   const [product, setProduct] = useState(null);
@@ -53,7 +46,6 @@ const PropertyPage = () => {
       {loading && <Spinner loading={loading} />}
       {!loading && product && (
         <>
-          {/* <PropertyHeaderImage image={product.images[0]} /> */}
           <section className='bg-[#B91C1B] py-4 search-form'>
             <div className='max-w-7xl mx-auto px-4 flex flex-col items-start sm:px-6 lg:px-8'>
               <ProductSearchForm />
@@ -75,4 +67,4 @@ const PropertyPage = () => {
   );
 };
 
-export default PropertyPage;
+export default ProductPage;

@@ -4,7 +4,7 @@ import { useParams, useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
 import { fetchProduct } from '@/utils/request';
 
-const PropertyEditForm = () => {
+const ProductEditForm = () => {
   const { id } = useParams();
   const router = useRouter();
 
@@ -199,4 +199,4 @@ const PropertyEditForm = () => {
     )
   );
 };
-export default PropertyEditForm;
+export default ProductEditForm;

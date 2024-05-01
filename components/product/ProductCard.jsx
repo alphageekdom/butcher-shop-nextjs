@@ -49,7 +49,7 @@ const ProductCard = ({ product }) => {
     e.preventDefault();
     e.stopPropagation();
     if (!userId) {
-      toast.error('You Need To Sign In To Bookmark A Property');
+      toast.error('You Need To Sign In To Bookmark A Product');
       return;
     }
 
