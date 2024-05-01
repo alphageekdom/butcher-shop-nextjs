@@ -32,6 +32,9 @@ const Navbar = () => {
   const router = useRouter();
   const pathname = usePathname();
 
+  const isCartPage = pathname === '/cart';
+  const isCheckoutPage = pathname === '/checkout';
+
   const handleSignIn = async () => {
     if (!session || !session.user) {
       router.replace('/');
@@ -85,7 +88,6 @@ const Navbar = () => {
         setHasItemsInCart(cartItemsData.length > 0);
       } else if (response.status === 401) {
         console.error('Unauthorized access to fetch cart data');
-        // Set hasItemsInCart to false
         setHasItemsInCart(false);
       } else {
         throw new Error('Failed to fetch cart data');
@@ -97,8 +99,10 @@ const Navbar = () => {
     }
   };
 
-  const openModal = (e) => {
+  const openModal = async (e) => {
     e.preventDefault();
+    await fetchCartData();
+
     if (hasItemsInCart) {
       setIsModalOpen(true);
     } else {
@@ -125,8 +129,9 @@ const Navbar = () => {
     };
   }, [fetchCartData]);
 
-  const isCartPage = pathname === '/cart';
-  const isCheckoutPage = pathname === '/checkout';
+  const handleCartCountChange = (newCount) => {
+    setHasItemsInCart(newCount > 0);
+  };
 
   return (
     <nav className='bg-red-700 custom-shadow'>
@@ -303,10 +308,9 @@ const Navbar = () => {
                 className='flex items-center text-white cursor-pointer'
                 onClick={openModal}
               >
-                <CartCount className='flex items-center text-white' />
+                <CartCount onCountChange={handleCartCountChange} />
               </div>
 
-              {/* Render the CartModal only if not on the cart page and modal is open */}
               {!isCartPage && !isCheckoutPage && isModalOpen && (
                 <CartModal isOpen={isModalOpen} onClose={closeModal} />
               )}

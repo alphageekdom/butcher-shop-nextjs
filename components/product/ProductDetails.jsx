@@ -8,24 +8,26 @@ import BookmarkButton from '@/components/uielements/BookmarkButton';
 import ShareButtons from '../uielements/ShareButton';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
+import { useGlobalContext } from '@/context/CartContext';
 
 const ProductDetails = ({ product }) => {
   const [isAddingToCart, setIsAddingToCart] = useState(false);
+  const { addItemToCart } = useGlobalContext();
 
   const handleAddToCart = async () => {
     if (isAddingToCart) return;
     setIsAddingToCart(true);
     try {
-      const response = await fetch('/api/cart', {
+      const res = await fetch('/api/cart', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ productId: product?._id }),
       });
-      if (response.ok) {
-        console.log('Item added to cart successfully');
+      if (res.ok) {
         toast.success('Added To Cart');
+        addItemToCart(product);
       } else {
         console.error('Failed to add item to cart');
         toast.error('Failed To Add');

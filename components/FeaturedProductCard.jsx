@@ -5,6 +5,7 @@ import { FaDollarSign, FaStar, FaBookmark } from 'react-icons/fa';
 import { useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
+import { useGlobalContext } from '@/context/CartContext';
 
 const FeaturedProductCard = ({ product }) => {
   const { data: session } = useSession();
@@ -12,6 +13,7 @@ const FeaturedProductCard = ({ product }) => {
   const [isBookmarked, setIsBookmarked] = useState(false);
   const [loading, setLoading] = useState(true);
   const [isAddingToCart, setIsAddingToCart] = useState(false);
+  const { addItemToCart } = useGlobalContext();
 
   const handleBookmarkClick = async (e) => {
     e.preventDefault();
@@ -83,15 +85,16 @@ const FeaturedProductCard = ({ product }) => {
     if (isAddingToCart || loading) return;
     setIsAddingToCart(true);
     try {
-      const response = await fetch('/api/cart', {
+      const res = await fetch('/api/cart', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ productId: product?._id }),
       });
-      if (response.ok) {
+      if (res.ok) {
         toast.success('Added To Cart');
+        addItemToCart(product);
       } else {
         toast.error('Failed To Add');
       }

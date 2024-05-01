@@ -23,9 +23,10 @@ export const GET = async (req, res) => {
 
     return new Response(JSON.stringify(cart), {
       status: 200,
+      headers: { 'Content-Type': 'application/json' },
     });
   } catch (error) {
-    console.log(error);
+    console.error('An error occurred:', error);
     return new Response('Something Went Wrong', { status: 500 });
   }
 };
@@ -54,7 +55,7 @@ export const POST = async (req, res) => {
       status: 200,
     });
   } catch (error) {
-    console.log(error);
+    console.error('An error occurred:', error);
     return new Response('Something Went Wrong', { status: 500 });
   }
 };
@@ -78,7 +79,7 @@ export const DELETE = async (req, res) => {
       status: 200,
     });
   } catch (error) {
-    console.log(error);
+    console.error('An error occurred:', error);
     return new Response('Something Went Wrong', { status: 500 });
   }
 };

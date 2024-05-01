@@ -9,6 +9,7 @@ import {
 import CartContainer from './CartContainer';
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/navigation';
+// import { useGlobalContext } from '@/context/CartContext';
 
 const Cart = () => {
   const [cartItems, setCartItems] = useState([]);
@@ -20,6 +21,7 @@ const Cart = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const router = useRouter();
+  // const { removeItemFromCart } = useGlobalContext();
 
   const fetchCartData = async () => {
     try {
@@ -48,6 +50,8 @@ const Cart = () => {
     if (!confirmed) return;
 
     try {
+      setCartItems(cartItems.filter((item) => item._id !== itemId));
+
       const res = await fetch('/api/cart', {
         method: 'DELETE',
         headers: {
@@ -57,10 +61,10 @@ const Cart = () => {
       });
 
       if (res.ok) {
-        setCartItems(cartItems.filter((item) => item._id !== itemId));
         toast.success('Item removed from cart');
       } else {
         throw new Error('Failed to remove item from cart');
+        fetchCartData();
       }
     } catch (error) {
       console.error('Error removing item:', error);
@@ -78,11 +82,13 @@ const Cart = () => {
     updatedCartItems[index].quantity += change;
 
     if (updatedCartItems[index].quantity <= 0) {
-      handleRemoveItem(itemId); // Remove item if quantity becomes zero
+      handleRemoveItem(itemId);
       return;
     }
 
     try {
+      setCartItems(updatedCartItems);
+
       // Update cart items in the database
       const res = await fetch('/api/cart', {
         method: 'POST',
@@ -97,12 +103,10 @@ const Cart = () => {
       });
 
       if (!res.ok) throw new Error('Failed to update cart item quantity');
-
-      // Update cart items in the local state
-      setCartItems(updatedCartItems);
     } catch (error) {
       console.error('Error updating cart item quantity:', error);
       toast.error('Failed to update cart item quantity');
+      fetchCartData();
     }
   };
 

@@ -1,3 +1,5 @@
+'use client';
+
 import { useRouter } from 'next/navigation';
 import Spinner from '../Spinner';
 import { useState, useEffect } from 'react';
@@ -15,6 +17,7 @@ const CartContainer = ({
   onClose,
 }) => {
   const [isMobileView, setIsMobileView] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     const handleResize = () => {
@@ -27,8 +30,6 @@ const CartContainer = ({
 
     return () => window.removeEventListener('resize', handleResize);
   }, []);
-
-  const router = useRouter();
 
   const redirectToCart = () => {
     router.push('/cart');
