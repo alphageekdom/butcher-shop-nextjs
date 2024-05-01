@@ -132,7 +132,7 @@ const Navbar = () => {
   }, [isModalOpen]);
 
   return (
-    <nav className='bg-red-700 custom-shadow'>
+    <nav className='bg-red-700'>
       <div className='mx-auto max-w-7xl px-2 sm:px-6 lg:px-8'>
         <div className='relative flex h-20 items-center justify-between'>
           <div className='absolute inset-y-0 left-0 flex items-center md:hidden'>
@@ -193,10 +193,10 @@ const Navbar = () => {
             {/* <!-- Logo --> */}
             <div className='flex justify-center items-center flex-1'>
               <a className='flex flex-shrink-0 items-center' href='/'>
-                <GiSteak className='text-5xl text-white' />
-                <span className='hidden md:block text-white text-2xl font-bold ml-2'>
+                <GiSteak className='block text-5xl text-white' />
+                <h3 className='hidden md:block text-white text-2xl font-bold ml-2'>
                   EliteCuts
-                </span>
+                </h3>
               </a>
             </div>
           </div>

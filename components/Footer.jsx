@@ -16,7 +16,9 @@ const Footer = () => {
       <div className='container mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 px-4'>
         {/* Company Information */}
         <div className='mb-4 md:mb-0'>
-          <h3 className='text-lg font-semibold mb-2'>EliteCuts</h3>
+          <h3 className='text-lg font-semibold mb-2'>
+            Copyright &copy; {new Date().getFullYear()} EliteCuts
+          </h3>
           <p className='text-sm flex items-center'>
             <FaMapPin className='mr-1' />
             <a
