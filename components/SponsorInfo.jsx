@@ -10,20 +10,21 @@ const SponsorInfo = ({
 }) => {
   return (
     <div
-      className={`${backgroundColor} p-6 rounded-lg custom-shadow flex items-center justify-center flex-col sm:flex-row`}
+      className={`rounded-lg custom-shadow overflow-hidden ${backgroundColor} flex flex-col lg:flex-row items-center justify-center`}
     >
-      <div className='flex-none mb-4 sm:mb-0 sm:mr-6'>
+      <div className='relative w-full h-full rounded-xl'>
         <Image
           src={imageSrc}
           alt={heading}
-          width={100}
-          height={100}
-          className='w-24 h-24 sm:w-32 sm:h-32 rounded-full object-cover'
+          width={500}
+          height={500}
+          sizes='100vw'
+          className='object-cover rounded-t-xl md:rounded-tr-none md:rounded-l-xl h-80 w-full md:w-72'
         />
       </div>
-      <div className='text-center sm:text-left'>
-        <h2 className={`${textColor} text-2xl font-bold mb-2`}>{heading}</h2>
-        <p className={`${textColor} mb-4`}>{children}</p>
+      <div className='p-6 lg:w-2/3'>
+        <h2 className={`text-2xl font-bold mb-4 ${textColor}`}>{heading}</h2>
+        <p className={`${textColor} mb-6`}>{children}</p>
         <a
           href={buttonInfo.link}
           className={`inline-block ${buttonInfo.backgroundColor} text-white rounded-lg px-4 py-2 hover:opacity-80`}
