@@ -50,8 +50,10 @@ export function CartProvider({ children }) {
   };
 
   useEffect(() => {
-    fetchCartData();
-  }, [cartUpdateTrigger]);
+    if (isUserAuthenticated()) {
+      fetchCartData();
+    }
+  }, [session, cartUpdateTrigger]);
 
   const addItemToCart = async (item) => {
     try {
@@ -63,7 +65,6 @@ export function CartProvider({ children }) {
       setCartCount(newCartCount);
 
       setCartUpdateTrigger((prev) => !prev);
-      await fetchCartData();
     } catch (error) {
       console.error('Error adding item to cart:', error);
       toast.error('Failed to add item to cart');
@@ -85,7 +86,7 @@ export function CartProvider({ children }) {
       });
 
       if (res.ok) {
-        await fetchCartData();
+        setCartUpdateTrigger((prev) => !prev);
         toast.success('Item removed from cart');
       } else {
         throw new Error('Failed to remove item from cart');
