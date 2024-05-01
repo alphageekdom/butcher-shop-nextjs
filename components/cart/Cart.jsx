@@ -9,7 +9,7 @@ import {
 import CartContainer from './CartContainer';
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/navigation';
-// import { useGlobalContext } from '@/context/CartContext';
+import { useGlobalContext } from '@/context/CartContext';
 
 const Cart = () => {
   const [cartItems, setCartItems] = useState([]);
@@ -21,7 +21,7 @@ const Cart = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const router = useRouter();
-  // const { removeItemFromCart } = useGlobalContext();
+  const { removeItemFromCart } = useGlobalContext();
 
   const fetchCartData = async () => {
     try {
@@ -50,22 +50,8 @@ const Cart = () => {
     if (!confirmed) return;
 
     try {
-      setCartItems(cartItems.filter((item) => item._id !== itemId));
-
-      const res = await fetch('/api/cart', {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ itemId }),
-      });
-
-      if (res.ok) {
-        toast.success('Item removed from cart');
-      } else {
-        throw new Error('Failed to remove item from cart');
-        fetchCartData();
-      }
+      await removeItemFromCart(itemId);
+      await fetchCartData();
     } catch (error) {
       console.error('Error removing item:', error);
       toast.error('Failed to remove item from cart');

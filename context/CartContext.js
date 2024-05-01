@@ -53,10 +53,36 @@ export function CartProvider({ children }) {
     }
   };
 
+  const removeItemFromCart = async (itemId) => {
+    try {
+      // Remove item from cart
+      setCartItems(cartItems.filter((item) => item._id !== itemId));
+
+      const res = await fetch('/api/cart', {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ itemId }),
+      });
+
+      if (res.ok) {
+        await fetchCartData();
+        toast.success('Item removed from cart');
+      } else {
+        throw new Error('Failed to remove item from cart');
+      }
+    } catch (error) {
+      console.error('Error removing item from cart:', error);
+      toast.error('Failed to remove item from cart');
+    }
+  };
+
   const contextValue = {
     cartCount,
     cartItems,
     addItemToCart,
+    removeItemFromCart,
   };
 
   return (
