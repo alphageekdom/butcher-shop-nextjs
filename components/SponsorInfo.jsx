@@ -19,7 +19,7 @@ const SponsorInfo = ({
           width={500}
           height={500}
           sizes='100vw'
-          className='object-cover rounded-t-xl md:rounded-tr-none md:rounded-l-xl h-80 w-full md:w-72'
+          className='object-cover h-[300px] md:h-[350px] lg:h-[420px] w-full'
         />
       </div>
       <div className='p-6 lg:w-2/3'>

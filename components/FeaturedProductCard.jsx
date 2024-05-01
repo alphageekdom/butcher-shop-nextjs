@@ -122,7 +122,7 @@ const FeaturedProductCard = ({ product }) => {
           sizes='100vw'
           placeholder='blur'
           blurDataURL={`/images/products/${product.images[0]}`}
-          className='object-cover rounded-t-xl md:rounded-tr-none md:rounded-l-xl h-72 w-full md:w-72'
+          className='object-cover rounded-t-xl md:rounded-tr-none md:rounded-l-xl h-[300px] w-full md:w-72'
         />
       </div>
       <div className='p-4 w-full'>
