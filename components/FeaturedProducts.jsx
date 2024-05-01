@@ -9,9 +9,6 @@ const FeaturedProducts = async () => {
 
     return (
       <>
-        <section className='py-4'>
-          <div className='max-w-7xl mx-auto px-4 flex flex-col items-start sm:px-6 lg:px-8'></div>
-        </section>
         {products.length > 0 && (
           <section className='bg-blue-50 px-4 pt-6 pb-10'>
             <div className='container-xl lg:container m-auto'>
