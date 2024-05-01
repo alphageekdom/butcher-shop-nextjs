@@ -25,7 +25,7 @@ const ProfilePage = () => {
       }
 
       try {
-        const res = await fetch(`api/bookmarks`);
+        const res = await fetch(`/api/bookmarks`);
 
         if (res.status === 200) {
           const data = await res.json();
