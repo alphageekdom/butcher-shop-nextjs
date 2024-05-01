@@ -91,7 +91,6 @@ const ProductCard = ({ product }) => {
         body: JSON.stringify({ productId: product?._id }),
       });
       if (res.ok) {
-        console.log('Item added to cart successfully');
         toast.success('Added To Cart');
         addItemToCart(product);
       } else {

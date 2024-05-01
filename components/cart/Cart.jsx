@@ -112,6 +112,8 @@ const Cart = () => {
     const taxesTotal = calculateTaxesTotal(subtotal, taxRate);
     const grandTotal = calculateGrandTotal(subtotal, taxesTotal);
     setSubtotal(subtotal);
+    setTaxesTotal(taxesTotal);
+    setGrandTotal(grandTotal);
   }, [cartItems, taxRate]);
 
   return (

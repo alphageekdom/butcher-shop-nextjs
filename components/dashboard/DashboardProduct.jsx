@@ -56,8 +56,6 @@ const ProductsList = () => {
   };
 
   const deleteProduct = async (id) => {
-    console.log('Product ID:', id);
-
     const confirmDelete = window.confirm(
       'Are you sure you want to delete this product?'
     );

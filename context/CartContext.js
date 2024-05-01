@@ -43,10 +43,6 @@ export function CartProvider({ children }) {
 
       setCartUpdateTrigger((prev) => !prev);
       await fetchCartData();
-
-      console.log('Item added to cart:', item);
-      console.log('Updated cart items:', updatedCartItems);
-      console.log('New cart count:', newCartCount);
     } catch (error) {
       console.error('Error adding item to cart:', error);
       toast.error('Failed to add item to cart');

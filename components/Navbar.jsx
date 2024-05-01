@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { GiSteak } from 'react-icons/gi';
 
 import Image from 'next/image';
-import { useRouter, usePathname } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
 import profileDefault from '@/public/images/user-default.png';
@@ -30,10 +30,6 @@ const Navbar = () => {
   const [hasItemsInCart, setHasItemsInCart] = useState(false);
 
   const router = useRouter();
-  const pathname = usePathname();
-
-  const isCartPage = pathname === '/cart';
-  const isCheckoutPage = pathname === '/checkout';
 
   const handleSignIn = async () => {
     if (!session || !session.user) {
@@ -99,15 +95,16 @@ const Navbar = () => {
     }
   };
 
-  const openModal = async (e) => {
-    e.preventDefault();
-    await fetchCartData();
-
+  const handleCartClick = () => {
     if (hasItemsInCart) {
-      setIsModalOpen(true);
+      openModal();
     } else {
       router.push('/cart');
     }
+  };
+
+  const openModal = () => {
+    setIsModalOpen(true);
   };
 
   const closeModal = () => {
@@ -128,10 +125,6 @@ const Navbar = () => {
       window.removeEventListener('resize', handleResize);
     };
   }, [fetchCartData]);
-
-  const handleCartCountChange = (newCount) => {
-    setHasItemsInCart(newCount > 0);
-  };
 
   return (
     <nav className='bg-red-700 custom-shadow'>
@@ -304,16 +297,15 @@ const Navbar = () => {
                 )}
               </div>
 
-              <div
-                className='flex items-center text-white cursor-pointer'
-                onClick={openModal}
-              >
-                <CartCount onCountChange={handleCartCountChange} />
-              </div>
+              <div className='flex items-center text-white '>
+                <div>
+                  <CartCount onClick={handleCartClick} />
+                </div>
 
-              {!isCartPage && !isCheckoutPage && isModalOpen && (
-                <CartModal isOpen={isModalOpen} onClose={closeModal} />
-              )}
+                {isModalOpen && (
+                  <CartModal isOpen={isModalOpen} onClose={closeModal} />
+                )}
+              </div>
             </div>
           )}
         </div>

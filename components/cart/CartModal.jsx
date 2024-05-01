@@ -9,7 +9,7 @@ import {
   calculateTaxesTotal,
   calculateGrandTotal,
 } from '@/utils/cart';
-import { useRouter } from 'next/navigation';
+import { useGlobalContext } from '@/context/CartContext';
 
 const CartModal = ({ isOpen, onClose }) => {
   const [cartItems, setCartItems] = useState([]);
@@ -19,7 +19,8 @@ const CartModal = ({ isOpen, onClose }) => {
   const [grandTotal, setGrandTotal] = useState(0);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(isOpen);
-  const router = useRouter();
+
+  const { removeItemFromCart } = useGlobalContext();
 
   const closeModal = () => {
     setIsModalOpen(false);
@@ -32,24 +33,13 @@ const CartModal = ({ isOpen, onClose }) => {
       'Are you sure you want to delete this item?'
     );
 
-    if (confirmed) {
-      try {
-        const response = await fetch('/api/cart', {
-          method: 'DELETE',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ itemId }),
-        });
+    if (!confirmed) return;
 
-        if (response.ok) {
-          setCartItems(cartItems.filter((item) => item._id !== itemId));
-        } else {
-          throw new Error('Failed to remove item from cart');
-        }
-      } catch (error) {
-        console.error('Error removing item:', error);
-      }
+    try {
+      await removeItemFromCart(itemId);
+      await fetchCartData();
+    } catch (error) {
+      console.error('Error removing item:', error);
     }
   };
 
@@ -99,14 +89,6 @@ const CartModal = ({ isOpen, onClose }) => {
         const cartItemsData = data.items || [];
 
         setCartItems(cartItemsData);
-
-        const subtotal = calculateSubtotal(cartItemsData);
-        const taxesTotal = calculateTaxesTotal(subtotal, taxRate);
-        const grandTotal = calculateGrandTotal(subtotal, taxesTotal);
-
-        setSubtotal(subtotal);
-        setTaxesTotal(taxesTotal);
-        setGrandTotal(grandTotal);
       } else {
         throw new Error('Failed to fetch cart data');
       }
@@ -127,11 +109,20 @@ const CartModal = ({ isOpen, onClose }) => {
     setIsModalOpen(isOpen);
   }, [isOpen]);
 
+  useEffect(() => {
+    const subtotal = calculateSubtotal(cartItems);
+    const taxesTotal = calculateTaxesTotal(subtotal, taxRate);
+    const grandTotal = calculateGrandTotal(subtotal, taxesTotal);
+    setSubtotal(subtotal);
+    setTaxesTotal(taxesTotal);
+    setGrandTotal(grandTotal);
+  }, [cartItems, taxRate]);
+
   return (
     isModalOpen && (
       <>
         <div className='fixed top-0 left-0 w-screen h-screen bg-gray-800 bg-opacity-75 flex justify-center items-center z-30 '>
-          <div className='bg-white p-8 rounded-lg relative w-[90%] md:[50%] h-[90%]'>
+          <div className='bg-white text-black p-8 rounded-lg relative w-[90%] md:[50%] h-[90%]'>
             <button
               className='absolute top-2 right-2 text-gray-600 hover:text-gray-800'
               onClick={closeModal}
@@ -142,7 +133,12 @@ const CartModal = ({ isOpen, onClose }) => {
               <div className='w-full'>
                 <div className='flex flex-row justify-start items-center p-5 gap-3 text-gray-600'>
                   <FaShoppingCart className='text-2xl' />
-                  <h1 className='text-2xl'>Cart</h1>
+                  <h1 className='text-2xl'>
+                    Cart
+                    <span className='text-grey-300 ml-2'>
+                      ({cartItems.length} Items)
+                    </span>
+                  </h1>
                 </div>
                 <CartContainer
                   cartItems={cartItems}
@@ -150,8 +146,8 @@ const CartModal = ({ isOpen, onClose }) => {
                   handleRemoveItem={handleRemoveItem}
                   handleQuantityChange={handleQuantityChange}
                   subtotal={subtotal}
-                  taxesTotal={taxesTotal}
-                  grandTotal={grandTotal}
+                  taxesTotal={calculateTaxesTotal(subtotal, taxRate)}
+                  grandTotal={calculateGrandTotal(subtotal, taxesTotal)}
                   isInModal={true}
                   onClose={closeModal}
                 />

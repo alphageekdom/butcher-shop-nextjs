@@ -13,8 +13,6 @@ const SearchResultsPage = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  console.log(products);
-
   const product = searchParams.get('product');
   const productType = searchParams.get('productType');
 
