@@ -16,8 +16,6 @@ import ProductSearchForm from './ProductSearchForm';
 
 const Navbar = () => {
   const { data: session } = useSession();
-  // const isAdmin = session?.user?.isAdmin;
-  // const profileImage = session?.user?.image;
 
   const isLoggedIn = session && session.user;
   const isAdmin = isLoggedIn && session.user.isAdmin;
@@ -194,12 +192,12 @@ const Navbar = () => {
             </div>
             {/* <!-- Logo --> */}
             <div className='flex justify-center items-center flex-1'>
-              <a className='flex flex-shrink-0 items-center' href='/'>
+              <Link className='flex flex-shrink-0 items-center' href='/'>
                 <GiSteak className='block text-5xl text-white' />
                 <h3 className='hidden md:block text-white text-2xl font-bold ml-2'>
                   EliteCuts
                 </h3>
-              </a>
+              </Link>
             </div>
           </div>
 
