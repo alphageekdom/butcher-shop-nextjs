@@ -1,5 +1,5 @@
 import React from 'react';
-import SponsorInfo from './SponsorInfo';
+import SponsorCard from './SponsorCard';
 import GrillImage from '@/assets/images/grill.jpg';
 import Knives from '@/assets/images/knives.jpg';
 
@@ -11,7 +11,7 @@ const Sponsor = () => {
           Our Sponsors
         </h1>
         <div className='grid grid-cols-1 md:grid-cols-2 gap-4 p-4 rounded-lg'>
-          <SponsorInfo
+          <SponsorCard
             heading='Grills'
             backgroundColor='bg-gray-100'
             buttonInfo={{
@@ -23,8 +23,8 @@ const Sponsor = () => {
           >
             Explore premium grills from our esteemed sponsor, renowned for their
             commitment to excellence and innovation.
-          </SponsorInfo>
-          <SponsorInfo
+          </SponsorCard>
+          <SponsorCard
             heading='Kitchen Knives'
             backgroundColor='bg-blue-100'
             buttonInfo={{
@@ -37,7 +37,7 @@ const Sponsor = () => {
             Delve into exquisite kitchen knife sets from our distinguished
             sponsor, recognized for their dedication to precision and culinary
             craftsmanship.
-          </SponsorInfo>
+          </SponsorCard>
         </div>
       </div>
     </section>

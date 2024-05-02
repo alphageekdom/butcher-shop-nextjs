@@ -116,13 +116,13 @@ const FeaturedProductCard = ({ product }) => {
       <div className='relative w-full h-full rounded-xl'>
         <Image
           src={`/images/products/${product.images[0]}`}
-          alt=''
+          alt={product.name}
           width={300}
           height={300}
           sizes='100vw'
           placeholder='blur'
           blurDataURL={`/images/products/${product.images[0]}`}
-          className='object-cover rounded-t-xl md:rounded-tr-none md:rounded-l-xl h-[300px] w-full md:w-72'
+          className='object-cover rounded-t-xl md:rounded-tr-none md:rounded-l-xl h-80 w-full'
         />
       </div>
       <div className='p-4 w-full'>

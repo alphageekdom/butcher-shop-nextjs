@@ -12,6 +12,7 @@ const ReviewCard = ({ bgColor, text, name, review, imageSrc, favorite }) => {
           alt={name}
           width={300}
           height={300}
+          priority={true}
           className='object-cover w-full h-full rounded-t-xl md:rounded-tr-none md:rounded-l-xl'
         />
       </div>
