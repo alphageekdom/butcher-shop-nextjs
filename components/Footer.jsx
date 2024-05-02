@@ -16,9 +16,9 @@ const Footer = () => {
       <div className='container mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 px-4'>
         {/* Company Information */}
         <div className='mb-4 md:mb-0'>
-          <h3 className='text-lg font-semibold mb-2'>
+          <h1 className='text-lg font-semibold mb-2'>
             Copyright &copy; {new Date().getFullYear()} EliteCuts
-          </h3>
+          </h1>
           <p className='text-sm flex items-center'>
             <FaMapPin className='mr-1' />
             <a
@@ -44,7 +44,7 @@ const Footer = () => {
 
         {/* Quick Links */}
         <div>
-          <h3 className='text-lg font-semibold mb-2'>Quick Links</h3>
+          <h1 className='text-lg font-semibold mb-2'>Quick Links</h1>
           <ul>
             <li className='text-sm mb-1'>
               <a href='#' className='hover:text-gray-400'>
@@ -66,27 +66,50 @@ const Footer = () => {
 
         {/* Social Media Icons */}
         <div>
-          <h3 className='text-lg font-semibold mb-2'>Follow Us</h3>
+          <h1 className='text-lg font-semibold mb-2'>Follow Us</h1>
           <div className='flex space-x-4'>
-            <a href='#' className='text-2xl hover:text-gray-400'>
+            <a
+              href='https://www.facebook.com'
+              className='text-2xl hover:text-gray-400'
+              aria-label='Facebook'
+            >
               <FaFacebook />
             </a>
-            <a href='#' className='text-2xl hover:text-gray-400'>
+            <a
+              href='https://twitter.com'
+              className='text-2xl hover:text-gray-400'
+              aria-label='Twitter'
+            >
               <FaTwitter />
             </a>
-            <a href='#' className='text-2xl hover:text-gray-400'>
+            <a
+              href='https://www.instagram.com'
+              className='text-2xl hover:text-gray-400'
+              aria-label='Instagram'
+            >
               <FaInstagram />
             </a>
-            <a href='#' className='text-2xl hover:text-gray-400'>
+            <a
+              href='https://www.pinterest.com'
+              className='text-2xl hover:text-gray-400'
+              aria-label='Pinterest'
+            >
               <FaPinterest />
             </a>
-            <a href='#' className='text-2xl hover:text-gray-400'>
+            <a
+              href='https://www.linkedin.com'
+              className='text-2xl hover:text-gray-400'
+              aria-label='LinkedIn'
+            >
               <FaLinkedin />
             </a>
-            <a href='#' className='text-2xl hover:text-gray-400'>
+            <a
+              href='https://www.youtube.com'
+              className='text-2xl hover:text-gray-400'
+              aria-label='YouTube'
+            >
               <FaYoutube />
             </a>
-            {/* Add more social media icons here */}
           </div>
         </div>
       </div>

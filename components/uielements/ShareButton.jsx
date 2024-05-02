@@ -17,6 +17,7 @@ const ShareButtons = ({ product }) => {
         <FacebookShareButton
           url={shareUrl}
           quote={product.name}
+          aria-label='Facebook'
           hashtag={`#${product.name.replace(/\s/g, '')}Lovers`}
         >
           <FacebookIcon size={40} round={true} />
@@ -25,6 +26,7 @@ const ShareButtons = ({ product }) => {
         <TwitterShareButton
           url={shareUrl}
           title={product.name}
+          aria-label='X/Twitter'
           hashtags={[`${product.name.replace(/\s/g, '')}Lovers`]}
         >
           <XIcon size={40} round={true} />
@@ -33,6 +35,7 @@ const ShareButtons = ({ product }) => {
         <WhatsappShareButton
           url={shareUrl}
           title={product.name}
+          aria-label='WhatsApp'
           separator=':: '
         >
           <WhatsappIcon size={40} round={true} />
@@ -41,6 +44,7 @@ const ShareButtons = ({ product }) => {
         <EmailShareButton
           url={shareUrl}
           subject={product.name}
+          aria-label='Email'
           body={`Check Out This Product Listing: ${shareUrl}`}
         >
           <EmailIcon size={40} round={true} />

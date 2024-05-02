@@ -6,11 +6,11 @@ import ProductImages from './ProductImages';
 import CommentSection from '../CommentSection';
 import BookmarkButton from '@/components/uielements/BookmarkButton';
 import ShareButtons from '../uielements/ShareButton';
-import { useState } from 'react';
+import React, { useState, Suspense } from 'react';
 import { toast } from 'react-toastify';
 import { useGlobalContext } from '@/context/CartContext';
 
-const ProductDetails = ({ product }) => {
+const ProductDetails = React.memo(({ product }) => {
   const [isAddingToCart, setIsAddingToCart] = useState(false);
   const { addItemToCart } = useGlobalContext();
 
@@ -73,7 +73,7 @@ const ProductDetails = ({ product }) => {
                   {isAddingToCart ? 'Adding...' : 'Add to Cart'}
                 </button>
               </div>
-              <p className='text-red-500 mb-9'>
+              <p className='text-red-900 text-xl font-semibold mb-9'>
                 Current Stock: {product.inStock}
               </p>
               <div className='border-t border-gray-500 my-4'></div>
@@ -88,10 +88,12 @@ const ProductDetails = ({ product }) => {
       </div>
 
       <div className='bg-white p-6 rounded-lg mt-6'>
-        <CommentSection product={product} />
+        <Suspense fallback={<div>Loading...</div>}>
+          <CommentSection product={product} />
+        </Suspense>
       </div>
     </main>
   );
-};
+});
 
 export default ProductDetails;

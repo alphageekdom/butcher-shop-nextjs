@@ -156,13 +156,13 @@ const ProductsList = () => {
                     <tr key={product._id}>
                       <td className='px-6 py-4 whitespace-nowrap'>
                         <div className='flex items-center'>
-                          <div className='flex-shrink-0 h-12 w-12'>
+                          <div className='relative flex-shrink-0 h-12 w-12 overflow-hidden'>
                             <Image
                               src={`/images/products/${product.images[0]}`}
                               alt={product.name}
-                              width={48}
-                              height={48}
-                              className='w-12 h-12 rounded-full'
+                              width={300}
+                              height={300}
+                              className='object-cover w-full h-full rounded-full'
                             />
                           </div>
                         </div>
@@ -179,12 +179,12 @@ const ProductsList = () => {
                       <td className='px-6 py-4 whitespace-nowrap'>
                         <Link
                           href={`/products/${product._id}/edit`}
-                          className='py-3 px-6 bg-blue-500 hover:bg-blue-700 text-white font-bold mr-2'
+                          className='py-3 px-6 bg-blue-700 hover:bg-blue-500 text-white font-bold mr-2'
                         >
                           Edit
                         </Link>
                         <button
-                          className='py-3 px-6 bg-red-500 hover:bg-red-700 text-white font-bold'
+                          className='py-3 px-6 bg-red-700 hover:bg-red-500 text-white font-bold'
                           onClick={() => product && deleteProduct(product._id)}
                         >
                           Delete

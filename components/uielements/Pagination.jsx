@@ -18,6 +18,7 @@ const Pagination = ({ page, pageSize, totalItems, onPageChange }) => {
           page === 1 ? 'text-gray-500' : ''
         }`}
         disabled={page === 1}
+        title='Previous'
         onClick={() => handlePageChange(page - 1)}
       >
         <MdOutlineArrowBackIosNew />
@@ -30,6 +31,7 @@ const Pagination = ({ page, pageSize, totalItems, onPageChange }) => {
           page === totalPages ? 'text-gray-500' : ''
         }`}
         disabled={page === totalPages}
+        title='Next'
         onClick={() => handlePageChange(page + 1)}
       >
         <MdOutlineArrowForwardIos />

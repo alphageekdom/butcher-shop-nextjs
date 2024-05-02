@@ -7,7 +7,7 @@ const BackButton = ({ href }) => {
       <div className='container m-auto py-6 px-6'>
         <Link
           href={href}
-          className='text-sky-500 hover:text-sky-600 flex items-center'
+          className='text-sky-950 hover:text-sky-600 flex items-center'
         >
           <FaArrowLeft className='mr-2' /> Go Back
         </Link>

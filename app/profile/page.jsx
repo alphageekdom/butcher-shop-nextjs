@@ -113,7 +113,10 @@ const ProfilePage = () => {
                 ) : (
                   bookmarks.map((bookmark) => (
                     <div key={bookmark?._id} className='mb-10'>
-                      <Link href={`/products/${bookmark._id}`}>
+                      <Link
+                        href={`/products/${bookmark._id}`}
+                        aria-label={bookmark.name}
+                      >
                         <Image
                           className='h-32 w-full rounded-md object-cover'
                           src={`/images/products/${bookmark?.images[0]}`}
@@ -128,7 +131,7 @@ const ProfilePage = () => {
                       </div>
                       <div className='mt-2'>
                         <button
-                          className='bg-red-500 text-white px-4 py-2 rounded-md'
+                          className='bg-red-700 text-white px-4 py-2 rounded-md'
                           onClick={() => handleDeleteBookmark(bookmark._id)}
                         >
                           Unbookmark

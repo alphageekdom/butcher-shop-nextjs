@@ -31,6 +31,7 @@ const CartItem = ({ item, index, handleQuantityChange, handleRemoveItem }) => {
         <button
           type='button'
           className='text-gray-500 focus:outline-none'
+          aria-label='Decrease'
           onClick={() => handleQuantityChange(item._id, -1)} // Decrement quantity
         >
           <FaMinus />
@@ -39,6 +40,7 @@ const CartItem = ({ item, index, handleQuantityChange, handleRemoveItem }) => {
         <button
           type='button'
           className='text-gray-500 focus:outline-none z-10'
+          aria-label='Increase'
           onClick={() => handleQuantityChange(item._id, 1)} // Increment quantity
         >
           <FaPlus />
@@ -48,6 +50,7 @@ const CartItem = ({ item, index, handleQuantityChange, handleRemoveItem }) => {
       <div className='flex items-center order-5 p-2'>
         <button
           type='button'
+          aria-label='Delete'
           className='w-full flex justify-center py-2 px-4 border rounded-md  bg-red-600 text-white'
           onClick={() => handleRemoveItem(item._id)}
         >

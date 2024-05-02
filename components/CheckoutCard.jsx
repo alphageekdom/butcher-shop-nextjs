@@ -98,7 +98,7 @@ const CheckoutCard = () => {
             {/* Add more customer information fields as needed */}
             <button
               type='submit'
-              className='bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition duration-300'
+              className='bg-blue-700 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition duration-300'
             >
               Proceed to Payment
             </button>
@@ -109,7 +109,8 @@ const CheckoutCard = () => {
           <div className='flex justify-center mb-6'>
             {/* PayPal button */}
             <button
-              className='bg-blue-400 hover:bg-blue-500 text-white py-2 px-4 rounded-md mr-4'
+              className='bg-blue-700 hover:bg-blue-500 text-white py-2 px-4 rounded-md mr-4'
+              aria-label='Pay with PayPal'
               onClick={handlePayWithPayPal}
             >
               <Image
@@ -124,7 +125,8 @@ const CheckoutCard = () => {
             </button>
             {/* Stripe button */}
             <button
-              className='bg-indigo-500 hover:bg-indigo-600 text-white py-2 px-4 rounded-md'
+              className='bg-indigo-700 hover:bg-indigo-500 text-white py-2 px-4 rounded-md'
+              aria-label='Pay with Stripe'
               onClick={handlePayWithStripe}
             >
               <Image
@@ -154,6 +156,7 @@ const CheckoutCard = () => {
                     color: '#9e2146',
                   },
                 },
+                label: 'Credit or Debit Card Information',
               }}
             />
           </div>

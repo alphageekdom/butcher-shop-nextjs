@@ -84,7 +84,7 @@ const BookmarkButton = ({ product }) => {
       className={`${
         isBookmarked
           ? 'bg-[#B91C1B] hover:bg-red-600'
-          : 'bg-blue-500 hover:bg-blue-600'
+          : 'bg-blue-700 hover:bg-blue-500'
       } text-white font-bold w-full py-2 px-4 rounded-full flex items-center justify-center`}
     >
       <FaBookmark className='mr-2' /> {isBookmarked ? 'Remove' : 'Bookmark'}

@@ -108,7 +108,7 @@ const CommentSection = ({ product }) => {
           </div>
           <button
             type='submit'
-            className='bg-blue-500 text-white px-4 py-2 rounded-md'
+            className='bg-blue-700 hover:bg-blue-500 text-white px-4 py-2 rounded-md'
           >
             Submit Review
           </button>

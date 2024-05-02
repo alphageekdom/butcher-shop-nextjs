@@ -30,7 +30,7 @@ const Sponsor = () => {
             buttonInfo={{
               text: 'Browse',
               link: 'https://cutleryandmore.com/collections/kitchen-knives-cutlery',
-              backgroundColor: 'bg-blue-500',
+              backgroundColor: 'bg-blue-600',
             }}
             imageSrc={Knives}
           >

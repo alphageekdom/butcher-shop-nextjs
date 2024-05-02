@@ -55,13 +55,13 @@ const Dashboard = () => {
             <div className='flex gap-4'>
               <Link
                 href='/products/list'
-                className='py-2 px-4 bg-blue-500 hover:bg-blue-700 text-white'
+                className='py-2 px-4 bg-blue-700 hover:bg-blue-500 text-white'
               >
                 Edit Products
               </Link>
               <Link
                 href='/products/add'
-                className='py-2 px-4 bg-green-500 hover:bg-green-700 text-white'
+                className='py-2 px-4 bg-green-700 hover:bg-green-500 text-white'
               >
                 Add Product
               </Link>
@@ -78,7 +78,7 @@ const Dashboard = () => {
             <div className='text-right'>
               <Link
                 href='/users'
-                className='py-2 px-4 bg-blue-500 hover:bg-blue-700 text-white'
+                className='py-2 px-4 bg-blue-700 hover:bg-blue-500 text-white'
               >
                 Edit Users
               </Link>
