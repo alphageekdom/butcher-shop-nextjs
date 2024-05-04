@@ -96,10 +96,16 @@ const ProfilePage = () => {
                 <h2 className='text-2xl mb-4'>
                   <span className='font-bold block'>Name: </span> {profileName}
                 </h2>
-                <h2 className='text-2xl'>
+                <h2 className='text-2xl mb-4'>
                   <span className='font-bold block'>Email: </span>{' '}
                   {profileEmail}
                 </h2>
+                <Link
+                  href={'/profile/update'}
+                  className='bg-green-700 text-white px-4 py-2 rounded-md'
+                >
+                  Update Profile
+                </Link>
               </div>
 
               <div className='md:w-3/4 md:pl-4'>

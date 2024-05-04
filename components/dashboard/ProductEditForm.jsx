@@ -47,14 +47,14 @@ const ProductEditForm = () => {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault(); // Prevent default form submission behavior
+    e.preventDefault();
 
     try {
       const formData = new FormData(e.target);
 
       const response = await fetch(`/api/products/${id}`, {
         method: 'PUT',
-        body: formData, // Convert form data to JSON string
+        body: formData,
       });
 
       if (response.status === 200) {
