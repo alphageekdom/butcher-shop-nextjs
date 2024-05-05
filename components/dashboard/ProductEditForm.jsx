@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
 import { fetchProduct } from '@/utils/request';
+import DOMPurify from 'dompurify';
 
 const ProductEditForm = () => {
   const { id } = useParams();
@@ -42,7 +43,7 @@ const ProductEditForm = () => {
     const { name, value } = e.target;
     setFields((prevFields) => ({
       ...prevFields,
-      [name]: value,
+      [name]: DOMPurify.sanitize(value),
     }));
   };
 

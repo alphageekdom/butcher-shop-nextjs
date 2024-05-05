@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import DOMPurify from 'dompurify';
 
 const ProductSearchForm = () => {
   const [product, setProduct] = useState('');
@@ -12,7 +13,9 @@ const ProductSearchForm = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (product === '' && productType === 'All') {
+    const sanitizedProduct = DOMPurify.sanitize(product.trim());
+
+    if (sanitizedProduct === '' && productType === 'All') {
       router.push('/products');
     } else {
       const query = `?product=${product}&productType=${productType}`;

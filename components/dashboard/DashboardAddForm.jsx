@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import DOMPurify from 'dompurify';
 
 const DashboardAddForm = () => {
   const [mounted, setMounted] = useState(false);
@@ -24,7 +25,7 @@ const DashboardAddForm = () => {
     const { name, value } = e.target;
     setFormData((prevFormData) => ({
       ...prevFormData,
-      [name]: value,
+      [name]: DOMPurify.sanitize(value),
     }));
   };
 

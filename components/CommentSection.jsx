@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { BsStarFill } from 'react-icons/bs';
 import { useSession } from 'next-auth/react';
+import DOMPurify from 'dompurify';
 import Spinner from './Spinner';
 
 const CommentSection = ({ product }) => {
@@ -16,10 +17,13 @@ const CommentSection = ({ product }) => {
     try {
       setLoading(true);
       const response = await fetch(`/api/products/${product._id}`);
-      const data = await response.json();
-      setReviews(data.reviews || []);
-      setRating(data.rating);
-      setLoading(false);
+      if (response.ok) {
+        const data = await response.json();
+        setReviews(data.reviews || []);
+        setRating(data.rating);
+      } else {
+        console.error('Failed to fetch product details:', response.statusText);
+      }
     } catch (error) {
       console.error('Error fetching product details:', error);
       setLoading(false);
@@ -46,12 +50,13 @@ const CommentSection = ({ product }) => {
     }
     try {
       setLoading(true);
+      const sanitizedComment = DOMPurify.sanitize(comment);
       const response = await fetch(`/api/products/${product._id}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ rating, comment }),
+        body: JSON.stringify({ rating, comment: sanitizedComment }),
       });
       if (response.ok) {
         const data = await response.json();
@@ -137,7 +142,7 @@ const CommentSection = ({ product }) => {
                   ))}
                 </div>
               </div>
-              <p className='mt-2'>{review.comment}</p>
+              <p className='mt-2'>{DOMPurify.sanitize(review.comment)}</p>
             </div>
           ))
         ) : (
