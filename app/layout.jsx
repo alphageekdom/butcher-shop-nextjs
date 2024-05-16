@@ -1,5 +1,5 @@
 import Footer from '@/components/Footer';
-import Navbar from '@/components/Navbar';
+import Navbar from '@/components/navbar/Navbar';
 import '@/assets/styles/global.css';
 
 import { GlobalProvider } from '@/context/GlobalContext';
@@ -10,7 +10,7 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 export const metadata = {
-  title: "Ribeye Don's | Luxury Cuts",
+  title: 'Elite Cuts | Luxury Cuts',
   description: 'Explore your new favorite cut',
   keywords: 'butcher shop, steaks, poultry, pork',
 };
