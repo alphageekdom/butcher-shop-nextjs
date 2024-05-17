@@ -1,74 +1,82 @@
 import Image from 'next/image';
 import { Gallery, Item } from 'react-photoswipe-gallery';
+import 'photoswipe/dist/photoswipe.css';
 
 const ProductImages = ({ images }) => {
   return (
     <Gallery>
       <section className='bg-blue-50 p-4'>
-        {images.length === 1 ? (
-          <Item
-            original={images[0]}
-            thumbnail={images[0]}
-            width={1000}
-            height={600}
-          >
-            {({ ref, open }) => (
-              <Image
-                ref={ref}
-                onClick={open}
-                src={images[0]}
-                alt=''
-                className='object-cover h-[400px] mx-auto rounded-xl'
-                width={0}
-                height={0}
-                sizes='100vw'
-                priority={true}
-                placeholder='blur'
-                blurDataURL={images[0]}
-              />
-            )}
-          </Item>
-        ) : (
-          <div
-            className={`grid ${
-              images.length === 3 ? 'grid-cols-2' : 'grid-cols1'
-            } gap-4`}
-          >
-            {images.map((image, index) => (
-              <div
-                key={index}
-                className={`${
-                  images.length === 3 && index === 0
-                    ? 'col-span-2'
-                    : 'col-span-1'
-                }`}
-              >
-                <Item
-                  original={image}
-                  thumbnail={image}
-                  width={1000}
-                  height={600}
+        <div className='container mx-auto'>
+          {images.length === 1 ? (
+            <Item
+              original={`/images/products/${images[0]}`}
+              thumbnail={`/images/products/${images[0]}`}
+              width='1000'
+              height='600'
+            >
+              {({ ref, open }) => (
+                <div
+                  ref={ref}
+                  onClick={open}
+                  className='relative cursor-pointer mx-auto rounded-xl product-thumbnail'
                 >
-                  {({ ref, open }) => (
+                  <div className='relative h-0 pb-[56.25%]'>
+                    {' '}
+                    {/* Aspect ratio of 16:9 */}
                     <Image
-                      ref={ref}
-                      onClick={open}
-                      src={`/images/products/${image}`}
-                      alt=''
-                      className='object-cover h-[400px] w-full rounded-xl'
-                      width={0}
-                      height={0}
-                      sizes='100vw'
+                      src={`/images/products/${images[0]}`}
+                      alt={`Product image ${images[0]}`}
+                      className='absolute inset-0 w-full h-full object-cover'
+                      fill
+                      sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
                       priority={true}
-                      placeholder='blur'
-                      blurDataURL={`/images/products/${image}`}
                     />
-                  )}
-                </Item>
-              </div>
-            ))}
-          </div>
-        )}
+                  </div>
+                </div>
+              )}
+            </Item>
+          ) : (
+            <div className='grid grid-cols-2 gap-4'>
+              {images.map((image, index) => (
+                <div
+                  key={index}
+                  className={`
+                  ${
+                    images.length === 3 && index === 2
+                      ? 'col-span-2'
+                      : 'col-span-1'
+                  }
+                  relative h-0 pb-[56.25%] rounded-xl overflow-hidden product-thumbnail
+                `}
+                >
+                  <Item
+                    original={`/images/products/${image}`}
+                    thumbnail={`/images/products/${image}`}
+                    width='1000'
+                    height='600'
+                  >
+                    {({ ref, open }) => (
+                      <div
+                        ref={ref}
+                        onClick={open}
+                        className='cursor-pointer absolute inset-0 w-full h-full'
+                      >
+                        <Image
+                          src={`/images/products/${image}`}
+                          alt={`Product image ${image}`}
+                          className='absolute inset-0 w-full h-full object-cover'
+                          fill
+                          sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
+                          priority={true}
+                        />
+                      </div>
+                    )}
+                  </Item>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
       </section>
     </Gallery>
   );

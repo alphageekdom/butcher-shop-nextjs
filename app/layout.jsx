@@ -9,6 +9,8 @@ import { CartProvider } from '@/context/CartContext';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
+import 'photoswipe/dist/photoswipe.css';
+
 export const metadata = {
   title: 'Elite Cuts | Luxury Cuts',
   description: 'Explore your new favorite cut',

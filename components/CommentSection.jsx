@@ -5,8 +5,7 @@ import DOMPurify from 'dompurify';
 import Spinner from './Spinner';
 
 const CommentSection = ({ product }) => {
-  const { data: session } = useSession();
-  const [status, setStatus] = useState('authenticated');
+  const { data: session, status } = useSession();
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState('');
   const [reviews, setReviews] = useState([]);
@@ -26,6 +25,7 @@ const CommentSection = ({ product }) => {
       }
     } catch (error) {
       console.error('Error fetching product details:', error);
+    } finally {
       setLoading(false);
     }
   };
@@ -65,22 +65,22 @@ const CommentSection = ({ product }) => {
         setComment('');
         setReviewSubmitted(true);
         localStorage.setItem(`reviewSubmitted_${product._id}`, 'true');
-        setLoading(false);
       } else {
         console.error('Failed to submit review');
-        setLoading(false);
       }
     } catch (error) {
       console.error('Error submitting review:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
   return loading ? (
     <Spinner />
   ) : (
-    <div className='bg-white p-6 rounded-lg  mt-6'>
+    <div className='bg-white p-6 rounded-lg mt-6'>
       <h2 className='text-lg font-semibold mb-2'>Leave a Review</h2>
-      {status === 'authenticated' && !reviewSubmitted && session ? (
+      {status === 'authenticated' && !reviewSubmitted ? (
         <form onSubmit={handleSubmit}>
           <div className='flex flex-col mb-4'>
             <label htmlFor='comment' className='mb-1'>
@@ -133,7 +133,7 @@ const CommentSection = ({ product }) => {
             <div key={index} className='border-b border-gray-300 py-4'>
               <div className='flex items-center'>
                 <p className='text-lg font-semibold mr-2'>
-                  {session.user?.name}
+                  {review.userName || 'Anonymous'}
                 </p>
                 <p className='text-gray-500'>Rating: {review.rating}/5</p>
                 <div className='flex ml-2'>

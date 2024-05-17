@@ -2,13 +2,17 @@
 
 import { FaStar, FaDollarSign } from 'react-icons/fa';
 import { GiMeatCleaver } from 'react-icons/gi';
+import dynamic from 'next/dynamic';
 import ProductImages from './ProductImages';
-import CommentSection from '../CommentSection';
 import BookmarkButton from '@/components/uielements/BookmarkButton';
 import ShareButtons from '../uielements/ShareButton';
 import React, { useState, Suspense } from 'react';
 import { toast } from 'react-toastify';
 import { useGlobalContext } from '@/context/CartContext';
+
+const CommentSection = dynamic(() => import('../CommentSection'), {
+  suspense: true,
+});
 
 const ProductDetails = React.memo(({ product }) => {
   const [isAddingToCart, setIsAddingToCart] = useState(false);
@@ -30,11 +34,11 @@ const ProductDetails = React.memo(({ product }) => {
         addItemToCart(product);
       } else {
         console.error('Failed to add item to cart');
-        toast.error('Failed To Add');
+        toast.error('Failed to add to cart');
       }
     } catch (error) {
       console.error('Error adding item to cart:', error);
-      toast.error(error);
+      toast.error('Error adding to cart');
     } finally {
       setIsAddingToCart(false);
     }
