@@ -1,42 +1,28 @@
-'use client';
-
-import { useState, useEffect } from 'react';
-import { useSearchParams } from 'next/navigation';
-import Spinner from '@/components/Spinner';
 import ProductCard from '@/components/product/ProductCard';
 import ProductSearchForm from '@/components/ProductSearchForm';
 import BackButton from '@/components/uielements/BackButton';
+import Product from '@/models/Product';
+import connectDB from '@/config/database';
+import { convertToSerializeableObject } from '@/utils/convertToObject';
 
-const SearchResultsPage = () => {
-  const searchParams = useSearchParams();
+const SearchResultsPage = async ({
+  searchParams: { product, productType },
+}) => {
+  await connectDB();
 
-  const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const productPattern = new RegExp(product, 'i');
 
-  const product = searchParams.get('product');
-  const productType = searchParams.get('productType');
+  let query = {
+    $or: [{ name: productPattern }, { description: productPattern }],
+  };
 
-  useEffect(() => {
-    const fetchSearchResults = async () => {
-      try {
-        const res = await fetch(
-          `/api/products/search?product=${product}&productType=${productType}`
-        );
+  if (productType && productType !== 'All') {
+    const typePattern = new RegExp(productType, 'i');
+    query.type = typePattern;
+  }
 
-        if (res.status === 200) {
-          const data = await res.json();
-          setProducts(data);
-        } else {
-          setProducts([]);
-        }
-      } catch (error) {
-        console.log(error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchSearchResults();
-  }, [product, productType]);
+  const productsQueryResults = await Product.find(query).lean();
+  const products = convertToSerializeableObject(productsQueryResults);
 
   return (
     <>
@@ -45,25 +31,21 @@ const SearchResultsPage = () => {
           <ProductSearchForm />
         </div>
       </section>
-      {loading ? (
-        <Spinner loading={loading} />
-      ) : (
-        <section className='px-4 py-6'>
-          <div className='container-xl lg:container m-auto px-4 py-6'>
-            <BackButton href={'/products'} />
-            <h1 className='text-2xl mb-4'>Search Results</h1>
-            {products.length === 0 ? (
-              <p>No Search Results Found</p>
-            ) : (
-              <div className='grid grid-cols-1 md:grid-cols-3 gap-6'>
-                {products.map((product) => (
-                  <ProductCard key={product._id} product={product} />
-                ))}
-              </div>
-            )}
-          </div>
-        </section>
-      )}
+      <section className='px-4 py-6'>
+        <div className='container-xl lg:container m-auto px-4 py-6'>
+          <BackButton href={'/products'} />
+          <h1 className='text-2xl mb-4'>Search Results</h1>
+          {products.length === 0 ? (
+            <p>No Search Results Found</p>
+          ) : (
+            <div className='grid grid-cols-1 md:grid-cols-3 gap-6'>
+              {products.map((product) => (
+                <ProductCard key={product._id} product={product} />
+              ))}
+            </div>
+          )}
+        </div>
+      </section>
     </>
   );
 };

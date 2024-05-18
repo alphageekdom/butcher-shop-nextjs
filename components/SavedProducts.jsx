@@ -1,36 +1,31 @@
-'use client';
-
-import { useState, useCallback } from 'react';
+import { getSessionUser } from '@/utils/getSessionUser';
+import connectDB from '@/config/database';
+import User from '@/models/User';
 import ProductCard from './product/ProductCard';
+import { convertToSerializeableObject } from '@/utils/convertToObject';
 
-const SavedProducts = ({ initialBookmarks }) => {
-  const [bookmarks, setBookmarks] = useState(initialBookmarks);
+const SavedProducts = async () => {
+  await connectDB();
 
-  const handleBookmarkChange = useCallback(async () => {
-    try {
-      const res = await fetch('/api/bookmarks');
-      if (res.ok) {
-        const newBookmarks = await res.json();
-        setBookmarks(newBookmarks);
-      } else {
-        console.error('Failed to fetch new bookmarks');
-      }
-    } catch (error) {
-      console.error('Error fetching bookmarks:', error);
-    }
-  }, []);
+  const sessionUser = await getSessionUser();
 
-  if (!bookmarks || bookmarks.length === 0) {
-    return <p>No cuts found.</p>;
-  }
+  const { userId } = sessionUser;
+
+  const user = await User.findById(userId).populate('bookmarks').lean();
+
+  const bookmarks = user?.bookmarks;
+
+  const plainBookmarks = bookmarks.map((bookmark) =>
+    convertToSerializeableObject(bookmark)
+  );
 
   return (
     <div className='grid grid-cols-1 md:grid-cols-3 gap-6'>
-      {bookmarks.map((product) => (
+      {serializedBookmarks.map((product) => (
         <ProductCard
           key={product._id}
           product={product}
-          onBookmarkChange={handleBookmarkChange}
+          // onBookmarkChange={handleBookmarkChange}
         />
       ))}
     </div>
