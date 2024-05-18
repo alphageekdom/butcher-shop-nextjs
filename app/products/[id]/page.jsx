@@ -1,6 +1,6 @@
 import ProductDetails from '@/components/product/ProductDetails';
 import BackButton from '@/components/uielements/BackButton';
-import ProductSearchForm from '@/components/ProductSearchForm';
+import ProductSearchForm from '@/components/uielements/ProductSearchForm';
 import connectDB from '@/config/database';
 import Product from '@/models/Product';
 import { convertToSerializeableObject } from '@/utils/convertToObject';

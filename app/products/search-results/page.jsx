@@ -1,5 +1,5 @@
 import ProductCard from '@/components/product/ProductCard';
-import ProductSearchForm from '@/components/ProductSearchForm';
+import ProductSearchForm from '@/components/uielements/ProductSearchForm';
 import BackButton from '@/components/uielements/BackButton';
 import connectDB from '@/config/database';
 import Product from '@/models/Product';

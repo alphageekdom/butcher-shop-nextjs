@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import ProductSearchForm from '../ProductSearchForm';
+import ProductSearchForm from '../uielements/ProductSearchForm';
 import { usePathname } from 'next/navigation';
 
 const MobileMenu = ({ closeMobileMenu, isAdmin, isLoggedIn, handleSignIn }) => {

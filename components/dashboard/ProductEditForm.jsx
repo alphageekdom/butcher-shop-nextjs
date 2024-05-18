@@ -111,6 +111,7 @@ const ProductEditForm = () => {
             name='name'
             className='border rounded w-full py-2 px-3 mb-2'
             placeholder='Ribeye, T-Bone, etc.'
+            autoComplete='Product Name'
             required
             value={fields.name}
             onChange={handleChange}

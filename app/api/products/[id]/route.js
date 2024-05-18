@@ -81,26 +81,20 @@ export const PUT = async (request, { params }) => {
 
     // Create productData Object for database
     const productData = {
-      category: formData.get('category'),
-      type: formData.get('type'),
       name: formData.get('name'),
+      type: formData.get('type'),
       title: formData.get('title'),
       description: formData.get('description'),
-      price: formData.get('price'),
-      inStock: formData.get('inStock'),
+      price: Number(formData.get('price')),
+      inStock: parseInt(formData.get('inStock')),
+      rating: existingProduct.rating,
+      images: existingProduct.images,
+      isFeatured: existingProduct.isFeatured,
       owner: userId,
     };
 
-    const productDataChanged = !isEqual(existingProduct, productData);
-
-    if (!productDataChanged) {
-      return new Response('No changes to update', { status: 200 });
-    }
-
     // Save the updated product
-    const updatedProduct = await Product.findByIdAndUpdate(id, productData, {
-      new: true,
-    });
+    const updatedProduct = await Product.findByIdAndUpdate(id, productData);
 
     return new Response(JSON.stringify(updatedProduct), {
       status: 200,

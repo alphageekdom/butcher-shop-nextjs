@@ -1,5 +1,5 @@
-import Products from '@/components/Products';
-import ProductSearchForm from '@/components/ProductSearchForm';
+import Products from '@/components/product/Products';
+import ProductSearchForm from '@/components/uielements/ProductSearchForm';
 
 const ProductsPage = async () => {
   return (
