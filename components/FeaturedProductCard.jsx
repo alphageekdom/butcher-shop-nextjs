@@ -38,6 +38,8 @@ const FeaturedProductCard = ({ product }) => {
         const data = await res.json();
         toast.success(data.message);
         setIsBookmarked(data.isBookmarked);
+      } else {
+        toast.error('Failed to update bookmark');
       }
     } catch (error) {
       console.log(error);
@@ -70,6 +72,8 @@ const FeaturedProductCard = ({ product }) => {
         if (res.status === 200) {
           const data = await res.json();
           setIsBookmarked(data.isBookmarked);
+        } else {
+          console.error('Failed to fetch bookmark status');
         }
       } catch (error) {
         console.log(error);
@@ -105,8 +109,6 @@ const FeaturedProductCard = ({ product }) => {
       setIsAddingToCart(false);
     }
   };
-
-  if (loading) return <p className='text-center'>Loading...</p>;
 
   return (
     <div

@@ -1,3 +1,5 @@
+'use client';
+
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { FaDollarSign, FaStar, FaBookmark } from 'react-icons/fa';
@@ -5,7 +7,7 @@ import { useSession } from 'next-auth/react';
 import { toast } from 'react-toastify';
 import { useGlobalContext } from '@/context/CartContext';
 
-const ProductCard = ({ product }) => {
+const ProductCard = ({ product, onBookmarkChange }) => {
   const { data: session } = useSession();
   const userId = session?.user?.id;
   const [isBookmarked, setIsBookmarked] = useState(false);
@@ -14,11 +16,6 @@ const ProductCard = ({ product }) => {
   const { addItemToCart } = useGlobalContext();
 
   useEffect(() => {
-    if (!userId) {
-      setLoading(false);
-      return;
-    }
-
     const checkBookmarkStatus = async () => {
       try {
         const res = await fetch('/api/bookmarks/check', {
@@ -54,6 +51,7 @@ const ProductCard = ({ product }) => {
     }
 
     try {
+      setLoading(true);
       const res = await fetch('/api/bookmarks', {
         method: 'POST',
         headers: {
@@ -68,10 +66,15 @@ const ProductCard = ({ product }) => {
         const data = await res.json();
         toast.success(data.message);
         setIsBookmarked(data.isBookmarked);
+        onBookmarkChange();
+      } else {
+        toast.error('Something Went Wrong');
       }
     } catch (error) {
       console.log(error);
       toast.error('Something Went Wrong');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -94,7 +97,6 @@ const ProductCard = ({ product }) => {
         toast.success('Added To Cart');
         addItemToCart(product);
       } else {
-        console.error('Failed to add item to cart');
         toast.error('Failed To Add');
       }
     } catch (error) {
@@ -105,8 +107,6 @@ const ProductCard = ({ product }) => {
     }
   };
 
-  if (loading) return <p className='text-center'>Loading...</p>;
-
   return (
     <div className='relative rounded-xl flex flex-col'>
       <div
@@ -115,7 +115,7 @@ const ProductCard = ({ product }) => {
       >
         <Image
           src={`/images/products/${product.images[0]}`}
-          alt=''
+          alt={product.name}
           height={300}
           width={450}
           sizes='100vw'
@@ -155,7 +155,8 @@ const ProductCard = ({ product }) => {
       </div>
       <button
         className='h-[36px] bg-red-800 hover:bg-red-700 text-white px-4 py-2 rounded-lg text-center text-sm'
-        onClick={handleAddToCart || loading}
+        onClick={handleAddToCart}
+        disabled={isAddingToCart || loading}
       >
         {isAddingToCart ? 'Adding...' : 'Add to Cart'}
       </button>

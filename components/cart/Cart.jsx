@@ -12,7 +12,6 @@ import { useRouter } from 'next/navigation';
 import { useGlobalContext } from '@/context/CartContext';
 
 const Cart = () => {
-  const [cartItems, setCartItems] = useState([]);
   const [subtotal, setSubtotal] = useState(0);
   const [taxRate, setTaxRate] = useState(0.1);
   const [taxesTotal, setTaxesTotal] = useState(0);
@@ -21,9 +20,12 @@ const Cart = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const router = useRouter();
-  const { removeItemFromCart } = useGlobalContext();
+
+  const { cartItems, setCartItems, removeItemFromCart, cartUpdateTrigger } =
+    useGlobalContext();
 
   const fetchCartData = async () => {
+    setLoading(true);
     try {
       const response = await fetch('/api/cart');
 
@@ -99,13 +101,12 @@ const Cart = () => {
   const closeModal = () => {
     setIsModalOpen(false);
     document.body.style.overflow = '';
-
     router.push('/');
   };
 
   useEffect(() => {
     fetchCartData();
-  }, []);
+  }, [cartUpdateTrigger]);
 
   useEffect(() => {
     const subtotal = calculateSubtotal(cartItems);

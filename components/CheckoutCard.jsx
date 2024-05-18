@@ -1,3 +1,5 @@
+'use client';
+
 import { useState } from 'react';
 import { CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
 import Image from 'next/image';

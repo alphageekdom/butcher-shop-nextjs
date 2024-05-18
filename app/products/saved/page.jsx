@@ -1,55 +1,29 @@
-'use client';
+import SavedProducts from '@/components/SavedProducts';
+import connectDB from '@/config/database';
+import User from '@/models/User';
+import { getSessionUser } from '@/utils/getSessionUser';
+import { convertToSerializeableObject } from '@/utils/convertToObject';
 
-import { useState, useEffect } from 'react';
-import ProductCard from '@/components/product/ProductCard';
-import { useSession } from 'next-auth/react';
-import Spinner from '@/components/Spinner';
-import { toast } from 'react-toastify';
+const SavedProductsPage = async () => {
+  await connectDB();
 
-const SavedProductsPage = () => {
-  const { data: session } = useSession();
-  const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const sessionUser = await getSessionUser();
 
-  useEffect(() => {
-    const fetchSavedProducts = async () => {
-      if (!session?.user?.id) {
-        return;
-      }
+  const { userId } = sessionUser;
 
-      try {
-        const res = await fetch(`/api/bookmarks`);
+  const user = await User.findById(userId).populate('bookmarks').lean();
 
-        if (res.status === 200) {
-          const data = await res.json();
-          setProducts(data);
-        }
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setLoading(false);
-      }
-    };
+  const bookmarks = user?.bookmarks;
 
-    // Fetch user properties when session is available
-    fetchSavedProducts();
-  }, [session]);
+  const plainBookmarks = bookmarks.map((bookmark) =>
+    convertToSerializeableObject(bookmark)
+  );
 
-  return loading ? (
-    <Spinner loading={loading} />
-  ) : (
+  return (
     <section className='px-4 py-6'>
       <div className='container-xl lg:container m-auto px-4 py-6'>
-        <h1 className='text-2xl mb-4'>Saved Products</h1>
-        {products.length === 0 ? (
-          <p>No saved products</p>
-        ) : (
-          <div className='grid grid-cols-1 md:grid-cols-3 gap-6'>
-            {products.map((product) => (
-              <ProductCard key={product._id} product={product} />
-            ))}
-          </div>
-        )}
+        <h1 className='text-2xl mb-4'>Saved Cuts</h1>
+        <SavedProducts initialBookmarks={plainBookmarks} />
       </div>
     </section>
   );

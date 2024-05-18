@@ -73,7 +73,7 @@ const Register = () => {
       } else if (res.status === 409) {
         toast.error('Email Already In Use');
       } else {
-        const data = await response.json();
+        const data = await res.json();
         toast.error(data.message || 'Registration Failed');
       }
     } catch (error) {

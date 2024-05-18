@@ -104,8 +104,8 @@ const Navbar = () => {
               )}
             </button>
           </div>
-          <Logo />
           <DesktopMenu isAdmin={isAdmin} />
+          <Logo />
           {isLoggedIn ? (
             <div className='flex items-center gap-4'>
               <CartButton />

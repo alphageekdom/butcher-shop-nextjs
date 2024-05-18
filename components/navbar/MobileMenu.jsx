@@ -1,20 +1,26 @@
 import Link from 'next/link';
 import ProductSearchForm from '../ProductSearchForm';
+import { usePathname } from 'next/navigation';
 
 const MobileMenu = ({ closeMobileMenu, isAdmin, isLoggedIn, handleSignIn }) => {
+  const pathname = usePathname();
   return (
     <div className='md:hidden' id='mobile-menu'>
       <div className='space-y-1 px-2 pb-3 pt-2'>
         <Link
           href='/'
-          className='bg-gray-900 text-white block rounded-md px-3 py-2 text-base font-medium'
+          className={`block rounded-md px-3 py-2 text-white text-base font-medium hover:bg-gray-900 ${
+            pathname === '/' ? 'bg-footerBg ' : ''
+          }`}
           onClick={closeMobileMenu}
         >
           Home
         </Link>
         <Link
           href='/products'
-          className='text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium'
+          className={`block rounded-md px-3 py-2 text-white text-base font-medium hover:bg-gray-900 ${
+            pathname === '/products' ? 'bg-footerBg ' : ''
+          }`}
           onClick={closeMobileMenu}
         >
           Products
@@ -22,7 +28,9 @@ const MobileMenu = ({ closeMobileMenu, isAdmin, isLoggedIn, handleSignIn }) => {
         {isAdmin && (
           <Link
             href='/dashboard'
-            className='text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium'
+            className={`block rounded-md px-3 py-2 text-white text-base font-medium hover:bg-gray-900 ${
+              pathname === '/dashboard' ? 'bg-footerBg ' : ''
+            }`}
             onClick={closeMobileMenu}
           >
             Dashboard
@@ -36,7 +44,9 @@ const MobileMenu = ({ closeMobileMenu, isAdmin, isLoggedIn, handleSignIn }) => {
                 closeMobileMenu();
               }}
               href={'/login'}
-              className='flex items-center justify-center text-white bg-gray-700 hover:bg-gray-900 hover:text-white rounded-md px-3 py-2'
+              className={`block rounded-md px-3 py-2 text-white text-base font-medium hover:bg-gray-900 ${
+                pathname === '/login' ? 'bg-footerBg ' : ''
+              }`}
             >
               <i className='fa-brands fa-google text-white'></i>
               <span>Login</span>
@@ -47,7 +57,9 @@ const MobileMenu = ({ closeMobileMenu, isAdmin, isLoggedIn, handleSignIn }) => {
                 closeMobileMenu();
               }}
               href={'/register'}
-              className='flex items-center justify-center text-white bg-gray-700 hover:bg-gray-900 hover:text-white rounded-md px-3 py-2'
+              className={`block rounded-md px-3 py-2 text-white text-base font-medium hover:bg-gray-900 ${
+                pathname === '/register' ? 'bg-footerBg ' : ''
+              }`}
             >
               <span>Register</span>
             </Link>

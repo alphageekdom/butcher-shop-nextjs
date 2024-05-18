@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import ProductCard from './product/ProductCard';
 import Spinner from '@/components/Spinner';
 import Pagination from '@/components/uielements/Pagination';
@@ -8,43 +8,62 @@ import Pagination from '@/components/uielements/Pagination';
 const Products = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
-
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(6);
   const [totalItems, setTotalItems] = useState(0);
 
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const res = await fetch(
-          `/api/products?page=${page}&pageSize=${pageSize}`
-        );
+  const fetchProducts = useCallback(async () => {
+    try {
+      const res = await fetch(
+        `/api/products?page=${page}&pageSize=${pageSize}`
+      );
 
-        if (!res.ok) {
-          throw new Error('Failed To Fetch Data');
-        }
-
-        const data = await res.json();
-
-        setProducts(data.products);
-        setTotalItems(data.total);
-      } catch (error) {
-        console.log(error);
-      } finally {
-        setLoading(false);
+      if (!res.ok) {
+        throw new Error('Failed To Fetch Data');
       }
-    };
 
-    fetchProducts();
+      const data = await res.json();
+
+      setProducts(data.products);
+      setTotalItems(data.total);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
   }, [page, pageSize]);
+
+  useEffect(() => {
+    fetchProducts();
+  }, [fetchProducts]);
 
   const handlePageChange = (newPage) => {
     setPage(newPage);
   };
 
-  return loading ? (
-    <Spinner />
-  ) : (
+  const handleBookmarkChange = useCallback(async () => {
+    try {
+      const res = await fetch('/api/bookmarks');
+      if (res.ok) {
+        const newBookmarks = await res.json();
+        setProducts((prevProducts) =>
+          prevProducts.map((product) =>
+            newBookmarks.some((bookmark) => bookmark._id === product._id)
+              ? { ...product, isBookmarked: true }
+              : { ...product, isBookmarked: false }
+          )
+        );
+      } else {
+        console.error('Failed to fetch new bookmarks');
+      }
+    } catch (error) {
+      console.error('Error fetching bookmarks:', error);
+    }
+  }, []);
+
+  if (loading) return <Spinner />;
+
+  return (
     <section className='px-4 py-6'>
       <div className='container-xl lg:container m-auto px-4 py-6'>
         {products.length === 0 ? (
@@ -52,7 +71,11 @@ const Products = () => {
         ) : (
           <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10'>
             {products.map((product) => (
-              <ProductCard key={product._id} product={product} />
+              <ProductCard
+                key={product._id}
+                product={product}
+                onBookmarkChange={handleBookmarkChange}
+              />
             ))}
           </div>
         )}

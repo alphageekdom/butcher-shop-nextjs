@@ -1,30 +1,29 @@
 import connectDB from '@/config/database';
 import User from '@/models/User';
 import bcrypt from 'bcryptjs';
-import { validationResult } from 'express-validator';
+import { NextResponse } from 'next/server';
 
 // POST /api/auth/register
 export const POST = async (request) => {
   try {
     await connectDB();
 
-    const errors = validationResult(request);
-    if (!errors.isEmpty()) {
-      return new Response(JSON.stringify({ errors: errors.array() }), {
-        status: 400,
-        headers: { 'Content-Type': 'application/json' },
-      });
-    }
+    const { name, email, password } = await request.json();
 
-    const { name, email, username, password } = await request.json();
+    if (!email || !password || !name) {
+      return NextResponse.json(
+        { message: 'Email, password, and name are required' },
+        { status: 400 }
+      );
+    }
 
     const existingUser = await User.findOne({ email });
 
     if (existingUser) {
-      return new Response(JSON.stringify({ error: 'Email already in use' }), {
-        status: 409,
-        headers: { 'Content-Type': 'application/json' },
-      });
+      return NextResponse.json(
+        { message: 'User already exists' },
+        { status: 409 }
+      );
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -32,7 +31,6 @@ export const POST = async (request) => {
     const newUser = new User({
       name,
       email,
-      username,
       password: hashedPassword,
     });
 
@@ -40,15 +38,14 @@ export const POST = async (request) => {
 
     // return Response.redirect(`${process.env.NEXTAUTH_URL}/auth/login`);
 
-    return new Response(
-      JSON.stringify({ message: 'Registration Successful' }),
-      { status: 200, headers: { 'Content-Type': 'application/json' } }
+    return NextResponse.json(
+      { message: 'User registered successfully', user: newUser },
+      { status: 201 }
     );
   } catch (error) {
-    console.log(error);
-    return new Response(JSON.stringify({ error: 'Internal server error' }), {
-      status: 500,
-      headers: { 'Content-Type': 'application/json' },
-    });
+    return NextResponse.json(
+      { message: 'Server error', error: error.message },
+      { status: 500 }
+    );
   }
 };

@@ -1,8 +1,8 @@
 'use client';
+
 import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
-import { fetchProduct } from '@/utils/request';
 import DOMPurify from 'dompurify';
 
 const ProductEditForm = () => {
@@ -10,6 +10,7 @@ const ProductEditForm = () => {
   const router = useRouter();
 
   const [mounted, setMounted] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [fields, setFields] = useState({
     type: '',
     name: '',
@@ -17,7 +18,6 @@ const ProductEditForm = () => {
     inStock: '',
     title: '',
   });
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     setMounted(true);
@@ -25,7 +25,8 @@ const ProductEditForm = () => {
     // Fetch product data for form
     const fetchProductData = async () => {
       try {
-        const productData = await fetchProduct(id);
+        const res = await fetch(`/api/products/${id}`);
+        const productData = await res.json();
 
         const { rating, ...restFields } = productData;
         setFields(restFields);
@@ -37,7 +38,7 @@ const ProductEditForm = () => {
     };
 
     fetchProductData();
-  }, []);
+  }, [id]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;

@@ -20,7 +20,6 @@ const BookmarkButton = ({ product }) => {
 
     const checkBookmarkStatus = async () => {
       try {
-        if (!userId) return setLoading(false);
         const res = await fetch('/api/bookmarks/check', {
           method: 'POST',
           headers: {
@@ -35,22 +34,21 @@ const BookmarkButton = ({ product }) => {
           const data = await res.json();
           setIsBookmarked(data.isBookmarked);
         } else {
-          throw new Error('Failed to fetch bookmark status');
+          console.error('Error checking bookmark status');
         }
       } catch (error) {
-        console.log(error);
-        toast.error('Failed to fetch bookmark status');
+        console.error('Error checking bookmark status:', error);
       } finally {
         setLoading(false);
       }
     };
 
     checkBookmarkStatus();
-  }, [product?._id, userId]);
+  }, [product._id, userId]);
 
   const handleBookmarkToggle = async () => {
     if (!userId) {
-      toast.error('You Need To Sign In To Bookmark A Product');
+      toast.error('You need to sign in to bookmark a product');
       return;
     }
 
@@ -61,14 +59,16 @@ const BookmarkButton = ({ product }) => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          productId: product?._id,
+          productId: product._id,
         }),
       });
 
       if (res.status === 200) {
         const data = await res.json();
-        setIsBookmarked(data.isBookmarked);
         toast.success(data.message);
+        setIsBookmarked(data.isBookmarked);
+      } else {
+        toast.error('Error updating bookmark status');
       }
     } catch (error) {
       console.log(error);

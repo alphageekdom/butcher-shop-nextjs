@@ -1,70 +1,40 @@
 'use client';
 
-import { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useContext, useState } from 'react';
 import { toast } from 'react-toastify';
-import { useSession } from 'next-auth/react';
 
 const CartContext = createContext();
 
-export function CartProvider({ children }) {
-  const [cartCount, setCartCount] = useState(0);
-  const [cartItems, setCartItems] = useState([]);
+export function CartProvider({
+  children,
+  initialCartCount = 0,
+  initialCartItems = [],
+}) {
+  const [cartCount, setCartCount] = useState(initialCartCount);
+  const [cartItems, setCartItems] = useState(initialCartItems);
   const [cartUpdateTrigger, setCartUpdateTrigger] = useState(false);
 
-  const { data: session } = useSession();
-
-  // Function to fetch cart data from the server
-  const fetchCartData = async () => {
+  const addItemToCart = async (item) => {
     try {
-      if (!isUserAuthenticated()) {
-        setCartCount(0);
-        setCartItems([]);
-        return;
-      }
+      const updatedCartItems = [...cartItems, item];
+      setCartItems(updatedCartItems);
+      setCartCount(updatedCartItems.length);
+      setCartUpdateTrigger((prev) => !prev);
 
       const res = await fetch('/api/cart', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ item }),
         credentials: 'include',
       });
 
       if (!res.ok) {
-        if (res.status === 401) {
-          setCartCount(0);
-          setCartItems([]);
-          return;
-        }
-        throw new Error('Failed to fetch cart data');
+        throw new Error('Failed to add item to cart');
       }
 
-      const data = await res.json();
-      const cartItemsData = data.items || [];
-      setCartCount(cartItemsData.length);
-      setCartItems(cartItemsData);
-    } catch (error) {
-      console.error('Error fetching cart data:', error);
-      toast.error('Failed to fetch cart data');
-    }
-  };
-
-  const isUserAuthenticated = () => {
-    return session && session.user;
-  };
-
-  useEffect(() => {
-    if (isUserAuthenticated()) {
-      fetchCartData();
-    }
-  }, [session, cartUpdateTrigger]);
-
-  const addItemToCart = async (item) => {
-    try {
-      // Add item to cart
-      const updatedCartItems = [...cartItems, item];
-      setCartItems(updatedCartItems);
-
-      const newCartCount = updatedCartItems.length;
-      setCartCount(newCartCount);
-
-      setCartUpdateTrigger((prev) => !prev);
+      toast.success('Item added to cart');
     } catch (error) {
       console.error('Error adding item to cart:', error);
       toast.error('Failed to add item to cart');
@@ -73,8 +43,10 @@ export function CartProvider({ children }) {
 
   const removeItemFromCart = async (itemId) => {
     try {
-      // Remove item from cart
-      setCartItems(cartItems.filter((item) => item._id !== itemId));
+      const updatedCartItems = cartItems.filter((item) => item._id !== itemId);
+      setCartItems(updatedCartItems);
+      setCartCount(updatedCartItems.length);
+      setCartUpdateTrigger((prev) => !prev);
 
       const res = await fetch('/api/cart', {
         method: 'DELETE',
@@ -85,12 +57,11 @@ export function CartProvider({ children }) {
         credentials: 'include',
       });
 
-      if (res.ok) {
-        setCartUpdateTrigger((prev) => !prev);
-        toast.success('Item removed from cart');
-      } else {
+      if (!res.ok) {
         throw new Error('Failed to remove item from cart');
       }
+
+      toast.success('Item removed from cart');
     } catch (error) {
       console.error('Error removing item from cart:', error);
       toast.error('Failed to remove item from cart');
@@ -100,8 +71,10 @@ export function CartProvider({ children }) {
   const contextValue = {
     cartCount,
     cartItems,
+    setCartItems,
     addItemToCart,
     removeItemFromCart,
+    cartUpdateTrigger,
   };
 
   return (

@@ -17,9 +17,12 @@ export const POST = async (request) => {
 
     const { userId } = sessionUser;
 
-    const user = await User.findOne({ _id: userId });
+    const user = await User.findOne({ _id: userId }, 'bookmarks');
+    if (!user) {
+      return new Response('User Not Found', { status: 404 });
+    }
 
-    let isBookmarked = user.bookmarks.includes(productId);
+    const isBookmarked = user.bookmarks.includes(productId);
 
     return new Response(JSON.stringify({ isBookmarked }, { status: 200 }));
   } catch (error) {
