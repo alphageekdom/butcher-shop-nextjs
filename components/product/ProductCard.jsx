@@ -7,7 +7,7 @@ import { useSession } from 'next-auth/react';
 import { toast } from 'react-toastify';
 import { useGlobalContext } from '@/context/CartContext';
 
-const ProductCard = ({ product, onBookmarkChange }) => {
+const ProductCard = ({ product }) => {
   const { data: session } = useSession();
   const userId = session?.user?.id;
   const [isBookmarked, setIsBookmarked] = useState(false);
@@ -66,7 +66,6 @@ const ProductCard = ({ product, onBookmarkChange }) => {
         const data = await res.json();
         toast.success(data.message);
         setIsBookmarked(data.isBookmarked);
-        onBookmarkChange();
       } else {
         toast.error('Something Went Wrong');
       }

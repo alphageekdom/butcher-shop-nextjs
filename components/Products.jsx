@@ -41,26 +41,6 @@ const Products = () => {
     setPage(newPage);
   };
 
-  const handleBookmarkChange = useCallback(async () => {
-    try {
-      const res = await fetch('/api/bookmarks');
-      if (res.ok) {
-        const newBookmarks = await res.json();
-        setProducts((prevProducts) =>
-          prevProducts.map((product) =>
-            newBookmarks.some((bookmark) => bookmark._id === product._id)
-              ? { ...product, isBookmarked: true }
-              : { ...product, isBookmarked: false }
-          )
-        );
-      } else {
-        console.error('Failed to fetch new bookmarks');
-      }
-    } catch (error) {
-      console.error('Error fetching bookmarks:', error);
-    }
-  }, []);
-
   if (loading) return <Spinner />;
 
   return (
@@ -71,11 +51,7 @@ const Products = () => {
         ) : (
           <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10'>
             {products.map((product) => (
-              <ProductCard
-                key={product._id}
-                product={product}
-                onBookmarkChange={handleBookmarkChange}
-              />
+              <ProductCard key={product._id} product={product} />
             ))}
           </div>
         )}
