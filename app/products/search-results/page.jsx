@@ -1,8 +1,8 @@
 import ProductCard from '@/components/product/ProductCard';
 import ProductSearchForm from '@/components/ProductSearchForm';
 import BackButton from '@/components/uielements/BackButton';
-import Product from '@/models/Product';
 import connectDB from '@/config/database';
+import Product from '@/models/Product';
 import { convertToSerializeableObject } from '@/utils/convertToObject';
 
 const SearchResultsPage = async ({
