@@ -13,7 +13,7 @@ const SavedProductsPage = async () => {
 
   const user = await User.findById(userId).populate('bookmarks').lean();
 
-  const bookmarks = user?.bookmarks;
+  const bookmarks = user?.bookmarks || [];
 
   const plainBookmarks = bookmarks.map((bookmark) =>
     convertToSerializeableObject(bookmark)
