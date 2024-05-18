@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import ProductCard from './product/ProductCard';
 import Spinner from '@/components/Spinner';
 import Pagination from '@/components/uielements/Pagination';
@@ -12,7 +12,7 @@ const Products = () => {
   const [pageSize, setPageSize] = useState(6);
   const [totalItems, setTotalItems] = useState(0);
 
-  const fetchProducts = useCallback(async () => {
+  const fetchProducts = async () => {
     try {
       const res = await fetch(
         `/api/products?page=${page}&pageSize=${pageSize}`
@@ -31,11 +31,11 @@ const Products = () => {
     } finally {
       setLoading(false);
     }
-  }, [page, pageSize]);
+  };
 
   useEffect(() => {
     fetchProducts();
-  }, []);
+  }, [page, pageSize]);
 
   const handlePageChange = (newPage) => {
     setPage(newPage);

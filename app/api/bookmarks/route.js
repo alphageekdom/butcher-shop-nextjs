@@ -51,11 +51,11 @@ export const POST = async (request) => {
 
     if (isBookmarked) {
       user.bookmarks.pull(productId);
-      message = 'Bookmark Removed Successfully';
+      message = 'Bookmark Removed';
       isBookmarked = false;
     } else {
       user.bookmarks.push(productId);
-      message = 'Bookmark Added Successfully';
+      message = 'Bookmark Added';
       isBookmarked = true;
     }
 

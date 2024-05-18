@@ -7,7 +7,7 @@ import { useSession } from 'next-auth/react';
 import { toast } from 'react-toastify';
 import { useGlobalContext } from '@/context/CartContext';
 
-const ProductCard = ({ product }) => {
+const ProductCard = ({ product, onBookmarkChange }) => {
   const { data: session } = useSession();
   const userId = session?.user?.id;
   const [isBookmarked, setIsBookmarked] = useState(false);
@@ -48,7 +48,7 @@ const ProductCard = ({ product }) => {
     e.preventDefault();
     e.stopPropagation();
     if (!userId) {
-      toast.error('You Need To Sign In To Bookmark A Product');
+      toast.error('Login To Bookmark');
       return;
     }
 
@@ -64,10 +64,15 @@ const ProductCard = ({ product }) => {
         }),
       });
 
-      if (res.status === 200) {
+      if (res.ok) {
         const data = await res.json();
         toast.success(data.message);
         setIsBookmarked(data.isBookmarked);
+        if (onBookmarkChange) {
+          console.log(product._id);
+          console.log(data.isBookmarked);
+          onBookmarkChange(product._id, data.isBookmarked);
+        }
       } else {
         toast.error('Something Went Wrong');
       }
