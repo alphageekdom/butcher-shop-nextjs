@@ -16,11 +16,6 @@ export function CartProvider({
 
   const addItemToCart = async (item) => {
     try {
-      const updatedCartItems = [...cartItems, item];
-      setCartItems(updatedCartItems);
-      setCartCount(updatedCartItems.length);
-      setCartUpdateTrigger((prev) => !prev);
-
       const res = await fetch('/api/cart', {
         method: 'POST',
         headers: {
@@ -30,9 +25,18 @@ export function CartProvider({
         credentials: 'include',
       });
 
+      const data = await res.json();
+      console.log('CartContext', data);
+
       if (!res.ok) {
-        throw new Error('Failed to add item to cart');
+        const errorResponse = await res.json();
+        throw new Error(errorResponse.message || 'Failed to add item to cart');
       }
+
+      const updatedCartItems = [...cartItems, item];
+      setCartItems(updatedCartItems);
+      setCartCount(updatedCartItems.length);
+      setCartUpdateTrigger((prev) => !prev);
 
       toast.success('Item added to cart');
     } catch (error) {
@@ -43,11 +47,6 @@ export function CartProvider({
 
   const removeItemFromCart = async (itemId) => {
     try {
-      const updatedCartItems = cartItems.filter((item) => item._id !== itemId);
-      setCartItems(updatedCartItems);
-      setCartCount(updatedCartItems.length);
-      setCartUpdateTrigger((prev) => !prev);
-
       const res = await fetch('/api/cart', {
         method: 'DELETE',
         headers: {
@@ -60,6 +59,11 @@ export function CartProvider({
       if (!res.ok) {
         throw new Error('Failed to remove item from cart');
       }
+
+      const updatedCartItems = cartItems.filter((item) => item._id !== itemId);
+      setCartItems(updatedCartItems);
+      setCartCount(updatedCartItems.length);
+      setCartUpdateTrigger((prev) => !prev);
 
       toast.success('Item removed from cart');
     } catch (error) {

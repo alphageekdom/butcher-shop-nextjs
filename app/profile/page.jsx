@@ -52,6 +52,7 @@ const ProfilePage = async () => {
                     width={200}
                     height={200}
                     alt='User'
+                    priority
                   />
                 </div>
                 <h2 className='text-2xl mb-4'>

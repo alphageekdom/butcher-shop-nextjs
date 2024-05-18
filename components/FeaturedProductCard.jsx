@@ -87,8 +87,16 @@ const FeaturedProductCard = ({ product }) => {
 
   const handleAddToCart = async () => {
     if (isAddingToCart || loading) return;
+
+    if (!product?._id) {
+      toast.error('Product not available');
+      return;
+    }
+
     setIsAddingToCart(true);
     try {
+      addItemToCart(product);
+
       const res = await fetch('/api/cart', {
         method: 'POST',
         headers: {
@@ -96,15 +104,18 @@ const FeaturedProductCard = ({ product }) => {
         },
         body: JSON.stringify({ productId: product?._id }),
       });
-      if (res.ok) {
-        toast.success('Added To Cart');
-        addItemToCart(product);
-      } else {
-        toast.error('Failed To Add');
+
+      if (!res.ok) {
+        const errorText = await res.text();
+        throw new Error(errorText || 'Failed to update server');
       }
+
+      toast.success('Added to cart');
     } catch (error) {
-      console.error('Error adding item to cart:', error);
-      toast.error(error);
+      console.error('Error updating server:', error);
+      toast.error(`Failed to update server: ${error.message}`);
+
+      removeItemFromCart(product._id);
     } finally {
       setIsAddingToCart(false);
     }

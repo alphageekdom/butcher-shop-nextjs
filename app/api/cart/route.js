@@ -35,6 +35,7 @@ export const GET = async (req, res) => {
 export const POST = async (req, res) => {
   try {
     const { productId, quantity } = await req.json();
+    console.log('POST', productId, quantity);
 
     const sessionUser = await getSessionUser();
 
@@ -43,6 +44,7 @@ export const POST = async (req, res) => {
     }
 
     const { userId } = sessionUser;
+    console.log('POST USERID', userId);
 
     const [user, product] = await Promise.all([
       User.findOne({ _id: userId }),

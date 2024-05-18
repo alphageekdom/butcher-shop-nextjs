@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { FaDollarSign, FaStar, FaBookmark } from 'react-icons/fa';
 import { useSession } from 'next-auth/react';
@@ -31,6 +31,8 @@ const ProductCard = ({ product }) => {
         if (res.status === 200) {
           const data = await res.json();
           setIsBookmarked(data.isBookmarked);
+        } else {
+          setIsBookmarked(false);
         }
       } catch (error) {
         console.log(error);
@@ -139,6 +141,7 @@ const ProductCard = ({ product }) => {
                 isBookmarked ? 'text-[#B91C1B]' : 'text-blue-500'
               } cursor-pointer`}
               onClick={handleBookmarkClick}
+              aria-label='Bookmark Button'
             />
           </h3>
 

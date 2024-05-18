@@ -35,7 +35,7 @@ const Products = () => {
 
   useEffect(() => {
     fetchProducts();
-  }, [fetchProducts]);
+  }, []);
 
   const handlePageChange = (newPage) => {
     setPage(newPage);
