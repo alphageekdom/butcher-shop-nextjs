@@ -3,13 +3,13 @@
 import { useState, useEffect } from 'react';
 import { AiOutlineClose } from 'react-icons/ai';
 import { FaShoppingCart } from 'react-icons/fa';
-import CartContainer from './CartContainer';
 import {
   calculateSubtotal,
   calculateTaxesTotal,
   calculateGrandTotal,
 } from '@/utils/cart';
 import { useGlobalContext } from '@/context/CartContext';
+import MobileCart from './MobileCart';
 
 const CartModal = ({ isOpen, onClose }) => {
   const [cartItems, setCartItems] = useState([]);
@@ -20,7 +20,8 @@ const CartModal = ({ isOpen, onClose }) => {
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(isOpen);
 
-  const { removeItemFromCart } = useGlobalContext();
+  const { removeItemFromCart, cartUpdateTrigger, addItemToCart } =
+    useGlobalContext();
 
   const closeModal = () => {
     setIsModalOpen(false);
@@ -37,7 +38,7 @@ const CartModal = ({ isOpen, onClose }) => {
 
     try {
       await removeItemFromCart(itemId);
-      await fetchCartData();
+      fetchCartData();
     } catch (error) {
       console.error('Error removing item:', error);
     }
@@ -73,6 +74,8 @@ const CartModal = ({ isOpen, onClose }) => {
           throw new Error('Failed to update cart item quantity');
         } else {
           setCartItems(updatedCartItems);
+          localStorage.setItem('cartItems', JSON.stringify(updatedCartItems));
+          fetchCartData();
         }
       } catch (error) {
         console.error('Error updating cart item quantity:', error);
@@ -82,16 +85,9 @@ const CartModal = ({ isOpen, onClose }) => {
 
   const fetchCartData = async () => {
     try {
-      const response = await fetch('/api/cart');
-
-      if (response.ok) {
-        const data = await response.json();
-        const cartItemsData = data.items || [];
-
-        setCartItems(cartItemsData);
-      } else {
-        throw new Error('Failed to fetch cart data');
-      }
+      const storedCartItems =
+        JSON.parse(localStorage.getItem('cartItems')) || [];
+      setCartItems(storedCartItems);
     } catch (error) {
       console.error('Error fetching cart data:', error);
     } finally {
@@ -107,7 +103,7 @@ const CartModal = ({ isOpen, onClose }) => {
       document.body.style.overflow = '';
     }
     setIsModalOpen(isOpen);
-  }, [isOpen]);
+  }, [isOpen, cartUpdateTrigger]);
 
   useEffect(() => {
     const subtotal = calculateSubtotal(cartItems);
@@ -120,42 +116,36 @@ const CartModal = ({ isOpen, onClose }) => {
 
   return (
     isModalOpen && (
-      <>
-        <div className='fixed top-0 left-0 w-screen h-screen bg-gray-800 bg-opacity-75 flex justify-center items-center z-30 '>
-          <div className='bg-white text-black p-8 rounded-lg relative w-[90%] md:[50%] h-[90%]'>
-            <button
-              className='absolute top-2 right-2 text-gray-600 hover:text-gray-800'
-              onClick={closeModal}
-            >
-              <AiOutlineClose className='h-6 w-6' />
-            </button>
-            <div className='flex justify-center mt-4'>
-              <div className='w-full'>
-                <div className='flex flex-row justify-start items-center p-5 gap-3 text-gray-600'>
-                  <FaShoppingCart className='text-2xl' />
-                  <h1 className='text-2xl'>
-                    Cart
-                    <span className='text-grey-300 ml-2'>
-                      ({cartItems.length} Items)
-                    </span>
-                  </h1>
-                </div>
-                <CartContainer
-                  cartItems={cartItems}
-                  loading={loading}
-                  handleRemoveItem={handleRemoveItem}
-                  handleQuantityChange={handleQuantityChange}
-                  subtotal={subtotal}
-                  taxesTotal={calculateTaxesTotal(subtotal, taxRate)}
-                  grandTotal={calculateGrandTotal(subtotal, taxesTotal)}
-                  isInModal={true}
-                  onClose={closeModal}
-                />
+      <div className='fixed top-0 left-0 w-screen h-full bg-gray-800 bg-opacity-75 flex justify-center items-center z-30 '>
+        <div className='bg-white text-black p-8 rounded-lg relative w-[90%] md:[50%] h-full overflow-hidden'>
+          <button
+            className='absolute top-2 right-2 text-gray-600 hover:text-gray-800'
+            onClick={closeModal}
+          >
+            <AiOutlineClose className='h-6 w-6' />
+          </button>
+          <div className='flex justify-center  h-full'>
+            <div className='w-full h-full'>
+              <div className='flex flex-row justify-start items-center p-5 gap-3 text-gray-600'>
+                <FaShoppingCart className='text-2xl' />
+                <h1 className='text-2xl'>
+                  Cart
+                  <span className='text-grey-300 ml-2'>
+                    ({cartItems.length} Items)
+                  </span>
+                </h1>
               </div>
+              <MobileCart
+                cartItems={cartItems}
+                handleRemoveItem={handleRemoveItem}
+                handleQuantityChange={handleQuantityChange}
+                isInModal={true}
+                onClose={closeModal}
+              />
             </div>
           </div>
         </div>
-      </>
+      </div>
     )
   );
 };

@@ -1,6 +1,6 @@
 import BackButton from '@/components/uielements/BackButton';
-import Cart from '@/components/cart/Cart';
 import { FaShoppingCart } from 'react-icons/fa';
+import CartSummary from '@/components/cart/CartSummary';
 
 const CartPage = ({ cartCount, cartItems }) => {
   return (
@@ -16,7 +16,7 @@ const CartPage = ({ cartCount, cartItems }) => {
             </h1>
           </div>
           <div className='grid grid-cols-1 md:grid-cols-70/30 w-full gap-6 mt-9'>
-            <Cart items={cartItems} />
+            <CartSummary items={cartItems} />
           </div>
         </div>
       </section>

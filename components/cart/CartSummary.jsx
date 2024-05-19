@@ -6,12 +6,12 @@ import {
   calculateTaxesTotal,
   calculateGrandTotal,
 } from '@/utils/cart';
-import CartContainer from './CartContainer';
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/navigation';
 import { useGlobalContext } from '@/context/CartContext';
+import CartCard from './CartCard';
 
-const Cart = () => {
+const CartSummary = () => {
   const [subtotal, setSubtotal] = useState(0);
   const [taxRate, setTaxRate] = useState(0.1);
   const [taxesTotal, setTaxesTotal] = useState(0);
@@ -118,7 +118,7 @@ const Cart = () => {
   }, [cartItems, taxRate]);
 
   return (
-    <CartContainer
+    <CartCard
       cartItems={cartItems}
       loading={loading}
       handleRemoveItem={handleRemoveItem}
@@ -131,4 +131,4 @@ const Cart = () => {
   );
 };
 
-export default Cart;
+export default CartSummary;

@@ -2,7 +2,12 @@ import React from 'react';
 import Image from 'next/image'; // Assuming you're using Next.js
 import { FaMinus, FaPlus, FaTrash } from 'react-icons/fa';
 
-const CartItem = ({ item, index, handleQuantityChange, handleRemoveItem }) => {
+const CartCardItem = ({
+  item,
+  index,
+  handleQuantityChange,
+  handleRemoveItem,
+}) => {
   return (
     <li key={index} className='grid grid-cols-2 md:grid-cols-5 p-4'>
       {/* col 1 */}
@@ -61,4 +66,4 @@ const CartItem = ({ item, index, handleQuantityChange, handleRemoveItem }) => {
   );
 };
 
-export default CartItem;
+export default CartCardItem;

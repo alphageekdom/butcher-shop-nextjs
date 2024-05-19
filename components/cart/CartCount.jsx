@@ -17,7 +17,7 @@ const CartCount = ({ onClick }) => {
         onClick={onClick}
       >
         <span className='absolute -inset-1.5'></span>
-        <span className='sr-only'>View notifications</span>
+        <span className='sr-only'>View cart</span>
         <FaShoppingCart size={24} aria-hidden='true' />
       </button>
       {cartCount > 0 && (

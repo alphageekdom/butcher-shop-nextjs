@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 
 const CartContext = createContext();
@@ -10,27 +10,71 @@ export function CartProvider({
   initialCartCount = 0,
   initialCartItems = [],
 }) {
-  const [cartCount, setCartCount] = useState(initialCartCount);
-  const [cartItems, setCartItems] = useState(initialCartItems);
+  const [cartCount, setCartCount] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const storedCartCount = localStorage.getItem('cartCount');
+      return storedCartCount ? parseInt(storedCartCount, 10) : initialCartCount;
+    }
+    return initialCartCount;
+  });
+
+  const [cartItems, setCartItems] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const storedCartItems = localStorage.getItem('cartItems');
+      return storedCartItems ? JSON.parse(storedCartItems) : initialCartItems;
+    }
+    return initialCartItems;
+  });
+
   const [cartUpdateTrigger, setCartUpdateTrigger] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('cartItems', JSON.stringify(cartItems));
+      localStorage.setItem('cartCount', cartCount.toString());
+    }
+  }, [cartItems, cartCount]);
+
+  useEffect(() => {
+    const fetchCartData = async () => {
+      try {
+        const res = await fetch('/api/cart', { credentials: 'include' });
+        if (!res.ok) {
+          throw new Error('Failed to fetch cart data');
+        }
+        const data = await res.json();
+        setCartItems(data.items);
+        setCartCount(data.items.length);
+      } catch (error) {
+        console.error('Error fetching cart data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCartData();
+  }, [cartUpdateTrigger]);
 
   const addItemToCart = async (item) => {
     try {
+      const productToAdd = {
+        productId: item._id,
+        quantity: item.quantity || 1,
+      };
+
       const res = await fetch('/api/cart', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ item }),
+        body: JSON.stringify(productToAdd),
         credentials: 'include',
       });
 
-      const data = await res.json();
-      console.log('CartContext', data);
-
       if (!res.ok) {
-        const errorResponse = await res.json();
-        throw new Error(errorResponse.message || 'Failed to add item to cart');
+        const data = await res.json();
+        throw new Error(data.message || 'Failed to add item to cart');
       }
 
       const updatedCartItems = [...cartItems, item];
@@ -75,10 +119,13 @@ export function CartProvider({
   const contextValue = {
     cartCount,
     cartItems,
+    cartUpdateTrigger,
+    loading,
+    setCartCount,
     setCartItems,
     addItemToCart,
     removeItemFromCart,
-    cartUpdateTrigger,
+    setLoading,
   };
 
   return (

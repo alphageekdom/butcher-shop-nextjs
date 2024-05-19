@@ -1,122 +1,27 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import Image from 'next/image';
 import { FaDollarSign, FaStar, FaBookmark } from 'react-icons/fa';
 import { useSession } from 'next-auth/react';
-import { toast } from 'react-toastify';
-import { useGlobalContext } from '@/context/CartContext';
+import useHandleBookmark from '@/hooks/useHandleBookmark';
+import useHandleAddToCart from '@/hooks/useHandleAddToCart';
 
-const ProductCard = ({ product, onBookmarkChange }) => {
+const ProductCard = ({ product }) => {
   const { data: session } = useSession();
   const userId = session?.user?.id;
-  const [isBookmarked, setIsBookmarked] = useState(false);
-  const [loading, setLoading] = useState(true);
-  const [isAddingToCart, setIsAddingToCart] = useState(false);
-  const { addItemToCart } = useGlobalContext();
 
-  useEffect(() => {
-    if (!userId) {
-      setLoading(false);
-      return;
-    }
-
-    const checkBookmarkStatus = async () => {
-      try {
-        const res = await fetch('/api/bookmarks/check', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            productId: product?._id,
-          }),
-        });
-
-        if (res.status === 200) {
-          const data = await res.json();
-          setIsBookmarked(data.isBookmarked);
-        } else {
-          setIsBookmarked(false);
-        }
-      } catch (error) {
-        console.log(error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    checkBookmarkStatus();
-  }, [product?._id, userId]);
-
-  const handleBookmarkClick = async (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    if (!userId) {
-      toast.error('Login To Bookmark');
-      return;
-    }
-
-    try {
-      setLoading(true);
-      const res = await fetch('/api/bookmarks', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          productId: product?._id,
-        }),
-      });
-
-      if (res.ok) {
-        const data = await res.json();
-        toast.success(data.message);
-        setIsBookmarked(data.isBookmarked);
-        if (onBookmarkChange) {
-          console.log(product._id);
-          console.log(data.isBookmarked);
-          onBookmarkChange(product._id, data.isBookmarked);
-        }
-      } else {
-        toast.error('Something Went Wrong');
-      }
-    } catch (error) {
-      console.log(error);
-      toast.error('Something Went Wrong');
-    } finally {
-      setLoading(false);
-    }
-  };
+  const { isBookmarked, loading, handleBookmarkClick, checkBookmarkStatus } =
+    useHandleBookmark(userId, product?._id);
+  const { isAddingToCart, handleAddToCart } = useHandleAddToCart(product);
 
   const handleCardClick = () => {
     window.location.href = `/products/${product._id}`;
   };
 
-  const handleAddToCart = async () => {
-    if (isAddingToCart || loading) return;
-    setIsAddingToCart(true);
-    try {
-      const res = await fetch('/api/cart', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ productId: product?._id }),
-      });
-      if (res.ok) {
-        toast.success('Added To Cart');
-        addItemToCart(product);
-      } else {
-        toast.error('Failed To Add');
-      }
-    } catch (error) {
-      console.error('Error adding item to cart:', error);
-      toast.error(error);
-    } finally {
-      setIsAddingToCart(false);
-    }
-  };
+  useEffect(() => {
+    checkBookmarkStatus();
+  }, [product?._id, userId]);
 
   return (
     <div className='relative rounded-xl flex flex-col'>
@@ -167,7 +72,10 @@ const ProductCard = ({ product, onBookmarkChange }) => {
       </div>
       <button
         className='h-[36px] bg-red-800 hover:bg-red-700 text-white px-4 py-2 rounded-lg text-center text-sm'
-        onClick={handleAddToCart}
+        onClick={(e) => {
+          e.stopPropagation();
+          handleAddToCart();
+        }}
         disabled={isAddingToCart || loading}
       >
         {isAddingToCart ? 'Adding...' : 'Add to Cart'}

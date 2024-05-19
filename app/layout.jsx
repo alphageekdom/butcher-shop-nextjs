@@ -1,5 +1,5 @@
 import Footer from '@/components/Footer';
-import Navbar from '@/components/navbar/Navbar';
+import Navbar from '@/components/Navbar';
 import '@/assets/styles/global.css';
 
 import { GlobalProvider } from '@/context/GlobalContext';

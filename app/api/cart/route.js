@@ -35,16 +35,32 @@ export const GET = async (req, res) => {
 export const POST = async (req, res) => {
   try {
     const { productId, quantity } = await req.json();
-    console.log('POST', productId, quantity);
+
+    if (productId === undefined || quantity === undefined) {
+      return new Response(
+        JSON.stringify({
+          message: 'Product ID and Quantity are Required',
+        }),
+        {
+          status: 400,
+        }
+      );
+    }
 
     const sessionUser = await getSessionUser();
 
     if (!sessionUser || !sessionUser.userId) {
-      return new Response('User ID Is Required', { status: 401 });
+      return new Response(
+        JSON.stringify({
+          message: 'User ID Is Required',
+        }),
+        {
+          status: 401,
+        }
+      );
     }
 
     const { userId } = sessionUser;
-    console.log('POST USERID', userId);
 
     const [user, product] = await Promise.all([
       User.findOne({ _id: userId }),
@@ -52,12 +68,19 @@ export const POST = async (req, res) => {
     ]);
 
     if (!user || !product) {
-      return new Response('User or product not found', { status: 404 });
+      return new Response(
+        JSON.stringify({
+          message: 'User or product not found',
+        }),
+        {
+          status: 404,
+        }
+      );
     }
 
-    await addToCart(user, product, quantity);
+    const cart = await addToCart(user, product, quantity);
 
-    return new Response('Item added to cart', {
+    return new Response(JSON.stringify(cart), {
       status: 200,
     });
   } catch (error) {

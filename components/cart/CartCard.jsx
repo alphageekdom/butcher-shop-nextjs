@@ -3,9 +3,9 @@
 import { useRouter } from 'next/navigation';
 import Spinner from '../Spinner';
 import { useState, useEffect } from 'react';
-import CartItem from './CartItem';
+import CartItem from './CartCardItem';
 
-const CartContainer = ({
+const CartCard = ({
   cartItems,
   handleRemoveItem,
   handleQuantityChange,
@@ -17,11 +17,13 @@ const CartContainer = ({
   onClose,
 }) => {
   const [isMobileView, setIsMobileView] = useState(false);
+  const [isTabletView, setIsTabletView] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
     const handleResize = () => {
       setIsMobileView(window.innerWidth <= 640);
+      setIsTabletView(window.innerWidth > 640 && window.innerWidth <= 900);
     };
 
     handleResize();
@@ -48,15 +50,14 @@ const CartContainer = ({
   return loading ? (
     <Spinner />
   ) : (
-    <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 px-5 bg-white'>
-      <div className='md:col-span-2 flex items-center justify-center'>
+    <div className='grid grid-cols-1 lg:grid-cols-3 gap-8 px-5 bg-white'>
+      <div className='lg:col-span-2 flex items-center justify-center'>
         <ul
-          className='divide-y divide-gray-200 w-full'
-          style={
-            isMobileView
-              ? { maxHeight: '200px', overflowY: 'auto' }
-              : { maxHeight: '500px', overflowY: 'auto' }
-          }
+          className={`divide-y divide-gray-200 w-full ${
+            isMobileView || isTabletView
+              ? 'max-h-52 overflow-y-auto'
+              : 'max-h-96 overflow-y-auto'
+          }`}
         >
           {cartItems.length === 0 ? (
             <h1 className='text-6xl text-gray-300'>Cart is Empty</h1>
@@ -76,10 +77,11 @@ const CartContainer = ({
       </div>
 
       <div>
-        <div className='border-t border-gray-500 my-4 lg:border-none'></div>
+        <div className='border-t border-gray-500 my-1 lg:border-none'></div>
         <div
-          className='bg-white p-4 rounded-lg text-right'
-          style={{ maxHeight: '350px', overflowY: 'auto' }}
+          className={`bg-white p-4 rounded-lg text-right lg:text-left ${
+            isTabletView ? 'max-h-52 overflow-y-auto' : 'overflow-y-auto'
+          }`}
         >
           <div className='flex justify-between'>
             <h2 className='text-xl font-semibold'>Subtotal:</h2>
@@ -120,4 +122,4 @@ const CartContainer = ({
   );
 };
 
-export default CartContainer;
+export default CartCard;

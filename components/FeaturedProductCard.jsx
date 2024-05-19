@@ -1,125 +1,27 @@
 'use client';
 
+import { useEffect } from 'react';
 import Image from 'next/image';
 import { FaDollarSign, FaStar, FaBookmark } from 'react-icons/fa';
 import { useSession } from 'next-auth/react';
-import { useEffect, useState } from 'react';
-import { toast } from 'react-toastify';
-import { useGlobalContext } from '@/context/CartContext';
+import useHandleBookmark from '@/hooks/useHandleBookmark';
+import useHandleAddToCart from '@/hooks/useHandleAddToCart';
 
 const FeaturedProductCard = ({ product }) => {
   const { data: session } = useSession();
   const userId = session?.user?.id;
-  const [isBookmarked, setIsBookmarked] = useState(false);
-  const [loading, setLoading] = useState(true);
-  const [isAddingToCart, setIsAddingToCart] = useState(false);
-  const { addItemToCart } = useGlobalContext();
 
-  const handleBookmarkClick = async (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    if (!userId) {
-      toast.error('You Need To Sign In To Bookmark A Product');
-      return;
-    }
-
-    try {
-      const res = await fetch('/api/bookmarks', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          productId: product?._id,
-        }),
-      });
-
-      if (res.status === 200) {
-        const data = await res.json();
-        toast.success(data.message);
-        setIsBookmarked(data.isBookmarked);
-      } else {
-        toast.error('Failed to update bookmark');
-      }
-    } catch (error) {
-      console.log(error);
-      toast.error('Something Went Wrong');
-    }
-  };
+  const { isBookmarked, loading, handleBookmarkClick, checkBookmarkStatus } =
+    useHandleBookmark(userId, product?._id);
+  const { isAddingToCart, handleAddToCart } = useHandleAddToCart(product);
 
   const handleCardClick = () => {
     window.location.href = `/products/${product._id}`;
   };
 
   useEffect(() => {
-    if (!userId) {
-      setLoading(false);
-      return;
-    }
-
-    const checkBookmarkStatus = async () => {
-      try {
-        const res = await fetch('/api/bookmarks/check', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            productId: product?._id,
-          }),
-        });
-
-        if (res.status === 200) {
-          const data = await res.json();
-          setIsBookmarked(data.isBookmarked);
-        } else {
-          console.error('Failed to fetch bookmark status');
-        }
-      } catch (error) {
-        console.log(error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     checkBookmarkStatus();
   }, [product?._id, userId]);
-
-  const handleAddToCart = async () => {
-    if (isAddingToCart || loading) return;
-
-    if (!product?._id) {
-      toast.error('Product not available');
-      return;
-    }
-
-    setIsAddingToCart(true);
-    try {
-      addItemToCart(product);
-
-      const res = await fetch('/api/cart', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ productId: product?._id }),
-      });
-
-      if (!res.ok) {
-        const errorText = await res.text();
-        throw new Error(errorText || 'Failed to update server');
-      }
-
-      toast.success('Added to cart');
-    } catch (error) {
-      console.error('Error updating server:', error);
-      toast.error(`Failed to update server: ${error.message}`);
-
-      removeItemFromCart(product._id);
-    } finally {
-      setIsAddingToCart(false);
-    }
-  };
 
   return (
     <div
