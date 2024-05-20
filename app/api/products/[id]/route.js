@@ -29,6 +29,7 @@ export const GET = async (request, { params }) => {
   }
 };
 
+// DELETE /api/products/:id
 export const DELETE = async (request, { params }) => {
   try {
     const { id } = params;

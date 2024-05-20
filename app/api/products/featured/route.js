@@ -3,7 +3,7 @@ import Product from '@/models/Product';
 
 await connectDB();
 
-// GET /api/properties/featured
+// GET /api/products/featured
 export const GET = async (request) => {
   try {
     const products = await Product.find({

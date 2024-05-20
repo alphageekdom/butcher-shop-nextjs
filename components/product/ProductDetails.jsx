@@ -9,6 +9,7 @@ import ShareButtons from '../uielements/ShareButton';
 import React, { useState, Suspense } from 'react';
 import { toast } from 'react-toastify';
 import { useGlobalContext } from '@/context/CartContext';
+import { useSession } from 'next-auth/react';
 
 const CommentSection = dynamic(() => import('../CommentSection'), {
   suspense: true,
@@ -18,7 +19,15 @@ const ProductDetails = React.memo(({ product }) => {
   const [isAddingToCart, setIsAddingToCart] = useState(false);
   const { addItemToCart } = useGlobalContext();
 
+  const { data: session } = useSession();
+  const isLoggedIn = session && session.user;
+
   const handleAddToCart = async () => {
+    if (!isLoggedIn) {
+      toast.error('You must be logged in to add items to the cart');
+      return;
+    }
+
     if (isAddingToCart) return;
     setIsAddingToCart(true);
     try {

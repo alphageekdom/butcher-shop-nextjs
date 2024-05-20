@@ -2,6 +2,7 @@
 
 import { createContext, useContext, useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
+import { useSession } from 'next-auth/react';
 
 const CartContext = createContext();
 
@@ -10,6 +11,9 @@ export function CartProvider({
   initialCartCount = 0,
   initialCartItems = [],
 }) {
+  const { data: session } = useSession();
+  const isLoggedIn = session && session.user;
+
   const [cartCount, setCartCount] = useState(() => {
     if (typeof window !== 'undefined') {
       const storedCartCount = localStorage.getItem('cartCount');
@@ -26,7 +30,7 @@ export function CartProvider({
     return initialCartItems;
   });
 
-  const [cartUpdateTrigger, setCartUpdateTrigger] = useState(false);
+  // const [cartUpdateTrigger, setCartUpdateTrigger] = useState(false);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -38,6 +42,8 @@ export function CartProvider({
 
   useEffect(() => {
     const fetchCartData = async () => {
+      if (!isLoggedIn) return;
+
       try {
         const res = await fetch('/api/cart', { credentials: 'include' });
         if (!res.ok) {
@@ -54,7 +60,7 @@ export function CartProvider({
     };
 
     fetchCartData();
-  }, [cartUpdateTrigger]);
+  }, []);
 
   const addItemToCart = async (item) => {
     try {
@@ -80,7 +86,6 @@ export function CartProvider({
       const updatedCartItems = [...cartItems, item];
       setCartItems(updatedCartItems);
       setCartCount(updatedCartItems.length);
-      setCartUpdateTrigger((prev) => !prev);
 
       toast.success('Item added to cart');
     } catch (error) {
@@ -107,7 +112,6 @@ export function CartProvider({
       const updatedCartItems = cartItems.filter((item) => item._id !== itemId);
       setCartItems(updatedCartItems);
       setCartCount(updatedCartItems.length);
-      setCartUpdateTrigger((prev) => !prev);
 
       toast.success('Item removed from cart');
     } catch (error) {
@@ -119,7 +123,7 @@ export function CartProvider({
   const contextValue = {
     cartCount,
     cartItems,
-    cartUpdateTrigger,
+    // cartUpdateTrigger,
     loading,
     setCartCount,
     setCartItems,

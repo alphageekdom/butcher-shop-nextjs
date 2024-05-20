@@ -9,6 +9,7 @@ import {
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/navigation';
 import { useGlobalContext } from '@/context/CartContext';
+import { useSession } from 'next-auth/react';
 import CartCard from './CartCard';
 
 const CartSummary = () => {
@@ -20,9 +21,10 @@ const CartSummary = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const router = useRouter();
+  const { data: session } = useSession();
+  const isLoggedIn = session && session.user;
 
-  const { cartItems, setCartItems, removeItemFromCart, cartUpdateTrigger } =
-    useGlobalContext();
+  const { cartItems, setCartItems, removeItemFromCart } = useGlobalContext();
 
   const fetchCartData = async () => {
     setLoading(true);
@@ -105,8 +107,10 @@ const CartSummary = () => {
   };
 
   useEffect(() => {
-    fetchCartData();
-  }, [cartUpdateTrigger]);
+    if (isLoggedIn) {
+      fetchCartData();
+    }
+  }, []);
 
   useEffect(() => {
     const subtotal = calculateSubtotal(cartItems);

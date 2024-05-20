@@ -40,7 +40,6 @@ const CartButton = () => {
           setCartCount(cartItemsData.length);
         } else if (response.status === 401) {
           console.error('Unauthorized access to fetch cart data');
-          setHasItemsInCart(false);
         } else {
           throw new Error('Failed to fetch cart data');
         }

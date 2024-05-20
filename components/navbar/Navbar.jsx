@@ -5,12 +5,12 @@ import { signIn, signOut, useSession } from 'next-auth/react';
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/navigation';
 
-import MobileMenu from './navbar/MobileMenu';
-import ProfileMenu from './navbar/ProfileMenu';
-import AuthLinks from './navbar/AuthLinks';
-import DesktopMenu from './navbar/DesktopMenu';
-import CartButton from './cart/CartButton';
-import Logo from './navbar/Logo';
+import MobileMenu from './MobileMenu';
+import ProfileMenu from './ProfileMenu';
+import AuthLinks from './AuthLinks';
+import DesktopMenu from './DesktopMenu';
+import CartButton from '../cart/CartButton';
+import Logo from './Logo';
 
 const Navbar = () => {
   const { data: session } = useSession();

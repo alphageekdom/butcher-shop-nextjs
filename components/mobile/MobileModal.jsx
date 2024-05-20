@@ -9,9 +9,10 @@ import {
   calculateGrandTotal,
 } from '@/utils/cart';
 import { useGlobalContext } from '@/context/CartContext';
+import { useSession } from 'next-auth/react';
 import MobileCart from './MobileCart';
 
-const CartModal = ({ isOpen, onClose }) => {
+const MobileModal = ({ isOpen, onClose }) => {
   const [cartItems, setCartItems] = useState([]);
   const [subtotal, setSubtotal] = useState(0);
   const [taxRate, setTaxRate] = useState(0.1);
@@ -20,8 +21,9 @@ const CartModal = ({ isOpen, onClose }) => {
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(isOpen);
 
-  const { removeItemFromCart, cartUpdateTrigger, addItemToCart } =
-    useGlobalContext();
+  const { removeItemFromCart, cartUpdateTrigger } = useGlobalContext();
+  const { data: session } = useSession();
+  const isLoggedIn = session && session.user;
 
   const closeModal = () => {
     setIsModalOpen(false);
@@ -84,6 +86,7 @@ const CartModal = ({ isOpen, onClose }) => {
   };
 
   const fetchCartData = async () => {
+    if (!isLoggedIn) return;
     try {
       const storedCartItems =
         JSON.parse(localStorage.getItem('cartItems')) || [];
@@ -103,7 +106,7 @@ const CartModal = ({ isOpen, onClose }) => {
       document.body.style.overflow = '';
     }
     setIsModalOpen(isOpen);
-  }, [isOpen, cartUpdateTrigger]);
+  }, [isOpen, isLoggedIn]);
 
   useEffect(() => {
     const subtotal = calculateSubtotal(cartItems);
@@ -150,4 +153,4 @@ const CartModal = ({ isOpen, onClose }) => {
   );
 };
 
-export default CartModal;
+export default MobileModal;
